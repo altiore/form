@@ -16,7 +16,8 @@
 		"prepublish": "npm run build",
 		"prepare": "husky install",
 		"storybook": "start-storybook -p 8888",
-		"build-storybook": "build-storybook"
+		"build-storybook": "build-storybook",
+		"deploy-storybook": "storybook-to-ghpages"
 	},
 	"repository": {
 		"type": "git",
@@ -47,6 +48,7 @@
 		"@storybook/addon-essentials": "^6.3.7",
 		"@storybook/addon-links": "^6.3.7",
 		"@storybook/react": "^6.3.7",
+		"@storybook/storybook-deployer": "^2.8.10",
 		"@types/node": "16.4.9",
 		"@typescript-eslint/eslint-plugin": "4.28.5",
 		"@typescript-eslint/parser": "4.28.5",
