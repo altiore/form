@@ -14,6 +14,9 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Install dependencies (please, check you dependencies)
+        run: npm ci
+
       - name: Build
         run: npm run build-storybook
 
