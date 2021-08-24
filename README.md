@@ -1,9 +1,9 @@
 # Form A
 
-powerful forms with [**form-a**](https://www.npmjs.com/package/form-a)
+powerful forms with [**@altiore/form**](https://www.npmjs.com/package/form-a)
 
-<a href="https://www.npmjs.com/package/form-a" target="_blank">
-  <img src="https://img.shields.io/npm/v/form-a.svg" alt="NPM Version" />
+<a href="https://www.npmjs.com/package/@altiore/form" target="_blank">
+  <img src="https://img.shields.io/npm/v/@altiore/form.svg" alt="NPM Version" />
 </a>
 
 ## Why?
@@ -15,11 +15,11 @@ To simplify work with forms
 #### npm
 
 ```bash
-npm i form-a -S
+npm i @altiore/form -S
 ```
 
 #### yarn
 
 ```bash
-yarn add form-a -D
+yarn add @altiore/form -D
 ```
