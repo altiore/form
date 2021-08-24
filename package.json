@@ -6,9 +6,9 @@
 	"types": "dist/index.d.ts",
 	"scripts": {
 		"build": "rm -rf dist && tsc",
-		"npm:patch": "npm version patch && npm publish && git push && git push --tags",
-		"npm:minor": "npm version minor && npm publish && git push && git push --tags",
-		"npm:major": "npm version major && npm publish && git push && git push --tags",
+		"npm:patch": "npm version patch && npm publish --access=public && git push && git push --tags",
+		"npm:minor": "npm version minor && npm publish --access=public && git push && git push --tags",
+		"npm:major": "npm version major && npm publish --access=public && git push && git push --tags",
 		"test": "npm run build",
 		"lint": "tsc --noEmit && prettier --write \"**/*.{js,jsx,ts,tsx,json,md,yml}\" && eslint . --fix --ext .js,.jsx,.ts,.tsx --max-warnings=0",
 		"lint:ci": "tsc --noEmit && prettier \"**/*.{js,jsx,ts,tsx,json,md,yml}\" && eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0",
