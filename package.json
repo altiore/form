@@ -1,0 +1,74 @@
+{
+	"name": "form-a",
+	"version": "0.0.1",
+	"description": "Form helper for building powerful forms",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"build": "rm -rf dist && tsc",
+		"npm:patch": "npm version patch && npm publish && git push && git push --tags",
+		"npm:minor": "npm version minor && npm publish && git push && git push --tags",
+		"npm:major": "npm version major && npm publish && git push && git push --tags",
+		"test": "npm run build",
+		"lint": "tsc --noEmit && prettier --write \"**/*.{js,jsx,ts,tsx,json,md,yml}\" && eslint . --fix --ext .js,.jsx,.ts,.tsx --max-warnings=0",
+		"lint:ci": "tsc --noEmit && prettier \"**/*.{js,jsx,ts,tsx,json,md,yml}\" && eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0",
+		"prepublish": "npm run build",
+		"prepare": "husky install"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com/altiore/test-forbidden-regex.git"
+	},
+	"keywords": [
+		"test",
+		"regex",
+		"within",
+		"probject",
+		"forbidden"
+	],
+	"author": {
+		"name": "Pavlo Bielik",
+		"email": "razvanlomov@gmail.com",
+		"url": "https://github.com/Razzwan"
+	},
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/altiore/test-forbidden-regex/issues"
+	},
+	"homepage": "https://github.com/altiore/test-forbidden-regex#readme",
+	"dependencies": {},
+	"devDependencies": {
+		"@babel/core": "7.14.8",
+		"@babel/eslint-parser": "7.14.7",
+		"@types/node": "16.4.9",
+		"@typescript-eslint/eslint-plugin": "4.28.5",
+		"@typescript-eslint/parser": "4.28.5",
+		"eslint": "7.32.0",
+		"eslint-config-prettier": "8.3.0",
+		"eslint-plugin-ordered-imports": "0.5.0",
+		"eslint-plugin-prettier": "^3.4.0",
+		"husky": "^7.0.1",
+		"lint-staged": "^11.1.1",
+		"prettier": "2.3.2",
+		"react": "^16.14.0",
+		"react-dom": "^16.14.0",
+		"typescript": "4.3.5"
+	},
+	"peerDependencies": {
+		"react": "^16.14.0 || ^17.0.0",
+		"react-dom": "^16.14.0 || ^17.0.0"
+	},
+	"lint-staged": {
+		"*.{ts,tsx}": [
+			"prettier --write",
+			"eslint --fix --max-warnings=0"
+		],
+		"*.{js,jsx}": [
+			"prettier --write",
+			"eslint --fix --max-warnings=0"
+		],
+		"*.{json,yml,md}": [
+			"prettier --write"
+		]
+	}
+}
