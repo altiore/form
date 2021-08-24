@@ -1,6 +1,6 @@
 import React, {useCallback, useRef} from 'react';
 
-interface FormProps {
+export interface FormProps {
 	onSubmit: (values: unknown) => void;
 }
 

@@ -5,6 +5,7 @@
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
+		"start": "npm run storybook",
 		"build": "rm -rf dist && tsc",
 		"npm:patch": "npm version patch && npm publish --access=public && git push && git push --tags",
 		"npm:minor": "npm version minor && npm publish --access=public && git push && git push --tags",
@@ -13,11 +14,13 @@
 		"lint": "tsc --noEmit && prettier --write \"**/*.{js,jsx,ts,tsx,json,md,yml}\" && eslint . --fix --ext .js,.jsx,.ts,.tsx --max-warnings=0",
 		"lint:ci": "tsc --noEmit && prettier \"**/*.{js,jsx,ts,tsx,json,md,yml}\" && eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0",
 		"prepublish": "npm run build",
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"storybook": "start-storybook -p 8888",
+		"build-storybook": "build-storybook"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+ssh://git@github.com/altiore/test-forbidden-regex.git"
+		"url": "git+ssh://git@github.com:altiore/form.git"
 	},
 	"keywords": [
 		"test",
@@ -33,16 +36,21 @@
 	},
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/altiore/test-forbidden-regex/issues"
+		"url": "https://github.com/altiore/form/issues"
 	},
-	"homepage": "https://github.com/altiore/test-forbidden-regex#readme",
+	"homepage": "https://github.com/altiore/form#readme",
 	"dependencies": {},
 	"devDependencies": {
 		"@babel/core": "7.14.8",
 		"@babel/eslint-parser": "7.14.7",
+		"@storybook/addon-actions": "^6.3.7",
+		"@storybook/addon-essentials": "^6.3.7",
+		"@storybook/addon-links": "^6.3.7",
+		"@storybook/react": "^6.3.7",
 		"@types/node": "16.4.9",
 		"@typescript-eslint/eslint-plugin": "4.28.5",
 		"@typescript-eslint/parser": "4.28.5",
+		"babel-loader": "^8.2.2",
 		"eslint": "7.32.0",
 		"eslint-config-prettier": "8.3.0",
 		"eslint-plugin-ordered-imports": "0.5.0",
