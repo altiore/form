@@ -1,5 +1,5 @@
 // @ts-ignore
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect} from 'react';
 
 export interface FieldProps {
 	name: string;
@@ -7,33 +7,51 @@ export interface FieldProps {
 	validate?: ((values: unknown) => void);
 }
 
-export const Field:React.FC<FieldProps> = ({name, component, validate}) => {
-  const elementRef = useRef<HTMLInputElement>(null);
+function debounce(func, timeout = 1500){
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+
+    timer = setTimeout(() => { 
+      func.apply(this, args); 
+    }, timeout);
+  };
+}
+
+export const Field:React.FC<FieldProps> = ({name, component: Input, validate}) => {
 
   const handleKeyUp = (e: any) => {
     e.preventDefault();
-    console.dir(e.target.validity)
-    console.dir(e.target.checkValidity())
-
     const {value} = e.target;
-    validate && validate(value)
+    console.log(value)
+    
+    // Здесь должен быть validate???
+    // validate(value)
+
+    // Зачем мы validate прокидываем сюда, почему он не может находится здесь(внутри этого компонента).
+    // Т.е. validate будет настраиваться логика
   }
 
   useEffect(() => {
-    if (elementRef.current) {
-      elementRef.current.onkeyup = handleKeyUp;
+    const input = document.querySelector(`input[name=${name}]`)
+
+    if (input) {
+      input.addEventListener("keyup", debounce(handleKeyUp));
+    } else {
+      throw new Error;
     }
 
     return () => {
-      if (elementRef.current) {
-        elementRef.current.onkeyup = null;
+      if (input) {
+        input.removeEventListener("keyup", debounce(handleKeyUp));
       }
     };
   }, []);
 
   return (
     <>
-      {component ? component(name, elementRef) : <input name={name} ref={elementRef} />}
+      {/* значение meta откуда берется из validate? */}
+      {Input ? <Input name={name} meta={{valid: true, error: ''}} /> : <input name={name} />}
     </>
   )
 };

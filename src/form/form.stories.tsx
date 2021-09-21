@@ -14,21 +14,29 @@ const Template: ComponentStory<typeof Form> = (args) => <Form {...args} />;
 
 export const SimplestForm = Template.bind({});
 
+// ???
 const validate = (value: any) => {
-	return value
+	return value === undefined ? {error: '', valid: true} : {error: 'текст ошибки', valid: false}
+}
+
+export interface InputProps {
+	name: string;
 }
 
 // Тестовый компонент 
-const Input = (name, ref) => (
-	<textarea name={name} ref={ref} />
-)
+// ??? meta
+const Input:React.FC<InputProps> = ({name, meta}) => {
+	return (
+		<input name={name} />
+	)
+}
 
 SimplestForm.args = {
 	children: (
 		<>
-			<Field name="test" />
-			<Field name="test" validate={validate} />
-			<Field name="test" component={Input} validate={validate} />
+			<Field name="test1" />
+			<Field name="test2" component={Input} />
+			<Field name="test3" component={Input} validate={validate}/>
 		</>
 	),
 };
