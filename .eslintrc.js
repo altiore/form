@@ -24,12 +24,13 @@ module.exports = {
 	],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
-		project: 'tsconfig.json',
+		project: 'tsconfig.eslint.json',
 		sourceType: 'module',
 	},
 	plugins: ['@typescript-eslint/eslint-plugin', 'ordered-imports', 'prettier'],
 	root: true,
 	rules: {
+		'@typescript-eslint/ban-ts-comment': 0,
 		'ordered-imports/ordered-imports': [
 			'warn',
 			{

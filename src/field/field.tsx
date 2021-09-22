@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import _debounce from 'lodash/debounce';
 
@@ -27,11 +27,11 @@ export const Field: React.FC<FieldProps> = ({
 		valid: true,
 	});
 
-	const handleDebounceFn = useCallback((e: ChangeEvent<{value: string}>) => {
+	const handleDebounceFn = useCallback((e: Event) => {
 		e.preventDefault();
 
 		if (e.target) {
-			const {value} = e.target;
+			const {value} = e.target as never;
 			const validationError =
 				typeof validate === 'function' ? validate(value) : undefined;
 
