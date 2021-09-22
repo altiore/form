@@ -12,20 +12,19 @@ export default {
 
 const Template: ComponentStory<typeof Form> = (args) => <Form {...args} />;
 
-export const SimplestForm = Template.bind({});
-
-// ???
-const validate = (value: any) => {
-	return value === undefined ? {error: '', valid: true} : {error: 'текст ошибки', valid: false}
-}
-
 export interface InputProps {
 	name: string;
+	meta: any;
 }
 
-// Тестовый компонент 
-// ??? meta
+export const SimplestForm = Template.bind({});
+
+const validate = (value: any) => {
+	return undefined;
+}
+
 const Input:React.FC<InputProps> = ({name, meta}) => {
+	console.log(meta)
 	return (
 		<input name={name} />
 	)

@@ -1,5 +1,7 @@
 // @ts-ignore
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
+
+import _debounce from 'lodash/debounce';
 
 export interface FieldProps {
 	name: string;
@@ -7,51 +9,48 @@ export interface FieldProps {
 	validate?: ((values: unknown) => void);
 }
 
-function debounce(func, timeout = 1500){
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-
-    timer = setTimeout(() => { 
-      func.apply(this, args); 
-    }, timeout);
-  };
-}
-
 export const Field:React.FC<FieldProps> = ({name, component: Input, validate}) => {
+  
+  const [meta, setMeta] = useState({
+    error: '',
+    valid: true,
+  })
+  
+  const handleDebounceFn = (e) => {
+    e.preventDefault();
+    
+    const {value} = e.target;
+    const result = validate && validate(value);
+    result === undefined ? meta : setMeta({error: result, valid: false});
+
+    return false
+  }
+
+  const debounceHandle = useCallback(_debounce(handleDebounceFn, 1500), []);
 
   const handleKeyUp = (e: any) => {
-    e.preventDefault();
-    const {value} = e.target;
-    console.log(value)
-    
-    // Здесь должен быть validate???
-    // validate(value)
-
-    // Зачем мы validate прокидываем сюда, почему он не может находится здесь(внутри этого компонента).
-    // Т.е. validate будет настраиваться логика
+    debounceHandle(e); 
   }
 
   useEffect(() => {
     const input = document.querySelector(`input[name=${name}]`)
 
     if (input) {
-      input.addEventListener("keyup", debounce(handleKeyUp));
+      input.addEventListener("keyup", handleKeyUp);
     } else {
-      throw new Error;
+      throw new Error(`Input c name=${name} не был найден`);
     }
 
     return () => {
       if (input) {
-        input.removeEventListener("keyup", debounce(handleKeyUp));
+        input.removeEventListener("keyup", handleKeyUp);
       }
     };
   }, []);
 
   return (
     <>
-      {/* значение meta откуда берется из validate? */}
-      {Input ? <Input name={name} meta={{valid: true, error: ''}} /> : <input name={name} />}
+      {Input ? <Input name={name} meta={meta} /> : <input name={name} />}
     </>
   )
 };
