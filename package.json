@@ -40,7 +40,9 @@
 		"url": "https://github.com/altiore/form/issues"
 	},
 	"homepage": "https://github.com/altiore/form#readme",
-	"dependencies": {},
+	"dependencies": {
+		"lodash.debounce": "^4.0.8"
+	},
 	"devDependencies": {
 		"@babel/core": "7.14.8",
 		"@babel/eslint-parser": "7.14.7",
