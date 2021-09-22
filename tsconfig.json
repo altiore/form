@@ -8,14 +8,14 @@
 		"outDir": "./dist/",
 		"sourceMap": false,
 		"noImplicitAny": true,
-		"module": "commonjs",
-		"target": "esnext",
+		"module": "esnext",
+		"target": "es5",
 		"jsx": "react",
+		"moduleResolution": "Node",
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
 		"allowJs": true,
-		"lib": ["dom", "es2015", "es2017"],
-		"resolveJsonModule": true
+		"lib": ["dom", "es2015", "es2017"]
 	},
 	"include": ["./src/**/*"],
 	"exclude": ["**/**.stories.tsx"]
