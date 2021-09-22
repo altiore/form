@@ -1,56 +1,73 @@
-// @ts-ignore
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
 
 import _debounce from 'lodash/debounce';
 
-export interface FieldProps {
-	name: string;
-	component?: any;
-	validate?: ((values: unknown) => void);
+export interface FieldMeta {
+	valid: boolean;
+	error?: string;
 }
 
-export const Field:React.FC<FieldProps> = ({name, component: Input, validate}) => {
-  
-  const [meta, setMeta] = useState({
-    error: '',
-    valid: true,
-  })
-  
-  const handleDebounceFn = (e) => {
-    e.preventDefault();
-    
-    const {value} = e.target;
-    const result = validate && validate(value);
-    result === undefined ? meta : setMeta({error: result, valid: false});
+export interface InputProps {
+	name: string;
+	meta: FieldMeta;
+}
 
-    return false
-  }
+export interface FieldProps {
+	name: string;
+	component?: React.ComponentType<InputProps>;
+	validate?: (value: unknown) => string | undefined;
+}
 
-  const debounceHandle = useCallback(_debounce(handleDebounceFn, 1500), []);
+export const Field: React.FC<FieldProps> = ({
+	name,
+	component: Input,
+	validate,
+}) => {
+	const [meta, setMeta] = useState<FieldMeta>({
+		valid: true,
+	});
 
-  const handleKeyUp = (e: any) => {
-    debounceHandle(e); 
-  }
+	const handleDebounceFn = useCallback((e: ChangeEvent<{value: string}>) => {
+		e.preventDefault();
 
-  useEffect(() => {
-    const input = document.querySelector(`input[name=${name}]`)
+		if (e.target) {
+			const {value} = e.target;
+			const validationError =
+				typeof validate === 'function' ? validate(value) : undefined;
 
-    if (input) {
-      input.addEventListener("keyup", handleKeyUp);
-    } else {
-      throw new Error(`Input c name=${name} не был найден`);
-    }
+			setMeta({
+				error: validationError,
+				valid: validationError === undefined,
+			});
+		}
+	}, []);
 
-    return () => {
-      if (input) {
-        input.removeEventListener("keyup", handleKeyUp);
-      }
-    };
-  }, []);
+	const debounceHandle = useCallback(_debounce(handleDebounceFn, 1500), []);
 
-  return (
-    <>
-      {Input ? <Input name={name} meta={meta} /> : <input name={name} />}
-    </>
-  )
+	const handleKeyUp = useCallback(
+		(e: Event) => {
+			debounceHandle(e);
+		},
+		[debounceHandle],
+	);
+
+	useEffect(() => {
+		const input = document.querySelector(`input[name=${name}]`);
+
+		if (input) {
+			input.addEventListener('keyup', handleKeyUp);
+		} else {
+			throw new Error(`Input c name=${name} не был найден`);
+		}
+
+		return () => {
+			if (input) {
+				input.removeEventListener('keyup', handleKeyUp);
+			}
+		};
+	}, []);
+
+	return (
+		<>{Input ? <Input name={name} meta={meta} /> : <input name={name} />}</>
+	);
 };

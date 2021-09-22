@@ -1,20 +1,18 @@
-// @ts-ignore
-import React, {useCallback, useRef} from 'react';
+import React, {FormEvent, useCallback, useRef} from 'react';
 
 export interface FormProps {
-	children: any;
 	onSubmit: (values: unknown) => void;
 }
 
-export const Form: React.FC<FormProps> = ({children, onSubmit}: FormProps) => {
+export const Form: React.FC<FormProps> = ({children, onSubmit}) => {
 	const formRef = useRef<HTMLFormElement>(null);
 
 	const handleSubmit = useCallback(
-		(evt: any) => {
+		(evt: FormEvent) => {
 			evt.preventDefault();
 			const formData = new FormData(formRef.current ?? undefined);
-			const values: any = {};
-			formData.forEach((value: any, key: string) => (values[key] = value));
+			const values: Record<string, unknown> = {};
+			formData.forEach((value: unknown, key: string) => (values[key] = value));
 			onSubmit(values);
 		},
 		[onSubmit],
