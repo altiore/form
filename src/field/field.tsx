@@ -12,18 +12,22 @@ export interface InputProps {
 	meta: FieldMeta;
 }
 
-export interface FieldProps {
+export type FieldProps<
+	T extends Record<string, unknown> = Record<string, unknown>,
+> = T & {
 	name: string;
-	component?: React.ComponentType<InputProps>;
+	component?: React.ComponentType<InputProps & T>;
 	validate?: (value: unknown) => string | undefined;
-}
+};
 
-export const Field: React.FC<FieldProps> = ({
+export const Field = <
+	T extends Record<string, unknown> = Record<string, unknown>,
+>({
 	name,
-	component: Input,
+	component,
 	validate,
 	...props
-}) => {
+}: FieldProps<T>): JSX.Element => {
 	const [meta, setMeta] = useState<FieldMeta>({
 		valid: true,
 	});
@@ -68,7 +72,14 @@ export const Field: React.FC<FieldProps> = ({
 		};
 	}, []);
 
+	const Input: any = component;
 	return (
-		<>{Input ? <Input name={name} meta={meta} {...props}/> : <input name={name} />}</>
+		<>
+			{Input ? (
+				<Input name={name} meta={meta} {...props} />
+			) : (
+				<input name={name} />
+			)}
+		</>
 	);
 };
