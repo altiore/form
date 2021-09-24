@@ -31,6 +31,7 @@ module.exports = {
 	root: true,
 	rules: {
 		'@typescript-eslint/ban-ts-comment': 0,
+		'@typescript-eslint/no-explicit-any': 0,
 		'ordered-imports/ordered-imports': [
 			'warn',
 			{
