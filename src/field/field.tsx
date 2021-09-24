@@ -22,6 +22,7 @@ export const Field: React.FC<FieldProps> = ({
 	name,
 	component: Input,
 	validate,
+	...props
 }) => {
 	const [meta, setMeta] = useState<FieldMeta>({
 		valid: true,
@@ -68,6 +69,6 @@ export const Field: React.FC<FieldProps> = ({
 	}, []);
 
 	return (
-		<>{Input ? <Input name={name} meta={meta} /> : <input name={name} />}</>
+		<>{Input ? <Input name={name} meta={meta} {...props}/> : <input name={name} />}</>
 	);
 };
