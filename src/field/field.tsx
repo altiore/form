@@ -78,7 +78,7 @@ export const Field = <
 				});
 			}
 		};
-	}, []);
+	}, [validate]);
 
 	const Input: any = component;
 	return (
