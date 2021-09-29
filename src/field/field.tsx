@@ -34,7 +34,6 @@ export const Field = <
 
 	const handleDebounceFn = useCallback((e: Event) => {
 		e.preventDefault();
-		console.log(e)
 
 		if (e.target) {
 			const {value} = e.target as never;
@@ -58,17 +57,25 @@ export const Field = <
 	);
 
 	useEffect(() => {
-		const input = document.querySelector(`input[name=${name}]`);
+		const inputs = document.querySelectorAll(`input[name=${name}]`);
 
-		if (input) {
-			validate && input.addEventListener('keydown', handleKeyUp);
+		if (inputs.length > 0) {
+			inputs.forEach((input) => {
+				if (validate) {
+					input.addEventListener('keydown', handleKeyUp);
+				}
+			});
 		} else {
 			throw new Error(`Input c name=${name} не был найден`);
 		}
 
 		return () => {
-			if (input) {
-				input.removeEventListener('keydown', handleKeyUp);
+			if (inputs.length > 0) {
+				inputs.forEach((input) => {
+					if (validate) {
+						input.removeEventListener('keydown', handleKeyUp);
+					}
+				});
 			}
 		};
 	}, []);
