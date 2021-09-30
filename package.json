@@ -54,7 +54,7 @@
 		"@storybook/addon-links": "6.3.8",
 		"@storybook/react": "6.3.8",
 		"@storybook/storybook-deployer": "^2.8.10",
-		"@types/lodash": "4.14.173",
+		"@types/lodash": "^4.14.173",
 		"@types/node": "16.4.9",
 		"@typescript-eslint/eslint-plugin": "4.28.5",
 		"@typescript-eslint/parser": "4.28.5",
