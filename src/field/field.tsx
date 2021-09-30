@@ -60,7 +60,7 @@ export const Field = <
 		const input = document.querySelector(`input[name=${name}]`);
 
 		if (input) {
-			input.addEventListener('keyup', handleKeyUp);
+			validate && input.addEventListener('keyup', handleKeyUp);
 		} else {
 			throw new Error(`Input c name=${name} не был найден`);
 		}
@@ -70,7 +70,7 @@ export const Field = <
 				input.removeEventListener('keyup', handleKeyUp);
 			}
 		};
-	}, []);
+	}, [validate]);
 
 	const Input: any = component;
 	return (
