@@ -67,7 +67,7 @@ export const Field = <
 
 		return () => {
 			if (input) {
-				input.removeEventListener('keyup', handleKeyUp);
+				validate && input.removeEventListener('keyup', handleKeyUp);
 			}
 		};
 	}, [validate]);
