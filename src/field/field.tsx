@@ -32,7 +32,7 @@ export const Field = <
 		valid: true,
 	});
 
-	const handleDebounceFn = useCallback((e: Event) => {
+	const handleDebounceFn = (e: Event) => {
 		e.preventDefault();
 
 		if (e.target) {
@@ -45,9 +45,9 @@ export const Field = <
 				valid: validationError === undefined,
 			});
 		}
-	}, []);
+	};
 
-	const debounceHandle = useCallback(_debounce(handleDebounceFn, 1500), []);
+	const debounceHandle = _debounce(handleDebounceFn, 1500);
 
 	const handleKeyUp = useCallback(
 		(e: Event) => {
@@ -57,17 +57,36 @@ export const Field = <
 	);
 
 	useEffect(() => {
-		const input = document.querySelector(`input[name=${name}]`);
+		const inputs = document.querySelectorAll(`input[name=${name}]`);
+		let currentInput: any = {};
 
-		if (input) {
-			validate && input.addEventListener('keyup', handleKeyUp);
+		// Если длина массива больше 1, то несколько input имеют одинаковые name
+		if (inputs.length > 1) {
+			const forms = document.querySelectorAll('form');
+
+			forms.forEach((form) => {
+				currentInput = form.querySelector(`input[name=${name}]`);
+
+				if (validate && currentInput) {
+					currentInput.addEventListener('keyup', handleKeyUp);
+				}
+			});
+		}
+
+		// Если длина массива равна 1, то input имеет уникальный name
+		if (inputs.length === 1) {
+			inputs.forEach((input) => {
+				if (validate) {
+					currentInput = input.addEventListener('keyup', handleKeyUp);
+				}
+			});
 		} else {
 			throw new Error(`Input c name=${name} не был найден`);
 		}
 
 		return () => {
-			if (input) {
-				validate && input.removeEventListener('keyup', handleKeyUp);
+			if (validate && currentInput) {
+				currentInput.removeEventListener('keyup', handleKeyUp);
 			}
 		};
 	}, [validate]);
