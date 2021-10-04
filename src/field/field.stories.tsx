@@ -19,10 +19,10 @@ const validate = (_value: unknown): string | undefined => {
 
 const Input: React.FC<InputProps> = ({name, meta}) => {
 	return (
-		<div>
+		<>
 			<input name={name} />
 			<p>Error: {meta.error}</p>
-		</div>
+		</>
 	);
 };
 
@@ -34,12 +34,12 @@ SimplestField.args = {
 export const FieldWithComponent = Template.bind({});
 FieldWithComponent.args = {
 	component: Input,
-	name: 'test2',
+	name: 'test1',
 };
 
 export const FieldWithValidation = Template.bind({});
 FieldWithValidation.args = {
 	component: Input,
-	name: 'test3',
+	name: 'test1',
 	validate,
 };

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import _debounce from 'lodash/debounce';
 
@@ -32,11 +32,14 @@ export const Field = <
 		valid: true,
 	});
 
-	const handleDebounceFn = (e: Event) => {
+	const element = useRef<HTMLInputElement | null>(null);
+
+	const handleDebounceFn = useCallback((e: Event) => {
 		e.preventDefault();
 
 		if (e.target) {
 			const {value} = e.target as never;
+
 			const validationError =
 				typeof validate === 'function' ? validate(value) : undefined;
 
@@ -45,11 +48,11 @@ export const Field = <
 				valid: validationError === undefined,
 			});
 		}
-	};
+	}, []);
 
-	const debounceHandle = _debounce(handleDebounceFn, 1500);
+	const debounceHandle = useCallback(_debounce(handleDebounceFn, 200), []);
 
-	const handleKeyUp = useCallback(
+	const handleBlur = useCallback(
 		(e: Event) => {
 			debounceHandle(e);
 		},
@@ -57,48 +60,34 @@ export const Field = <
 	);
 
 	useEffect(() => {
-		const inputs = document.querySelectorAll(`input[name=${name}]`);
-		let currentInput: any = {};
+		const input = element.current.querySelector(`input[name=${name}]`);
 
-		// Если длина массива больше 1, то несколько input имеют одинаковые name
-		if (inputs.length > 1) {
-			const forms = document.querySelectorAll('form');
-
-			forms.forEach((form) => {
-				currentInput = form.querySelector(`input[name=${name}]`);
-
-				if (validate && currentInput) {
-					currentInput.addEventListener('keyup', handleKeyUp);
-				}
-			});
-		}
-
-		// Если длина массива равна 1, то input имеет уникальный name
-		if (inputs.length === 1) {
-			inputs.forEach((input) => {
-				if (validate) {
-					currentInput = input.addEventListener('keyup', handleKeyUp);
-				}
-			});
+		if (input) {
+			if (validate) {
+				input.addEventListener('blur', handleBlur);
+			}
 		} else {
 			throw new Error(`Input c name=${name} не был найден`);
 		}
 
 		return () => {
-			if (validate && currentInput) {
-				currentInput.removeEventListener('keyup', handleKeyUp);
+			if (input) {
+				if (validate) {
+					input.removeEventListener('blur', handleBlur);
+				}
 			}
 		};
 	}, [validate]);
 
 	const Input: any = component;
+
 	return (
-		<>
+		<span ref={element}>
 			{Input ? (
 				<Input name={name} meta={meta} {...props} />
 			) : (
 				<input name={name} />
 			)}
-		</>
+		</span>
 	);
 };
