@@ -38,6 +38,13 @@
 		"email": "razvanlomov@gmail.com",
 		"url": "https://github.com/Razzwan"
 	},
+	"contributors": [
+		{
+			"name": "Alexander Chernykh",
+			"email": "dev@whitered932.ru",
+			"url": "https://github.com/whitered932"
+		}
+	],
 	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/altiore/form/issues"
