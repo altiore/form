@@ -12,7 +12,7 @@ export interface InputProps {
 	meta: FieldMeta;
 }
 
-export type FieldProps<
+export type FieldComponentProps<
 	T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
 	name: string;
@@ -27,7 +27,7 @@ export const Field = <
 	component,
 	validate,
 	...props
-}: FieldProps<T>): JSX.Element => {
+}: FieldComponentProps<T>): JSX.Element => {
 	const [meta, setMeta] = useState<FieldMeta>({
 		valid: true,
 	});
