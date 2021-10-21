@@ -9,6 +9,7 @@
 	],
 	"scripts": {
 		"start": "npm run storybook",
+		"test:jest": "jest",
 		"build": "rm -rf dist && tsc",
 		"npm:patch": "npm version patch && npm publish --access=public && git push && git push --tags",
 		"npm:minor": "npm version minor && npm publish --access=public && git push && git push --tags",
@@ -38,6 +39,13 @@
 		"email": "razvanlomov@gmail.com",
 		"url": "https://github.com/Razzwan"
 	},
+	"contributors": [
+		{
+			"name": "Alexander Chernykh",
+			"email": "dev@whitered932.ru",
+			"url": "https://github.com/whitered932"
+		}
+	],
 	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/altiore/form/issues"
@@ -54,6 +62,7 @@
 		"@storybook/addon-links": "6.3.8",
 		"@storybook/react": "6.3.8",
 		"@storybook/storybook-deployer": "^2.8.10",
+		"@types/jest": "^27.0.2",
 		"@types/lodash": "^4.14.173",
 		"@types/node": "16.4.9",
 		"@typescript-eslint/eslint-plugin": "4.28.5",
@@ -64,11 +73,30 @@
 		"eslint-plugin-ordered-imports": "0.5.0",
 		"eslint-plugin-prettier": "^3.4.0",
 		"husky": "^7.0.1",
+		"jest": "^27.3.1",
 		"lint-staged": "^11.1.1",
 		"prettier": "2.3.2",
 		"react": "^16.14.0",
 		"react-dom": "^16.14.0",
+		"ts-jest": "^27.0.7",
 		"typescript": "4.4.3"
+	},
+	"jest": {
+		"moduleFileExtensions": [
+			"js",
+			"ts",
+			"json"
+		],
+		"rootDir": "./",
+		"moduleNameMapper": {
+			"@root-dir/(.*)": "<rootDir>/$1",
+			"~/(.*)": "<rootDir>/src/$1"
+		},
+		"testRegex": ".*\\.spec\\.ts$",
+		"transform": {
+			"^.+\\.(t|j)s$": "ts-jest"
+		},
+		"testEnvironment": "node"
 	},
 	"peerDependencies": {
 		"react": "^16.14.0 || ^17.0.0",
