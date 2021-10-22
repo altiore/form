@@ -6,31 +6,37 @@ import {ComponentMeta, ComponentStory} from '@storybook/react';
 import {createField} from './field.input';
 import Field from './index';
 
+import { maxLength } from '../validators/max-length/max-length';
+import { minLength } from '../validators/min-length/min-length';
+
 export default {
 	component: Field.Input,
 	title: '@altiore/filed.input',
 } as ComponentMeta<typeof Field.Input>;
 
-const MyFiled = createField(({error, name}) => {
+const Component = ({errors, name}) => {
 	return (
-		<div>
-			<span>{name}</span>
+		<>
 			<input name={name} />
-			<span>{error}</span>
-		</div>
+			{errors.map((item) => (
+				<p key={item}>{item}</p>
+			))}
+		</>
 	);
-});
+}
+
+const MyFiled = createField(Component);
 
 const Template: ComponentStory<typeof Field.Input> = () => (
 	<form>
-		<Field.Boolean name="boolean" />
+		{/* <Field.Boolean name="boolean" />
 		<Field.Checkbox name="checkbox" />
 		<Field.Input name="input" />
 		<Field.Number name="number" />
 		<Field.Password name="password" />
 		<Field.Phone name="phone" />
-		<Field.String name="string" />
-		<MyFiled name="my-field" />
+		<Field.String name="string" /> */}
+		<MyFiled name="my-field" validators={[minLength(5), maxLength(2)]} />
 	</form>
 );
 
