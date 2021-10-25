@@ -30,4 +30,4 @@ const Template: ComponentStory<typeof Field> = () => (
 	</form>
 );
 
-export const SimplestForm = Template.bind({});
+export const SimplestField = Template.bind({});
