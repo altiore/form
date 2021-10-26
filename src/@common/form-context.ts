@@ -1,6 +1,5 @@
 import React from 'react';
 
-export const FormContext = React.createContext<{
-	defaultValues: Record<string, any>;
-	errors: Record<string, string[]>;
-}>(undefined);
+import {FormContextState} from '~/@common/types';
+
+export const FormContext = React.createContext<FormContextState>(undefined);

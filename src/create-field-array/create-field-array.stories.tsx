@@ -11,12 +11,12 @@ interface IField extends FieldProps {
 	label: string;
 }
 
-const Field = createField<IField>(({errors, label, name}) => {
+const Field = createField<IField>(({inputRef, errors, label, name}) => {
 	return (
 		<div>
 			<span>{label}</span>
 			<span>{name}</span>
-			<input name={name} />
+			<input ref={inputRef} name={name} />
 			<span>{errors[0]}</span>
 		</div>
 	);
