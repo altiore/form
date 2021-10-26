@@ -1,27 +1,37 @@
 import React from 'react';
 
+import {FormContext} from '~/@common/form-context';
+
 import {List} from './list';
 
-export type FieldArrayProps<T> = {
+export type FieldArrayProps = {
 	name: string;
-	items: T[];
 };
 
 
-type ListProps = {
+type InternalFieldArrayProps = {
 	errors: string[];
 	list: List;
+	defaultValue: any[];
 };
 
 export const createFieldArray = function <T>(
-	component: React.FC<T & ListProps>,
-): ((props: FieldArrayProps<T>) => JSX.Element) {
-	return (props) => {
-		const errors = ['Error 1'];
-		return React.createElement(component, {
-			errors,
-			list: {} as any,
-			...props,
-		});
+	component: React.FC<T & InternalFieldArrayProps>,
+): ((props: FieldArrayProps) => JSX.Element) {
+	return ({name, ...props}) => {
+		return (
+			<FormContext.Consumer>
+				{(value) => {
+					const list = new List(value.defaultValues?.[name], name);
+					return React.createElement(component, {
+						defaultValue: value.defaultValues?.[name],
+						errors: value.errors?.[name] ?? [],
+						list,
+						name,
+						...props as T,
+					});
+				}}
+			</FormContext.Consumer>
+		);
 	};
 };

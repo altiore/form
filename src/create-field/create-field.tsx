@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 
 import _debounce from 'lodash/debounce';
+
 import {FormContext} from '~/@common/form-context';
 
 export type FieldProps = {
@@ -78,8 +79,8 @@ export const createField = <T extends FieldProps>(
 						errors: value.errors?.[name] ?? [],
 						inputRef: element,
 						name,
-						...props,
-					} as any);
+						...props as T,
+					});
 				}}
 			</FormContext.Consumer>
 		);

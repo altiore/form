@@ -38,6 +38,8 @@ module.exports = {
 				'group-ordering': [
 					{match: '^react', name: 'react', order: 10},
 					{match: '^@storybook', name: '@storybook', order: 20},
+					{match: '^lodash', name: 'external libraries', order: 30},
+					{match: '^~', name: 'current package', order: 40},
 					{match: '^\\./', name: 'current directory', order: 80},
 					{match: '.*', name: 'new unknown', order: 90},
 				],

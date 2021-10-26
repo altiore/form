@@ -5,6 +5,7 @@ import {ComponentMeta, ComponentStory} from '@storybook/react';
 import {FieldArrayProps, createFieldArray} from './create-field-array';
 
 import {FieldProps, createField} from '../create-field';
+import {Form} from '../form';
 
 interface IField extends FieldProps {
 	label: string;
@@ -46,10 +47,10 @@ export default {
 	title: '@altiore/create-field-array',
 } as ComponentMeta<typeof IngredientsArray>;
 
-const Template: ComponentStory<typeof IngredientsArray> = () => (
-	<form>
+const Template: ComponentStory<typeof IngredientsArray> = (_args) => (
+	<Form onSubmit={console.log}>
 		<IngredientsArray name="ingredients" />
-	</form>
+	</Form>
 );
 
 export const SimplestFieldArray = Template.bind({});

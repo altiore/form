@@ -1,6 +1,6 @@
 export interface ListInterface {
-	map: <T>(
-		arg: (el: ListItem, index: number) => any,
+	map: <T = JSX.Element>(
+		arg: (el: ListItem, index: number) => T,
 	) => T[];
 	add: (index?: number) => void;
 	remove: (index: number) => void;
@@ -8,9 +8,9 @@ export interface ListInterface {
 
 interface ListItem {
 	name: string;
-	append?: () => void;
-	prepend?: () => void;
-	remove?: () => void;
+	append: () => void;
+	prepend: () => void;
+	remove: () => void;
 }
 
 export class List implements ListInterface {
@@ -22,12 +22,17 @@ export class List implements ListInterface {
 		this.prefix = prefix;
 	}
 
-	add(): void {
+	add(index?: any): void {
 		this.list.push(this.list.length)
 	}
 
-	map<T>(arg: (el: ListItem, index: number) => any): T[] {
-		return this.list.map((_,index) => arg()));
+	map<T = JSX.Element>(callback: ((el: ListItem, index: number) => T)): T[] {
+		return this.list.map((index) => callback({
+			name: `${this.prefix}.${index}`,
+			append: () => this.add(index),
+			prepend: () => this.add(index - 1),
+			remove: () => this.remove(index),
+		}, index));
 	}
 
 	remove(index: number): void {
