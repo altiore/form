@@ -1,31 +1,22 @@
 import React from 'react';
 
-export type FieldArrayProps = {
+import {List} from './list';
+
+export type FieldArrayProps<T> = {
 	name: string;
+	items: T[];
 };
+
 
 type ListProps = {
 	errors: string[];
-	list: {
-		map: (
-			arg: (
-				el: {append: any; prepend: any; remove: any; name: string},
-				index: number,
-			) => any,
-		) => string[];
-		add: (
-			obj?: Record<string, any>,
-			position?: number | 'before' | 'after',
-		) => void;
-		remove: (index: number) => void;
-	};
+	list: List;
 };
 
-export const createFieldArray = <T extends FieldArrayProps>(
+export const createFieldArray = function <T>(
 	component: React.FC<T & ListProps>,
-): ((props: T) => JSX.Element) => {
+): ((props: FieldArrayProps<T>) => JSX.Element) {
 	return (props) => {
-		// TODO: сделать валидацию значения текущего инпута
 		const errors = ['Error 1'];
 		return React.createElement(component, {
 			errors,
