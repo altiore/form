@@ -11,12 +11,25 @@ export default {
 } as ComponentMeta<typeof Field>;
 
 const Template: ComponentStory<typeof Field> = (args) => <Field {...args} />;
-
+/**
+ * @constant
+ * @param _value
+ * @type {string | undefined}
+ */
 const validate = (_value: unknown): string | undefined => {
 	console.log('validation value is', _value);
 	return undefined;
 };
-
+/**
+ * @author Pavel Bielik <razvanlomov@gmail.com>
+ * @author Alexander Chernykh <dev@whitered932.ru>
+ * @param {string} input - field for a data
+ * @param {FieldMeta} meta - description of the field information
+ * @class  input
+ * @returns {string | undefined} input value
+ *
+ * @example <input>
+ */
 const Input: React.FC<InputProps> = ({name, meta}) => {
 	return (
 		<>

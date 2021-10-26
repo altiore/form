@@ -8,6 +8,7 @@
 		"dist"
 	],
 	"scripts": {
+		"jsdoc": "jsdoc -c jsdoc.json",
 		"start": "npm run storybook",
 		"build": "rm -rf dist && tsc",
 		"npm:patch": "npm version patch && npm publish --access=public && git push && git push --tags",
@@ -59,6 +60,7 @@
 		"@typescript-eslint/eslint-plugin": "4.28.5",
 		"@typescript-eslint/parser": "4.28.5",
 		"babel-loader": "^8.2.2",
+		"better-docs": "^2.3.2",
 		"eslint": "7.32.0",
 		"eslint-config-prettier": "8.3.0",
 		"eslint-plugin-ordered-imports": "0.5.0",

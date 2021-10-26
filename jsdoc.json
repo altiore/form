@@ -1,0 +1,25 @@
+{
+	"source": {
+		"include": ["src"],
+		"exclude": [],
+		"includePattern": "\\.(jsx|js|ts|tsx)$",
+		"excludePattern": "(node_modules/|jsdoc)"
+	},
+	"plugins": [
+		"node_modules/better-docs/typescript",
+		"node_modules/better-docs/category",
+		"plugins/markdown"
+	],
+	"templates": {
+		"cleverLinks": true,
+		"monospaceLinks": true
+	},
+	"opts": {
+		"recurse": true,
+		"destination": "./jsdoc",
+		"template": "node_modules/better-docs/"
+	},
+	"tags": {
+		"allowUnknownTags": ["optional"]
+	}
+}
