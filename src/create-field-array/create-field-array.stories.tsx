@@ -11,10 +11,9 @@ interface IField extends FieldProps {
 	label: string;
 }
 
-const Field = createField<IField>(({inputRef, errors, label, name}) => {
+const Field = createField<IField>(({inputRef, errors, name}) => {
 	return (
 		<div>
-			<span>{label}</span>
 			<span>{name}</span>
 			<input ref={inputRef} name={name} />
 			<span>{errors[0]}</span>
@@ -29,14 +28,19 @@ interface IFieldArray extends FieldArrayProps {
 const IngredientsArray = createFieldArray<IFieldArray>(({list}) => {
 	return (
 		<div>
-			{list.map(({name, remove}) => (
-				<div key={name}>
-					<Field label="Ingredient" name="ingredient" />
-					<Field label="Amount" name="amount" />
-					<Field label="Unit" name="unit" />
-					<button onClick={remove}>Удалить ингредиент</button>
-				</div>
-			))}
+			{list.map(({name, remove, append, prepend, index}) => {
+				return (
+					<div key={name}>
+						<div style={{display: 'flex'}}>
+							<span>{index}</span>
+							<Field label={''} name={name} />
+							<button onClick={remove}>-</button>
+							<button onClick={append}>after</button>
+							<button onClick={prepend}>before</button>
+						</div>
+					</div>
+				);
+			})}
 			<button onClick={list.add}>Добавить ингредиент</button>
 		</div>
 	);
@@ -47,8 +51,8 @@ export default {
 	title: '@altiore/create-field-array',
 } as ComponentMeta<typeof IngredientsArray>;
 
-const Template: ComponentStory<typeof IngredientsArray> = (_args) => (
-	<Form onSubmit={console.log}>
+const Template: ComponentStory<typeof IngredientsArray> = () => (
+	<Form onSubmit={() => 1}>
 		<IngredientsArray name="ingredients" />
 	</Form>
 );
