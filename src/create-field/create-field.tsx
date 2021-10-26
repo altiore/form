@@ -15,6 +15,17 @@ type InternalFieldProps = {
 	inputRef: any;
 };
 
+const FieldComponent: React.FC<any> = ({name, component, registerField, ...props}) => {
+	useEffect(() => {
+		registerField(name);
+	}, [name, registerField]);
+
+	return React.createElement(component, {
+		...props,
+		name,
+	})
+}
+
 export const createField = <T extends FieldProps>(
 	component: React.FC<T & InternalFieldProps>,
 ): ((props: T) => JSX.Element) => {
@@ -54,7 +65,7 @@ export const createField = <T extends FieldProps>(
 			const input = element.current;
 
 			if (!input) {
-				throw new Error(`Input c name=${name} не был найден`);
+				return () => {};
 			}
 
 			const hasEventHandler = Boolean(validators?.length && input);
@@ -65,22 +76,23 @@ export const createField = <T extends FieldProps>(
 			return () => {
 				if (hasEventHandler) {
 					input.removeEventListener('blur', handleBlur);
-				} else {
-					throw new Error(`Input c name=${name} не был найден`);
 				}
 			};
 		}, [element, name, validators]);
 
 		return (
 			<FormContext.Consumer>
-				{(value) => {
-					return React.createElement(component, {
-						defaultValue: value.defaultValues?.[name],
-						errors: value.errors?.[name] ?? [],
+				{({defaultValues, errors, registerField}) => {
+					// registerField(name);
+					return <FieldComponent {...{
+						component,
+						defaultValue: defaultValues?.[name],
+						errors: errors?.[name] ?? [],
 						inputRef: element,
 						name,
+						registerField,
 						...props as T,
-					});
+					}} /> as any;
 				}}
 			</FormContext.Consumer>
 		);

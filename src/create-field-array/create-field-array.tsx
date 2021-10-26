@@ -1,8 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {FormContext} from '~/@common/form-context';
-
-import {List} from './list';
+import {ListInterface} from '~/@common/types';
 
 export type FieldArrayProps = {
 	name: string;
@@ -11,9 +10,24 @@ export type FieldArrayProps = {
 
 type InternalFieldArrayProps = {
 	errors: string[];
-	list: List;
+	list: ListInterface;
 	defaultValue: any[];
 };
+
+const FieldComponent: React.FC<any> = ({name, component, fields, registerField, ...props}) => {
+	useEffect(() => {
+		registerField(name, true);
+	}, [name, registerField]);
+
+	if (!fields?.[name]?.list) {
+		return null;
+	}
+
+	return React.createElement(component, {
+		...props,
+		name,
+	})
+}
 
 export const createFieldArray = function <T>(
 	component: React.FC<T & InternalFieldArrayProps>,
@@ -21,15 +35,17 @@ export const createFieldArray = function <T>(
 	return ({name, ...props}) => {
 		return (
 			<FormContext.Consumer>
-				{(value) => {
-					const list = new List(value.defaultValues?.[name], name);
-					return React.createElement(component, {
-						defaultValue: value.defaultValues?.[name],
-						errors: value.errors?.[name] ?? [],
-						list,
+				{({defaultValues, errors, registerField, fields}) => {
+					return <FieldComponent {...{
+						fields,
+						component,
+						defaultValue: defaultValues?.[name],
+						errors: errors?.[name] ?? [],
+						list: fields?.[name]?.list ?? [],
 						name,
+						registerField,
 						...props as T,
-					});
+					}} />;
 				}}
 			</FormContext.Consumer>
 		);
