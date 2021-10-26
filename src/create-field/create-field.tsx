@@ -15,7 +15,12 @@ type InternalFieldProps = {
 	inputRef: any;
 };
 
-const FieldComponent: React.FC<any> = ({name, component, registerField, ...props}) => {
+const FieldComponent: React.FC<any> = ({
+	name,
+	component,
+	registerField,
+	...props
+}) => {
 	useEffect(() => {
 		registerField(name);
 	}, [name, registerField]);
@@ -23,8 +28,8 @@ const FieldComponent: React.FC<any> = ({name, component, registerField, ...props
 	return React.createElement(component, {
 		...props,
 		name,
-	})
-}
+	});
+};
 
 export const createField = <T extends FieldProps>(
 	component: React.FC<T & InternalFieldProps>,
@@ -65,6 +70,7 @@ export const createField = <T extends FieldProps>(
 			const input = element.current;
 
 			if (!input) {
+				// eslint-disable-next-line @typescript-eslint/no-empty-function
 				return () => {};
 			}
 
@@ -84,15 +90,19 @@ export const createField = <T extends FieldProps>(
 			<FormContext.Consumer>
 				{({defaultValues, errors, registerField}) => {
 					// registerField(name);
-					return <FieldComponent {...{
-						component,
-						defaultValue: defaultValues?.[name],
-						errors: errors?.[name] ?? [],
-						inputRef: element,
-						name,
-						registerField,
-						...props as T,
-					}} /> as any;
+					return (
+						<FieldComponent
+							{...{
+								component,
+								defaultValue: defaultValues?.[name],
+								errors: errors?.[name] ?? [],
+								inputRef: element,
+								name,
+								registerField,
+								...(props as T),
+							}}
+						/>
+					) as any;
 				}}
 			</FormContext.Consumer>
 		);

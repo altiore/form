@@ -7,14 +7,19 @@ export type FieldArrayProps = {
 	name: string;
 };
 
-
 type InternalFieldArrayProps = {
 	errors: string[];
 	list: ListInterface;
 	defaultValue: any[];
 };
 
-const FieldComponent: React.FC<any> = ({name, component, fields, registerField, ...props}) => {
+const FieldComponent: React.FC<any> = ({
+	name,
+	component,
+	fields,
+	registerField,
+	...props
+}) => {
 	useEffect(() => {
 		registerField(name, true);
 	}, [name, registerField]);
@@ -26,26 +31,30 @@ const FieldComponent: React.FC<any> = ({name, component, fields, registerField, 
 	return React.createElement(component, {
 		...props,
 		name,
-	})
-}
+	});
+};
 
 export const createFieldArray = function <T>(
 	component: React.FC<T & InternalFieldArrayProps>,
-): ((props: FieldArrayProps) => JSX.Element) {
+): (props: FieldArrayProps) => JSX.Element {
 	return ({name, ...props}) => {
 		return (
 			<FormContext.Consumer>
 				{({defaultValues, errors, registerField, fields}) => {
-					return <FieldComponent {...{
-						fields,
-						component,
-						defaultValue: defaultValues?.[name],
-						errors: errors?.[name] ?? [],
-						list: fields?.[name]?.list ?? [],
-						name,
-						registerField,
-						...props as T,
-					}} />;
+					return (
+						<FieldComponent
+							{...{
+								component,
+								defaultValue: defaultValues?.[name],
+								errors: errors?.[name] ?? [],
+								fields,
+								list: fields?.[name]?.list ?? [],
+								name,
+								registerField,
+								...(props as T),
+							}}
+						/>
+					);
 				}}
 			</FormContext.Consumer>
 		);

@@ -1,4 +1,10 @@
-import React, {FormEvent, ReactNode, useCallback, useRef, useState} from 'react';
+import React, {
+	FormEvent,
+	ReactNode,
+	useCallback,
+	useRef,
+	useState,
+} from 'react';
 
 import {FormContext} from '~/@common/form-context';
 import {FormContextState} from '~/@common/types';
@@ -16,25 +22,36 @@ export const Form = ({
 	onSubmit,
 }: FormProps): JSX.Element => {
 	const formRef = useRef<HTMLFormElement>(null);
-
-	const [formState, setFormState] = useState<Omit<FormContextState, 'registerField'>>({
+	const [formState, setFormState] = useState<
+		Omit<FormContextState, 'registerField'>
+	>({
 		defaultValues,
 		errors: {},
 		fields: {},
 	});
 
-	const registerField = useCallback((fieldName: string, isArray?: boolean, prevList?: any) => {
-		setFormState(s => ({
-			...s,
-			fields: {
-				...s.fields,
-				[fieldName]: {
-					list: isArray ? new List(registerField, s.defaultValues?.[fieldName], fieldName, prevList) : undefined,
-					registered: true,
+	const registerField = useCallback(
+		(fieldName: string, isArray?: boolean, prevList?: any) => {
+			setFormState((s) => ({
+				...s,
+				fields: {
+					...s.fields,
+					[fieldName]: {
+						list: isArray
+							? new List(
+									registerField,
+									s.defaultValues?.[fieldName],
+									fieldName,
+									prevList,
+							  )
+							: undefined,
+						registered: true,
+					},
 				},
-			}
-		}));
-	}, [setFormState]);
+			}));
+		},
+		[setFormState],
+	);
 
 	const handleSubmit = useCallback(
 		(evt: FormEvent) => {
@@ -49,10 +66,13 @@ export const Form = ({
 
 	return (
 		<form onSubmit={handleSubmit} ref={formRef}>
-			<FormContext.Provider value={{
-				...formState,
-				registerField,
-			}}>{children}</FormContext.Provider>
+			<FormContext.Provider
+				value={{
+					...formState,
+					registerField,
+				}}>
+				{children}
+			</FormContext.Provider>
 		</form>
 	);
 };
