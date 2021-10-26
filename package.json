@@ -10,7 +10,7 @@
 	"scripts": {
 		"start": "npm run storybook",
 		"test:jest": "jest",
-		"build": "rm -rf dist && tsc",
+		"build": "rm -rf dist && tsc && tscpaths -p tsconfig.json -s ./src -o ./dist",
 		"npm:patch": "npm version patch && npm publish --access=public && git push && git push --tags",
 		"npm:minor": "npm version minor && npm publish --access=public && git push && git push --tags",
 		"npm:major": "npm version major && npm publish --access=public && git push && git push --tags",
@@ -81,6 +81,7 @@
 		"react": "^16.14.0",
 		"react-dom": "^16.14.0",
 		"ts-jest": "^27.0.7",
+		"tscpaths": "0.0.9",
 		"typescript": "4.4.3"
 	},
 	"jest": {
