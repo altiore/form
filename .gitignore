@@ -3,6 +3,9 @@
 # dependencies
 /node_modules
 
+# jsdocs
+/docs
+
 # testing
 /coverage
 
