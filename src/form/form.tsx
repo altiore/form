@@ -18,6 +18,20 @@ export interface FormProps {
 	onSubmit: (values: unknown) => void;
 }
 
+/**
+ * Компонент Form принимает children, defaultValues, onSubmit
+ *
+ * @component
+ *
+ * @typedef Form
+ * @prop {React.ReactNode} [children] Childrens формы
+ * @prop {React.ReactNode} [defaultValues] Дефолтные значения
+ * @prop {func} [onSubmit] ...
+ *
+ * @example
+ * return (any)
+ */
+
 export const Form = ({
 	children,
 	defaultValues,
