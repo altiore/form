@@ -28,31 +28,42 @@ interface IFieldArray extends FieldArrayProps {
 const IngredientsArray = createFieldArray<IFieldArray>(({list}) => {
 	return (
 		<div>
+			<Field label="Title" name="title" />
 			{list.map(({name, remove, append, prepend, index}) => {
 				return (
 					<div key={name}>
 						<div style={{display: 'flex'}}>
 							<span>{index}</span>
 							<Field label={''} name="ingredient" />
-							<button onClick={remove}>-</button>
-							<button onClick={append}>after</button>
-							<button onClick={prepend}>before</button>
+							<button onClick={remove} type="button">
+								-
+							</button>
+							<button onClick={append} type="button">
+								after
+							</button>
+							<button onClick={prepend} type="button">
+								before
+							</button>
 						</div>
 					</div>
 				);
 			})}
-			<button onClick={list.add}>Добавить ингредиент</button>
+			<button onClick={list.add} type="button">
+				Добавить ингредиент
+			</button>
+			<button type="submit">Submit</button>
 		</div>
 	);
 });
 
 export default {
+	argTypes: {onSubmit: {action: 'submit'}},
 	component: IngredientsArray,
 	title: '@altiore/create-field-array',
 } as ComponentMeta<typeof IngredientsArray>;
 
-const Template: ComponentStory<typeof IngredientsArray> = () => (
-	<Form onSubmit={() => 1}>
+const Template: ComponentStory<typeof IngredientsArray> = ({onSubmit}: any) => (
+	<Form onSubmit={onSubmit}>
 		<IngredientsArray name="ingredients" />
 	</Form>
 );
