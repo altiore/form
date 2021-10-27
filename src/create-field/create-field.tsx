@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useRef} from 'react';
 
 import _debounce from 'lodash/debounce';
 
+import {ArrayFieldContext} from '~/@common/array-field-context';
 import {FormContext} from '~/@common/form-context';
 
 export type FieldProps = {
@@ -22,13 +23,29 @@ const FieldComponent: React.FC<any> = ({
 	...props
 }) => {
 	useEffect(() => {
-		registerField(name);
+		if (registerField) {
+			registerField(name);
+		} else {
+			console.warn(
+				'Вы используете createField вне формы. Оберните ваш инпут в компонент' +
+					' `import {Form} from "@altiore/form";`',
+			);
+		}
 	}, [name, registerField]);
 
-	return React.createElement(component, {
-		...props,
-		name,
-	});
+	return (
+		<ArrayFieldContext.Consumer>
+			{(value) => {
+				return React.createElement(component, {
+					...props,
+					name:
+						value?.name && !name.match(new RegExp('^' + String(value?.name)))
+							? `${value?.name}.${name}`
+							: name,
+				});
+			}}
+		</ArrayFieldContext.Consumer>
+	);
 };
 
 export const createField = <T extends FieldProps>(
@@ -70,6 +87,10 @@ export const createField = <T extends FieldProps>(
 			const input = element.current;
 
 			if (!input) {
+				console.warn(
+					'Похоже, вы забыли добавить использование inputRef внутри createField' +
+						' декоратора',
+				);
 				// eslint-disable-next-line @typescript-eslint/no-empty-function
 				return () => {};
 			}
@@ -88,8 +109,24 @@ export const createField = <T extends FieldProps>(
 
 		return (
 			<FormContext.Consumer>
-				{({defaultValues, errors, registerField}) => {
-					// registerField(name);
+				{(value) => {
+					if (!value) {
+						return (
+							<FieldComponent
+								{...{
+									component,
+									// TODO: ошибки должны попадать в инпут даже вне контекста???
+									errors: [],
+									inputRef: element,
+									name,
+									...(props as T),
+								}}
+							/>
+						);
+					}
+
+					const {defaultValues, errors, registerField} = value;
+
 					return (
 						<FieldComponent
 							{...{
@@ -102,7 +139,7 @@ export const createField = <T extends FieldProps>(
 								...(props as T),
 							}}
 						/>
-					) as any;
+					);
 				}}
 			</FormContext.Consumer>
 		);
