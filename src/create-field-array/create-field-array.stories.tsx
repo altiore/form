@@ -29,11 +29,10 @@ const IngredientsArray = createFieldArray<IFieldArray>(({list}) => {
 	return (
 		<div>
 			<Field label="Title" name="title" />
-			{list.map(({name, remove, append, prepend, index}) => {
+			{list.map(({key, remove, append, prepend}) => {
 				return (
-					<div key={name}>
+					<div key={key}>
 						<div style={{display: 'flex'}}>
-							<span>{index}</span>
 							<Field label={''} name="ingredient" />
 							<button onClick={remove} type="button">
 								-
@@ -62,10 +61,12 @@ export default {
 	title: '@altiore/create-field-array',
 } as ComponentMeta<typeof IngredientsArray>;
 
-const Template: ComponentStory<typeof IngredientsArray> = ({onSubmit}: any) => (
-	<Form onSubmit={onSubmit}>
-		<IngredientsArray name="ingredients" />
-	</Form>
-);
+const Template: ComponentStory<typeof IngredientsArray> = ({onSubmit}: any) => {
+	return (
+		<Form onSubmit={onSubmit}>
+			<IngredientsArray name="ingredients" />
+		</Form>
+	);
+};
 
 export const SimplestFieldArray = Template.bind({});

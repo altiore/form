@@ -46,8 +46,7 @@ export class List implements ListInterface {
 					{callback(
 						{
 							append: () => this.add(index, 1),
-							index: index,
-							name,
+							key: name,
 							prepend: () => this.add(index, 0),
 							remove: () => this.remove(index),
 						},

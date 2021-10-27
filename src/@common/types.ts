@@ -1,6 +1,5 @@
 export interface ListItem {
-	name: string;
-	index: number;
+	key: string;
 	append: () => void;
 	prepend: () => void;
 	remove: () => void;
