@@ -6,6 +6,8 @@ import React, {
 	useState,
 } from 'react';
 
+import set from 'lodash/set';
+
 import {FormContext} from '~/@common/form-context';
 import {FormContextState} from '~/@common/types';
 import {List} from '~/create-field-array/list';
@@ -58,7 +60,10 @@ export const Form = ({
 			evt.preventDefault();
 			const formData = new FormData(formRef.current ?? undefined);
 			const values: Record<string, unknown> = {};
-			formData.forEach((value: unknown, key: string) => (values[key] = value));
+			formData.forEach((value: unknown, key: string) => {
+				const keyArr = key.split('.');
+				set(values, keyArr, value);
+			});
 			onSubmit(values);
 		},
 		[onSubmit],
