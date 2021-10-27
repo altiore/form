@@ -16,6 +16,18 @@ type InternalFieldProps = {
 	inputRef: any;
 };
 
+/**
+ * Компонент принимает пользовательский компонент и возвращает {name, validators, ...props}
+ *
+ * @component
+ *
+ * @typedef CreateField
+ * @prop {React.ReactNode} [component] Пользовательский компонент
+ *
+ * @example
+ * return (any)
+ */
+
 const FieldComponent: React.FC<any> = ({
 	name,
 	component,
