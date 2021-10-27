@@ -1,3 +1,6 @@
+import React from 'react';
+
+import {ArrayFieldContext} from '~/@common/array-field-context';
 import {ListInterface, ListItem, RegisterField} from '~/@common/types';
 
 export class List implements ListInterface {
@@ -33,19 +36,24 @@ export class List implements ListInterface {
 		this.registerField(this.prefix, true, this.list);
 	};
 
-	map = <T = JSX.Element>(
-		callback: (el: ListItem, index: number) => T,
-	): T[] => {
+	map = (
+		callback: (el: ListItem, index: number) => JSX.Element,
+	): JSX.Element[] => {
 		return this.list.map((index) => {
-			return callback(
-				{
-					append: () => this.add(index, 1),
-					index: index,
-					name: `${this.prefix}.${index}`,
-					prepend: () => this.add(index, 0),
-					remove: () => this.remove(index),
-				},
-				index,
+			const name = `${this.prefix}.${index}`;
+			return (
+				<ArrayFieldContext.Provider key={index} value={{name}}>
+					{callback(
+						{
+							append: () => this.add(index, 1),
+							index: index,
+							name,
+							prepend: () => this.add(index, 0),
+							remove: () => this.remove(index),
+						},
+						index,
+					)}
+				</ArrayFieldContext.Provider>
 			);
 		});
 	};

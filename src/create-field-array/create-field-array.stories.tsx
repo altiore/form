@@ -33,7 +33,7 @@ const IngredientsArray = createFieldArray<IFieldArray>(({list}) => {
 					<div key={name}>
 						<div style={{display: 'flex'}}>
 							<span>{index}</span>
-							<Field label={''} name={name} />
+							<Field label={''} name="ingredient" />
 							<button onClick={remove}>-</button>
 							<button onClick={append}>after</button>
 							<button onClick={prepend}>before</button>

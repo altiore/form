@@ -7,7 +7,7 @@ export interface ListItem {
 }
 
 export interface ListInterface {
-	map: <T = JSX.Element>(arg: (el: ListItem, index: number) => T) => T[];
+	map: (arg: (el: ListItem, index: number) => JSX.Element) => JSX.Element[];
 	add: (index?: any) => void;
 	remove: (index: number) => void;
 }
@@ -29,4 +29,8 @@ export interface FormContextState {
 		}
 	>;
 	registerField: RegisterField;
+}
+
+export interface ArrayFieldState {
+	name: string;
 }
