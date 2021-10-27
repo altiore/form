@@ -89,7 +89,6 @@ export const createField = <T extends FieldProps>(
 		return (
 			<FormContext.Consumer>
 				{({defaultValues, errors, registerField}) => {
-					// registerField(name);
 					return (
 						<FieldComponent
 							{...{

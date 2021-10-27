@@ -40,6 +40,7 @@ export class List implements ListInterface {
 			return callback(
 				{
 					append: () => this.add(index, 1),
+					fieldName: (name) => `${this.prefix}.${index}.${name}`,
 					index: index,
 					name: `${this.prefix}.${index}`,
 					prepend: () => this.add(index, 0),

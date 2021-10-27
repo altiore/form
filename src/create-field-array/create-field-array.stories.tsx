@@ -28,12 +28,13 @@ interface IFieldArray extends FieldArrayProps {
 const IngredientsArray = createFieldArray<IFieldArray>(({list}) => {
 	return (
 		<div>
-			{list.map(({name, remove, append, prepend, index}) => {
+			{list.map(({name, remove, append, prepend, index, fieldName}) => {
 				return (
 					<div key={name}>
-						<div style={{display: 'flex'}}>
+						<div>
 							<span>{index}</span>
-							<Field label={''} name={name} />
+							<Field label={''} name={fieldName('unit')} />
+							<Field label={''} name={fieldName('ingredient')} />
 							<button onClick={remove}>-</button>
 							<button onClick={append}>after</button>
 							<button onClick={prepend}>before</button>

@@ -3,6 +3,7 @@ export interface ListItem {
 	index: number;
 	append: () => void;
 	prepend: () => void;
+	fieldName: (name: string) => string;
 	remove: () => void;
 }
 
