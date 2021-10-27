@@ -8,6 +8,7 @@ import {FormContext} from '~/@common/form-context';
 export type FieldProps = {
 	name: string;
 	validators?: Array<(v: any) => string | undefined>;
+	defaultValue?: string;
 };
 
 type InternalFieldProps = {
@@ -63,8 +64,8 @@ const FieldComponent: React.FC<any> = ({
 export const createField = <T extends FieldProps>(
 	component: React.FC<T & InternalFieldProps>,
 ): ((props: T) => JSX.Element) => {
-	return ({name, validators, ...props}) => {
-		const element = useRef<HTMLDivElement | null>(null);
+	return ({name, validators, defaultValue, ...props}) => {
+		const element = useRef<HTMLInputElement | null>(null);
 
 		const handleDebounceFn = useCallback(
 			(e: Event) => {
@@ -97,7 +98,7 @@ export const createField = <T extends FieldProps>(
 
 		useEffect(() => {
 			const input = element.current;
-
+			input.defaultValue = defaultValue || '';
 			if (!input) {
 				console.warn(
 					'Похоже, вы забыли добавить использование inputRef внутри createField' +
@@ -111,7 +112,6 @@ export const createField = <T extends FieldProps>(
 			if (hasEventHandler) {
 				input.addEventListener('blur', handleBlur);
 			}
-
 			return () => {
 				if (hasEventHandler) {
 					input.removeEventListener('blur', handleBlur);

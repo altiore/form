@@ -4,16 +4,18 @@ import {ComponentMeta, ComponentStory} from '@storybook/react';
 
 import {FieldProps, createField} from './create-field';
 
+import {minLength} from '../validators';
+
 interface IField extends FieldProps {
 	label: string;
 }
 
-const Field = createField<IField>(({errors, label, name}) => {
+const Field = createField<IField>(({inputRef, errors, label, name}) => {
 	return (
 		<div>
 			<span>{label}</span>
 			<span>{name}</span>
-			<input name={name} />
+			<input name={name} ref={inputRef} />
 			<span>{errors[0]}</span>
 		</div>
 	);
@@ -26,7 +28,12 @@ export default {
 
 const Template: ComponentStory<typeof Field> = () => (
 	<form>
-		<Field name="my-field" label="My Label" />
+		<Field
+			defaultValue={'321'}
+			validators={[minLength(3)]}
+			name="my-field"
+			label="My Label"
+		/>
 	</form>
 );
 

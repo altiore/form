@@ -28,13 +28,16 @@ interface IFieldArray extends FieldArrayProps {
 const IngredientsArray = createFieldArray<IFieldArray>(({list}) => {
 	return (
 		<div>
-			<Field label="Title" name="title" />
-			{list.map(({name, remove, append, prepend, index}) => {
+			<Field defaultValue={'Title'} label="Title" name="title" />
+			{list.map(({name, remove, append, prepend}) => {
 				return (
 					<div key={name}>
 						<div style={{display: 'flex'}}>
-							<span>{index}</span>
-							<Field label={''} name="ingredient" />
+							<Field
+								label={''}
+								name="ingredient"
+								defaultValue={'мой ингредиент'}
+							/>
 							<button onClick={remove} type="button">
 								-
 							</button>
