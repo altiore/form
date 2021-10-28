@@ -78,9 +78,24 @@ export const Form = ({
 			evt.preventDefault();
 			const formData = new FormData(formRef.current ?? undefined);
 			const values: Record<string, unknown> = {};
+			let index = -1;
 			formData.forEach((value: unknown, key: string) => {
 				const keyArr = key.split('.');
+				if (keyArr.length % 3 == 0) {
+					// Строки всегда формируются по такому правилу
+					// names.index.name
+					// index - то что нам нужно и он всегда второй с конца
+					// т.е если будет вложенность - recipes.2.recipe.ingredients.1.ingredient
+					// для доступа к форме ингредиентов нам нужен именно последний (1)
+					// ингредиент.
+					keyArr[keyArr.length - 2] = index.toString();
+					const el = formRef.current.querySelector(
+						`input[name=\"${key}\"]`,
+					) as any;
+					el.name = keyArr.join('.');
+				}
 				set(values, keyArr, value);
+				index++;
 			});
 			onSubmit(values);
 		},
