@@ -8,7 +8,7 @@
 		"dist"
 	],
 	"scripts": {
-		"start": "npm run storybook",
+		"start": "npm run story",
 		"test:jest": "jest",
 		"build": "rm -rf dist && tsc && tscpaths -p tsconfig.json -s ./src -o ./dist",
 		"npm:patch": "npm version patch && npm publish --access=public && git push && git push --tags",
@@ -20,20 +20,28 @@
 		"jsdoc": "jsdoc -c jsdoc.json",
 		"prepublish": "npm run build",
 		"prepare": "husky install",
-		"storybook": "start-storybook -p 8888",
-		"build-storybook": "build-storybook",
-		"deploy-storybook": "storybook-to-ghpages"
+		"story": "start-storybook -p 8888",
+		"story-build": "rm -rf ./storybook-static && build-storybook",
+		"story-deploy": "gh-pages -d storybook-static"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+ssh://git@github.com:altiore/form.git"
 	},
 	"keywords": [
-		"test",
-		"regex",
-		"within",
-		"probject",
-		"forbidden"
+		"form",
+		"forms",
+		"react",
+		"react-dom",
+		"altiore",
+		"validate",
+		"validation",
+		"form-decorator",
+		"form-hook",
+		"form-HOC",
+		"form-helper",
+		"form helper",
+		"validation helper"
 	],
 	"author": {
 		"name": "Pavlo Bielik",
@@ -74,6 +82,7 @@
 		"eslint-config-prettier": "8.3.0",
 		"eslint-plugin-ordered-imports": "0.5.0",
 		"eslint-plugin-prettier": "^3.4.0",
+		"gh-pages": "3.2.3",
 		"husky": "^7.0.1",
 		"jest": "^27.3.1",
 		"lint-staged": "^11.1.1",

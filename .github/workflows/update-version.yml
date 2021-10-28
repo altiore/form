@@ -1,0 +1,44 @@
+name: Update Version
+on:
+  push:
+    branches:
+      - main # Change this to your default branch
+jobs:
+  deploy-storybook:
+    name: deploy-storybook
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2 # If you're using actions/checkout@v2 you must set persist-credentials to false in most cases for the deployment to work correctly.
+        with:
+          persist-credentials: false
+
+      - name: Install dependencies (please, check you dependencies)
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Patch version
+        run: |
+          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY \
+          && git config --global user.email "razvanlomov@gmail.com" \
+          && git config --global user.name "CI" \
+          && npm version --no-commit-hooks patch
+
+      - name: Set PACKAGE_VERSION
+        run: |
+          echo "PACKAGE_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+
+      - name: Update version
+        run: |
+          echo "new version is $PACKAGE_VERSION" \
+          && git commit --amend -m "chore(version) : v$PACKAGE_VERSION [no ci]" \
+          && git push origin main \
+          && git push --tags
+
+      - name: Deploy Storybook to GitHub Pages
+        run: |
+          npm run story-build \
+          && npm run story-deploy
