@@ -1,0 +1,17 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: 'release.tar.gz'
+          bodyFile: 'README.md'
+          token: ${{ secrets.GITHUB_TOKEN }}

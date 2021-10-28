@@ -20,3 +20,7 @@ jobs:
       - name: Linter (please, run `npm run lint` locally before merge)
         run: |
           npm run lint:ci
+
+      - name: Build (please, run `npm run build` locally before merge)
+        run: |
+          npm run build
