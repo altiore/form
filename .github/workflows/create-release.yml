@@ -1,4 +1,4 @@
-name: Create Release
+name: Publish Release
 
 on:
   push:
@@ -15,3 +15,13 @@ jobs:
           artifacts: 'release.tar.gz'
           bodyFile: 'README.md'
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm publish --access=public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
