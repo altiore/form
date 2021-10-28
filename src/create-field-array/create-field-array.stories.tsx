@@ -2,6 +2,8 @@ import React from 'react';
 
 import {ComponentMeta, ComponentStory} from '@storybook/react';
 
+import {minLength} from '~/validators/min-length';
+
 import {FieldArrayProps, createFieldArray} from './create-field-array';
 
 import {FieldProps, createField} from '../create-field';
@@ -33,7 +35,7 @@ const IngredientsArray = createFieldArray<IFieldArray>(({list}) => {
 				return (
 					<div key={key}>
 						<div style={{display: 'flex'}}>
-							<Field label={''} name="ingredient" />
+							<Field label={''} name="ingredient" validators={[minLength(3)]} />
 							<button onClick={remove} type="button">
 								-
 							</button>

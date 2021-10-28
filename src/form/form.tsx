@@ -43,12 +43,25 @@ export const Form = ({
 }: FormProps): JSX.Element => {
 	const formRef = useRef<HTMLFormElement>(null);
 	const [formState, setFormState] = useState<
-		Omit<FormContextState, 'registerField'>
+		Omit<FormContextState, 'registerField' | 'setErrors'>
 	>({
 		defaultValues,
 		errors: {},
 		fields: {},
 	});
+
+	const setErrors = useCallback(
+		(fieldName: string, errors: string[]) => {
+			setFormState((s) => ({
+				...s,
+				errors: {
+					...s.errors,
+					[fieldName]: errors,
+				},
+			}));
+		},
+		[setFormState],
+	);
 
 	const registerField = useCallback(
 		(fieldName: string, isArray?: boolean, prevList?: any) => {
@@ -93,6 +106,7 @@ export const Form = ({
 				value={{
 					...formState,
 					registerField,
+					setErrors,
 				}}>
 				{children}
 			</FormContext.Provider>

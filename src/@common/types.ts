@@ -17,6 +17,8 @@ export type RegisterField = (
 	prevList?: any,
 ) => void;
 
+export type SetErrors = (name: string, errors: string[] | undefined) => void;
+
 export interface FormContextState {
 	defaultValues: Record<string, any>;
 	errors: Record<string, string[]>;
@@ -28,6 +30,7 @@ export interface FormContextState {
 		}
 	>;
 	registerField: RegisterField;
+	setErrors: SetErrors;
 }
 
 export interface ArrayFieldState {
