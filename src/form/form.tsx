@@ -29,6 +29,10 @@ export interface FormProps {
  * @prop {func} [onSubmit] ...
  *
  * @example
+ *import {Form} from '@altiore/form';
+ * const Template: ComponentStory<typeof Form> = ({children, ...args}) => (
+ *<Form {...args}>{children}</Form>
+ *);
  * return (any)
  */
 
