@@ -16,6 +16,32 @@ export type FieldProps = {
 	validators?: Array<ValidateFuncType>;
 };
 
+/**
+ * createField принимает пользовательский компонент и возвращает {name, validators, ...props}
+ *
+ * @see https://@altiore/form'.github.io/...
+ * @category Components
+ *
+ * @typedef createField
+ * @prop {React.ReactNode} [component] [React.ReactNode] Компонент
+ *
+ * @example
+ * import {FieldProps, createField} from '@altiore/form';
+ *
+ * interface IField extends FieldProps {
+ *  label: string;
+ * }
+ * const Field = createField<IField>(({errors, label, name}) => {
+ *   return (
+ *     <div>
+ *       <span>{label}</span>
+ *       <span>{name}</span>
+ *       <input name={name} />
+ *       <span>{errors[0]}</span>
+ *     </div>
+ *   );
+ * });
+ */
 export const createField = <T extends FieldProps>(
 	component: (props: Omit<T, 'validators'> & InternalFieldProps) => JSX.Element,
 ): ((props: T) => JSX.Element) => {
