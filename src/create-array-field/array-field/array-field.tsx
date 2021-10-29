@@ -31,9 +31,6 @@ export const ArrayField = createArrayField<IFieldArray>(({list}) => {
 		<div>
 			<Field label="Title" name="title" />
 			{list.map(({key, remove, append, prepend}) => {
-				console.log('render key', {
-					key,
-				});
 				return (
 					<div key={key}>
 						<div style={{display: 'flex'}}>

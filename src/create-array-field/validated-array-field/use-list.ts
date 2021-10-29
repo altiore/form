@@ -1,12 +1,9 @@
 import {useCallback, useMemo, useState} from 'react';
 
-import {FieldMeta, ListInterface, ListItem} from '~/@common/types';
+import {ListInterface, ListItem} from '~/@common/types';
 import {add, map, remove} from '~/create-array-field/array-field.utils';
 
-export const useList = (
-	fieldName: string,
-	field: FieldMeta<any>,
-): ListInterface => {
+export const useList = (fieldName: string): ListInterface => {
 	const [items, setItems] = useState<number[]>([]);
 
 	const addHandler = useCallback(
@@ -38,5 +35,5 @@ export const useList = (
 		};
 	}, [addHandler, items, mapHandler, removeHandler]);
 
-	return field?.list || list;
+	return list;
 };

@@ -1,6 +1,6 @@
-import React, {MutableRefObject, useRef} from 'react';
+import React, {MutableRefObject, useEffect, useMemo, useRef} from 'react';
 
-import {FieldMeta, ValidateFuncType} from '~/@common/types';
+import {FieldMeta, RegisterField, ValidateFuncType} from '~/@common/types';
 import {useValidateInput} from '~/@common/use-validate/use-validate-input';
 
 export type InternalFieldProps = {
@@ -14,6 +14,7 @@ export interface ValidatedFieldProps<T> {
 	componentProps: T;
 	field: FieldMeta;
 	name: string;
+	registerField: RegisterField;
 	validators: Array<ValidateFuncType>;
 }
 
@@ -22,11 +23,24 @@ export const ValidatedField = <T,>({
 	componentProps,
 	field,
 	name,
+	registerField,
 	validators,
 }: ValidatedFieldProps<T>): JSX.Element => {
+	const isInsideForm = useMemo(() => Boolean(registerField), [registerField]);
+
+	useEffect(() => {
+		if (isInsideForm) {
+			return registerField(name, false);
+		}
+	}, [isInsideForm, name, registerField]);
+
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const errors = useValidateInput(inputRef, validators, field);
+
+	if (isInsideForm && !field) {
+		return null;
+	}
 
 	return React.createElement(component, {
 		...componentProps,

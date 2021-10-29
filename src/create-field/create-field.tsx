@@ -1,15 +1,10 @@
 import React from 'react';
 
-import ArrayFieldChild, {
-	ArrayFieldChildProps,
-} from '~/@common/array-field.child';
-import FormChild from '~/@common/form.child';
+import {ArrayFieldContext} from '~/@common/array-field-context';
+import {FormContext} from '~/@common/form-context';
 import {ValidateFuncType} from '~/@common/types';
 
-import ValidatedField, {
-	InternalFieldProps,
-	ValidatedFieldProps,
-} from './validated-field';
+import ValidatedField, {InternalFieldProps} from './validated-field';
 
 export type FieldProps = {
 	name: string;
@@ -45,34 +40,31 @@ export type FieldProps = {
 export const createField = <T extends FieldProps>(
 	component: (props: Omit<T, 'validators'> & InternalFieldProps) => JSX.Element,
 ): ((props: T) => JSX.Element) => {
-	return React.memo<T>(({name, validators, ...props}) => {
-		type FieldProps = Omit<
-			ValidatedFieldProps<Omit<T, 'name' | 'validators'>>,
-			'field' | 'name'
-		>;
-		type ArrayComponentChildProps = Omit<
-			ArrayFieldChildProps<FieldProps>,
-			'field' | 'name'
-		>;
-		type FormChildProps = Omit<
-			ArrayComponentChildProps,
-			'field' | 'name' | 'registerField'
-		>;
-
+	return ({name, validators, ...props}): JSX.Element => {
 		return (
-			<FormChild<FormChildProps>
-				component={ArrayFieldChild}
-				componentProps={{
-					component: ValidatedField,
-					componentProps: {
-						component,
-						componentProps: props,
-						validators,
-					},
-				}}
-				isArray={false}
-				name={name}
-			/>
+			<FormContext.Consumer>
+				{(form) => (
+					<ArrayFieldContext.Consumer>
+						{(value) => {
+							const fieldName =
+								value?.name && !name.match(new RegExp('^' + String(value.name)))
+									? `${value.name}.${name}`
+									: name;
+
+							return (
+								<ValidatedField
+									field={form?.fields?.[fieldName]}
+									registerField={form?.registerField}
+									component={component}
+									componentProps={props}
+									validators={validators}
+									name={fieldName}
+								/>
+							);
+						}}
+					</ArrayFieldContext.Consumer>
+				)}
+			</FormContext.Consumer>
 		);
-	});
+	};
 };
