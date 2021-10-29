@@ -42,7 +42,7 @@ export class List implements ListInterface {
 		return this.list.map((index) => {
 			const name = `${this.prefix}.${index}`;
 			return (
-				<ArrayFieldContext.Provider key={index} value={{name}}>
+				<ArrayFieldContext.Provider key={name} value={{name}}>
 					{callback(
 						{
 							append: () => this.add(index, 1),

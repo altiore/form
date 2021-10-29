@@ -1,4 +1,4 @@
-import {ValidateFuncType} from '~/@common';
+import {ValidateFuncType} from '~/@common/types';
 
 export const maxLength =
 	(length: number): ValidateFuncType =>
