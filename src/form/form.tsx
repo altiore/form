@@ -6,11 +6,13 @@ import React, {
 	useState,
 } from 'react';
 
+import get from 'lodash/get';
+import isEqual from 'lodash/isEqual';
 import set from 'lodash/set';
 
 import {FormContext} from '~/@common/form-context';
 import {FormContextState} from '~/@common/types';
-import {List} from '~/create-field-array/list';
+import {List} from '~/create-array-field/list';
 
 export interface FormProps {
 	children: ReactNode;
@@ -45,45 +47,52 @@ export const Form = ({
 	const [formState, setFormState] = useState<
 		Omit<FormContextState, 'registerField' | 'setErrors'>
 	>({
-		defaultValues,
-		errors: {},
 		fields: {},
 	});
 
 	const setErrors = useCallback(
 		(fieldName: string, errors: string[]) => {
-			setFormState((s) => ({
-				...s,
-				errors: {
-					...s.errors,
-					[fieldName]: errors,
-				},
-			}));
+			setFormState((s) => {
+				if (isEqual(s.fields[fieldName].errors, errors)) {
+					return s;
+				}
+				return {
+					...s,
+					fields: {
+						[fieldName]: {
+							...s.fields[fieldName],
+							errors,
+						},
+					},
+				};
+			});
 		},
 		[setFormState],
 	);
 
 	const registerField = useCallback(
-		(fieldName: string, isArray?: boolean, prevList?: any) => {
-			setFormState((s) => ({
-				...s,
-				fields: {
-					...s.fields,
-					[fieldName]: {
-						list: isArray
-							? new List(
-									registerField,
-									s.defaultValues?.[fieldName],
-									fieldName,
-									prevList,
-							  )
-							: undefined,
-						registered: true,
+		(fieldName: string, isArray: boolean, prevList?: []) => {
+			setFormState((s) => {
+				const defaultValue = get(defaultValues, fieldName.split('.'));
+				return {
+					...s,
+					fields: {
+						...s.fields,
+						[fieldName]: {
+							defaultValue,
+							errors: [],
+							items: isArray ? [] : undefined,
+							list: isArray
+								? new List(registerField, defaultValue, fieldName, prevList)
+								: undefined,
+							name: fieldName,
+							setErrors: setErrors.bind({}, fieldName),
+						},
 					},
-				},
-			}));
+				};
+			});
 		},
-		[setFormState],
+		[defaultValues, setFormState],
 	);
 
 	const handleSubmit = useCallback(
@@ -106,7 +115,6 @@ export const Form = ({
 				value={{
 					...formState,
 					registerField,
-					setErrors,
 				}}>
 				{children}
 			</FormContext.Provider>

@@ -1,3 +1,5 @@
+import {MouseEventHandler} from 'react';
+
 export interface ListItem {
 	key: string;
 	append: () => void;
@@ -5,34 +7,41 @@ export interface ListItem {
 	remove: () => void;
 }
 
-export interface ListInterface {
+export type ListInterface<
+	Item extends Record<string, any> = Record<string, any>,
+> = {
 	map: (arg: (el: ListItem, index: number) => JSX.Element) => JSX.Element[];
-	add: (index?: any) => void;
+	add:
+		| MouseEventHandler
+		| (() => void)
+		| ((item: Item, index?: number) => void);
 	remove: (index: number) => void;
-}
+};
 
 export type RegisterField = (
 	fieldName: string,
-	isArray?: boolean,
-	prevList?: any,
+	isArray: boolean,
+	prevList?: number[],
 ) => void;
 
 export type SetErrors = (name: string, errors: string[] | undefined) => void;
 
-export interface FormContextState {
-	defaultValues: Record<string, any>;
-	errors: Record<string, string[]>;
-	fields: Record<
-		string,
-		{
-			registered: boolean;
-			list?: ListInterface;
-		}
-	>;
+export type FieldMeta<Item extends Record<string, any> = Record<string, any>> =
+	{
+		name: string;
+		defaultValue?: any;
+		errors: string[];
+		list?: ListInterface<Item>;
+		setErrors: (errors: string[]) => void;
+	};
+
+export type FormContextState = {
+	fields: Record<string, FieldMeta<any>>;
 	registerField: RegisterField;
-	setErrors: SetErrors;
-}
+};
 
 export interface ArrayFieldState {
 	name: string;
 }
+
+export type ValidateFuncType = (value: string | number) => string | undefined;
