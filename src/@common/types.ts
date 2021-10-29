@@ -1,4 +1,4 @@
-import {MouseEventHandler} from 'react';
+import {MouseEventHandler, MutableRefObject} from 'react';
 
 export interface ListItem {
 	key: string;
@@ -18,26 +18,23 @@ export type ListInterface<
 	remove: (index: number) => void;
 };
 
-export type RegisterField = (
-	fieldName: string,
-	isArray: boolean,
-	prevList?: number[],
-) => void;
+export type RegisterField = (fieldName: string, isArray: boolean) => void;
 
 export type SetErrors = (name: string, errors: string[] | undefined) => void;
 
-export type FieldMeta<Item extends Record<string, any> = Record<string, any>> =
-	{
-		name: string;
-		defaultValue?: any;
-		errors: string[];
-		list?: ListInterface<Item>;
-		setErrors: (errors: string[]) => void;
-	};
+export type FieldMeta = {
+	name: string;
+	defaultValue?: any;
+	errors: string[];
+	items?: number[];
+	setErrors: (errors: string[]) => void;
+};
 
 export type FormContextState = {
-	fields: Record<string, FieldMeta<any>>;
+	fields: Record<string, FieldMeta>;
 	registerField: RegisterField;
+	getList: (fieldName: string) => ListInterface;
+	formRef: MutableRefObject<HTMLFormElement>;
 };
 
 export interface ArrayFieldState {

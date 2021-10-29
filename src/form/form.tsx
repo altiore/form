@@ -11,8 +11,8 @@ import isEqual from 'lodash/isEqual';
 import set from 'lodash/set';
 
 import {FormContext} from '~/@common/form-context';
-import {FormContextState} from '~/@common/types';
-import {List} from '~/create-array-field/list';
+import {FormContextState, ListInterface} from '~/@common/types';
+import {add, map, remove} from '~/create-array-field/array-field.utils';
 
 export interface FormProps {
 	children: ReactNode;
@@ -45,7 +45,7 @@ export const Form = ({
 }: FormProps): JSX.Element => {
 	const formRef = useRef<HTMLFormElement>(null);
 	const [formState, setFormState] = useState<
-		Omit<FormContextState, 'registerField' | 'setErrors'>
+		Omit<FormContextState, 'registerField' | 'getList' | 'formRef'>
 	>({
 		fields: {},
 	});
@@ -70,8 +70,51 @@ export const Form = ({
 		[setFormState],
 	);
 
+	const setItems = useCallback(
+		(fieldName: string, setItems: (i: number[]) => number[]) => {
+			setFormState((s) => ({
+				...s,
+				fields: {
+					...s.fields,
+					[fieldName]: {
+						...s.fields[fieldName],
+						items: setItems(s.fields[fieldName].items),
+					},
+				},
+			}));
+		},
+		[setFormState],
+	);
+
+	const getList = useCallback(
+		(fieldName: string): ListInterface => {
+			const addHandler = (field: any, index?: number) =>
+				setItems(fieldName, (i) => {
+					return add(i, fieldName, field, index);
+				});
+			const removeHandler = (index: number) =>
+				setItems(fieldName, (i) => {
+					const res = remove(i, fieldName, index);
+					return res;
+				});
+			const mapHandler = map.bind(
+				{},
+				addHandler,
+				removeHandler,
+				get(formState, ['fields', fieldName, 'items'], []),
+				fieldName,
+			);
+			return {
+				add: addHandler,
+				map: mapHandler,
+				remove: removeHandler,
+			};
+		},
+		[formState, setItems],
+	);
+
 	const registerField = useCallback(
-		(fieldName: string, isArray: boolean, prevList?: []) => {
+		(fieldName: string, isArray: boolean) => {
 			setFormState((s) => {
 				const defaultValue = get(defaultValues, fieldName.split('.'));
 				return {
@@ -82,15 +125,26 @@ export const Form = ({
 							defaultValue,
 							errors: [],
 							items: isArray ? [] : undefined,
-							list: isArray
-								? new List(registerField, defaultValue, fieldName, prevList)
-								: undefined,
 							name: fieldName,
 							setErrors: setErrors.bind({}, fieldName),
 						},
 					},
 				};
 			});
+
+			return () => {
+				setFormState((s) => {
+					const newState: any = {
+						...s,
+						fields: {
+							...s.fields,
+							[fieldName]: undefined,
+						},
+					};
+					delete newState.fields[fieldName];
+					return newState;
+				});
+			};
 		},
 		[defaultValues, setFormState],
 	);
@@ -114,6 +168,8 @@ export const Form = ({
 			<FormContext.Provider
 				value={{
 					...formState,
+					formRef,
+					getList,
 					registerField,
 				}}>
 				{children}

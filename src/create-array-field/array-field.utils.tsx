@@ -43,7 +43,6 @@ export const add = (
 		field,
 		fieldName,
 		index,
-		max: Math.max(...list),
 	});
 
 	return [...list, list.length ? Math.max(...list) + 1 : 0];
