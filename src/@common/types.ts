@@ -41,4 +41,4 @@ export interface ArrayFieldState {
 	name: string;
 }
 
-export type ValidateFuncType = (value: string | number) => string | undefined;
+export type ValidateFuncType = (value: any) => string | undefined;

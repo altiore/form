@@ -5,7 +5,7 @@ import {ComponentMeta, ComponentStory} from '@storybook/react';
 import {Form} from '~/form';
 import {minLength} from '~/validators/min-length';
 
-import {Field} from './field';
+import Field from './field';
 
 export default {
 	argTypes: {onSubmit: {action: 'submit'}},
@@ -15,7 +15,8 @@ export default {
 
 export const SimplestField: ComponentStory<typeof Field> = () => (
 	<form>
-		<Field name="my-field" label="My Label" validators={[minLength(3)]} />
+		<Field name="first" label="First" validators={[minLength(3)]} />
+		<Field name="second" label="Second" validators={[minLength(3)]} />
 	</form>
 );
 
@@ -23,6 +24,7 @@ export const InsideFormField: ComponentStory<typeof Field> = ({
 	onSubmit,
 }: any) => (
 	<Form onSubmit={onSubmit}>
-		<Field name="my-field" label="My Label" validators={[minLength(3)]} />
+		<Field name="first" label="First" validators={[minLength(3)]} />
+		<Field name="second" label="Second" validators={[minLength(3)]} />
 	</Form>
 );

@@ -1,10 +1,60 @@
-import React from 'react';
+import React, {useEffect, useMemo} from 'react';
 
 import {ArrayFieldContext} from '~/@common/array-field-context';
 import {FormContext} from '~/@common/form-context';
-import {ValidateFuncType} from '~/@common/types';
+import {
+	ArrayFieldState,
+	FormContextState,
+	ValidateFuncType,
+} from '~/@common/types';
 
-import ValidatedField, {InternalFieldProps} from './validated-field';
+import ValidatedField, {
+	InternalFieldProps,
+	ValidatedFieldProps,
+} from './validated-field';
+
+type NamedFieldProps<T> = Omit<ValidatedFieldProps<T>, 'field' | 'name'> & {
+	arrayFieldState: ArrayFieldState;
+	formState: FormContextState;
+	providedName: string;
+};
+
+const NamedField = <T,>({
+	arrayFieldState,
+	formState,
+	providedName,
+	...rest
+}: NamedFieldProps<T>) => {
+	const fieldName = useMemo(() => {
+		return arrayFieldState?.name &&
+			!providedName.match(new RegExp('^' + String(arrayFieldState.name)))
+			? `${arrayFieldState.name}.${providedName}`
+			: providedName;
+	}, [arrayFieldState?.name, providedName]);
+
+	const registerField = useMemo(
+		() => formState?.registerField,
+		[formState?.registerField],
+	);
+
+	const isInsideForm = useMemo(() => Boolean(registerField), [registerField]);
+
+	useEffect(() => {
+		if (isInsideForm) {
+			return registerField(fieldName, false);
+		}
+	}, [fieldName, isInsideForm, registerField]);
+
+	const fields = useMemo(() => formState?.fields, [formState?.fields]);
+
+	const field = useMemo(() => fields?.[fieldName], [fields, fieldName]);
+
+	if (isInsideForm && !field) {
+		return null;
+	}
+
+	return <ValidatedField {...rest} field={field} name={fieldName} />;
+};
 
 export type FieldProps = {
 	name: string;
@@ -43,22 +93,17 @@ export const createField = <T extends FieldProps>(
 	return ({name, validators, ...props}): JSX.Element => {
 		return (
 			<FormContext.Consumer>
-				{(form) => (
+				{(formState) => (
 					<ArrayFieldContext.Consumer>
-						{(value) => {
-							const fieldName =
-								value?.name && !name.match(new RegExp('^' + String(value.name)))
-									? `${value.name}.${name}`
-									: name;
-
+						{(arrayFieldState) => {
 							return (
-								<ValidatedField
-									field={form?.fields?.[fieldName]}
-									registerField={form?.registerField}
+								<NamedField<Omit<T, 'name' | 'validators'>>
+									arrayFieldState={arrayFieldState}
+									formState={formState}
 									component={component}
 									componentProps={props}
+									providedName={name}
 									validators={validators}
-									name={fieldName}
 								/>
 							);
 						}}
