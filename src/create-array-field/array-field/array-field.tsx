@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {ArrayFieldProps, createArrayField} from '~/create-array-field';
-import {Field} from '~/create-field/field';
+import Field from '~/create-field/field';
 import {minLength} from '~/validators';
 
 export const ArrayTags = createArrayField<IFieldArray>(({list}) => {

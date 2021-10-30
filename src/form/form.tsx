@@ -59,6 +59,7 @@ export const Form = ({
 				return {
 					...s,
 					fields: {
+						...s.fields,
 						[fieldName]: {
 							...s.fields[fieldName],
 							errors,

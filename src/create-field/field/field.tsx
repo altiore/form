@@ -1,12 +1,12 @@
 import React from 'react';
 
-import {FieldProps, createField} from './create-field';
+import {FieldProps, createField} from '~/create-field';
 
 export interface IField extends FieldProps {
 	label: string;
 }
 
-export const Field = createField<IField>(({inputRef, errors, label, name}) => {
+export const Field = createField<IField>(({errors, inputRef, label, name}) => {
 	return (
 		<div>
 			<span>{label}</span>
