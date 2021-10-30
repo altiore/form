@@ -33,7 +33,7 @@ export type FieldMeta = {
 export type FormContextState = {
 	fields: Record<string, FieldMeta>;
 	registerField: RegisterField;
-	getList: (fieldName: string) => ListInterface;
+	getList: (fieldMeta: FieldMeta) => ListInterface;
 	formRef: MutableRefObject<HTMLFormElement>;
 };
 

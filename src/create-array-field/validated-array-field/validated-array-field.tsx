@@ -1,12 +1,7 @@
-import React, {MutableRefObject, useEffect, useMemo, useRef} from 'react';
+import React, {MutableRefObject, useMemo, useRef} from 'react';
 
-import {
-	FieldMeta,
-	ListInterface,
-	RegisterField,
-	ValidateFuncType,
-} from '~/@common/types';
-import {useValidateList} from '~/@common/use-validate/use-validate-list';
+import {useValidateList} from '~/@common/hooks/use-validate-list';
+import {FieldMeta, ListInterface, ValidateFuncType} from '~/@common/types';
 
 import {useList} from './use-list';
 
@@ -22,46 +17,32 @@ export interface ValidatedArrayFieldProps<T> {
 	) => JSX.Element;
 	componentProps: T;
 	field: FieldMeta;
-	getList: (fieldName: string) => ListInterface;
+	getList: (fieldMeta: FieldMeta) => ListInterface;
 	name: string;
-	registerField: RegisterField;
 	validators: Array<ValidateFuncType>;
 }
 
-export const ValidatedArrayField = <T,>({
+const ValidatedArrayFieldComponent = <T,>({
 	component,
 	componentProps,
 	field,
 	getList,
 	name,
-	registerField,
 	validators,
 }: ValidatedArrayFieldProps<T>): JSX.Element => {
-	const isInsideForm = useMemo(() => Boolean(registerField), [registerField]);
-
-	useEffect(() => {
-		if (isInsideForm) {
-			return registerField(name, true);
-		}
-	}, [isInsideForm, name, registerField]);
-
 	const listRef = useRef<HTMLElement>(null);
 
 	const stateList = useList(name);
 
 	const list = useMemo(() => {
 		if (typeof getList === 'function') {
-			return getList(name);
+			return getList(field);
 		}
 
 		return stateList;
-	}, [getList, name, stateList]);
+	}, [field, getList, stateList]);
 
 	const errors = useValidateList(listRef, validators, field);
-
-	if (isInsideForm && !field) {
-		return null;
-	}
 
 	return React.createElement(component, {
 		...componentProps,
@@ -71,3 +52,7 @@ export const ValidatedArrayField = <T,>({
 		name,
 	});
 };
+
+export const ValidatedArrayField = React.memo(
+	ValidatedArrayFieldComponent,
+) as typeof ValidatedArrayFieldComponent;

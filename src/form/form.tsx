@@ -11,7 +11,7 @@ import isEqual from 'lodash/isEqual';
 import set from 'lodash/set';
 
 import {FormContext} from '~/@common/form-context';
-import {FormContextState, ListInterface} from '~/@common/types';
+import {FieldMeta, FormContextState, ListInterface} from '~/@common/types';
 import {add, map, remove} from '~/create-array-field/array-field.utils';
 
 export interface FormProps {
@@ -88,7 +88,8 @@ export const Form = ({
 	);
 
 	const getList = useCallback(
-		(fieldName: string): ListInterface => {
+		(fieldMeta: FieldMeta): ListInterface => {
+			const fieldName = fieldMeta.name;
 			const addHandler = (field: any, index?: number) =>
 				setItems(fieldName, (i) => {
 					return add(i, fieldName, field, index);
@@ -98,11 +99,12 @@ export const Form = ({
 					const res = remove(i, fieldName, index);
 					return res;
 				});
+			const items = fieldMeta.items || [];
 			const mapHandler = map.bind(
 				{},
 				addHandler,
 				removeHandler,
-				get(formState, ['fields', fieldName, 'items'], []),
+				items,
 				fieldName,
 			);
 			return {
@@ -111,7 +113,7 @@ export const Form = ({
 				remove: removeHandler,
 			};
 		},
-		[formState, setItems],
+		[setItems],
 	);
 
 	const registerField = useCallback(

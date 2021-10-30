@@ -1,7 +1,7 @@
 import React, {MutableRefObject} from 'react';
 
+import {useValidateInput} from '~/@common/hooks/use-validate-input';
 import {FieldMeta, ValidateFuncType} from '~/@common/types';
-import {useValidateInput} from '~/@common/use-validate/use-validate-input';
 
 import {useInput} from './validated-field.hooks';
 
