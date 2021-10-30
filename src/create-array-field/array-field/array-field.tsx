@@ -29,7 +29,6 @@ export interface IFieldArray extends ArrayFieldProps {
 export const ArrayField = createArrayField<IFieldArray>(({list}) => {
 	return (
 		<div>
-			<Field label="Title" name="title" />
 			{list.map(({key, remove, append, prepend}) => {
 				return (
 					<div key={key}>
@@ -52,7 +51,33 @@ export const ArrayField = createArrayField<IFieldArray>(({list}) => {
 			<button onClick={list.add} type="button">
 				Добавить ингредиент
 			</button>
-			<button type="submit">Submit</button>
 		</div>
+	);
+});
+
+export const ArrayFieldSimplest = createArrayField<IFieldArray>(({list}) => {
+	return (
+		<>
+			{list.map(({key, remove}) => {
+				return (
+					<div key={key}>
+						<div style={{display: 'flex'}}>
+							<Field label="Title" name="title" validators={[minLength(3)]} />
+							<Field
+								label="Description"
+								name="desc"
+								validators={[minLength(3)]}
+							/>
+							<button onClick={remove} type="button">
+								-
+							</button>
+						</div>
+					</div>
+				);
+			})}
+			<button onClick={list.add} type="button">
+				Добавить ингредиент
+			</button>
+		</>
 	);
 });

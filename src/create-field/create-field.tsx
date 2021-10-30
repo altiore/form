@@ -1,7 +1,8 @@
-import React, {useEffect, useMemo} from 'react';
+import React from 'react';
 
 import {ArrayFieldContext} from '~/@common/array-field-context';
 import {FormContext} from '~/@common/form-context';
+import {useRegisterField} from '~/@common/hooks/use-register-field';
 import {
 	ArrayFieldState,
 	FormContextState,
@@ -25,35 +26,17 @@ const NamedField = <T,>({
 	providedName,
 	...rest
 }: NamedFieldProps<T>) => {
-	const fieldName = useMemo(() => {
-		return arrayFieldState?.name &&
-			!providedName.match(new RegExp('^' + String(arrayFieldState.name)))
-			? `${arrayFieldState.name}.${providedName}`
-			: providedName;
-	}, [arrayFieldState?.name, providedName]);
-
-	const registerField = useMemo(
-		() => formState?.registerField,
-		[formState?.registerField],
+	const {field, isInsideForm, name} = useRegisterField(
+		arrayFieldState,
+		formState,
+		providedName,
 	);
-
-	const isInsideForm = useMemo(() => Boolean(registerField), [registerField]);
-
-	useEffect(() => {
-		if (isInsideForm) {
-			return registerField(fieldName, false);
-		}
-	}, [fieldName, isInsideForm, registerField]);
-
-	const fields = useMemo(() => formState?.fields, [formState?.fields]);
-
-	const field = useMemo(() => fields?.[fieldName], [fields, fieldName]);
 
 	if (isInsideForm && !field) {
 		return null;
 	}
 
-	return <ValidatedField {...rest} field={field} name={fieldName} />;
+	return <ValidatedField {...rest} field={field} name={name} />;
 };
 
 export type FieldProps = {

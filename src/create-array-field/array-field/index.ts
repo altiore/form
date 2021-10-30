@@ -1,1 +1,1 @@
-export {ArrayField as default} from './array-field';
+export {ArrayField as default, ArrayFieldSimplest} from './array-field';

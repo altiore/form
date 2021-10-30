@@ -1,9 +1,45 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {ArrayFieldContext} from '~/@common/array-field-context';
 import {FormContext} from '~/@common/form-context';
+import {useRegisterField} from '~/@common/hooks/use-register-field';
+import {ArrayFieldState, FormContextState} from '~/@common/types';
 
-import ArrayField, {InternalArrayFieldProps} from './validated-array-field';
+import ArrayField, {
+	InternalArrayFieldProps,
+	ValidatedArrayFieldProps,
+} from './validated-array-field';
+
+type NamedFieldProps<T> = Omit<
+	ValidatedArrayFieldProps<T>,
+	'field' | 'name' | 'getList'
+> & {
+	arrayFieldState: ArrayFieldState;
+	formState: FormContextState;
+	providedName: string;
+};
+
+const NamedField = <T,>({
+	arrayFieldState,
+	formState,
+	providedName,
+	...rest
+}: NamedFieldProps<T>) => {
+	const {field, isInsideForm, name} = useRegisterField(
+		arrayFieldState,
+		formState,
+		providedName,
+		true,
+	);
+
+	const getList = useMemo(() => formState?.getList, [formState?.getList]);
+
+	if (isInsideForm && !field) {
+		return null;
+	}
+
+	return <ArrayField {...rest} field={field} getList={getList} name={name} />;
+};
 
 export type ArrayFieldProps = {
 	name: string;
@@ -18,22 +54,16 @@ export const createArrayField = <T extends ArrayFieldProps>(
 	return ({name, validators, ...props}) => {
 		return (
 			<FormContext.Consumer>
-				{(form) => (
+				{(formState) => (
 					<ArrayFieldContext.Consumer>
-						{(value) => {
-							const fieldName =
-								value?.name && !name.match(new RegExp('^' + String(value.name)))
-									? `${value.name}.${name}`
-									: name;
-
+						{(arrayFieldState) => {
 							return (
-								<ArrayField
+								<NamedField<Omit<T, 'name' | 'validators'>>
+									arrayFieldState={arrayFieldState}
+									formState={formState}
 									component={component}
 									componentProps={props}
-									field={form?.fields?.[fieldName]}
-									getList={form?.getList}
-									name={fieldName}
-									registerField={form?.registerField}
+									providedName={name}
 									validators={validators}
 								/>
 							);
