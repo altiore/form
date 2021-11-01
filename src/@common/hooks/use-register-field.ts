@@ -1,6 +1,6 @@
 import {useEffect, useMemo} from 'react';
 
-import {ArrayFieldState, FieldMeta, FormContextState} from '~/@common/types';
+import {FieldArrayState, FieldMeta, FormContextState} from '~/@common/types';
 
 type ResType = {
 	isInsideForm: boolean;
@@ -9,17 +9,17 @@ type ResType = {
 };
 
 export const useRegisterField = (
-	arrayFieldState: ArrayFieldState,
+	fieldArrayState: FieldArrayState,
 	formState: FormContextState,
 	providedName: string,
 	isArray = false,
 ): ResType => {
 	const fieldName = useMemo(() => {
-		return arrayFieldState?.name &&
-			!providedName.match(new RegExp('^' + String(arrayFieldState.name)))
-			? `${arrayFieldState.name}.${providedName}`
+		return fieldArrayState?.name &&
+			!providedName.match(new RegExp('^' + String(fieldArrayState.name)))
+			? `${fieldArrayState.name}.${providedName}`
 			: providedName;
-	}, [arrayFieldState?.name, providedName]);
+	}, [fieldArrayState?.name, providedName]);
 
 	const registerField = useMemo(
 		() => formState?.registerField,

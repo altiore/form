@@ -3,17 +3,17 @@ import React, {MutableRefObject, useMemo, useRef} from 'react';
 import {useValidateList} from '~/@common/hooks/use-validate-list';
 import {FieldMeta, ListInterface, ValidateFuncType} from '~/@common/types';
 
-import {add, map, remove, useList} from './validated-array-field.utils';
+import {add, map, remove, useList} from './validated-field-array.utils';
 
-export type InternalArrayFieldProps = {
+export type InternalFieldArrayProps = {
 	listRef: MutableRefObject<HTMLElement>;
 	errors: string[];
 	list: ListInterface;
 };
 
-export interface ValidatedArrayFieldProps<T> {
+export interface ValidatedFieldArrayProps<T> {
 	component: (
-		props: Omit<T, 'validators'> & InternalArrayFieldProps,
+		props: Omit<T, 'validators'> & InternalFieldArrayProps,
 	) => JSX.Element;
 	componentProps: T;
 	field: FieldMeta;
@@ -22,14 +22,14 @@ export interface ValidatedArrayFieldProps<T> {
 	validators: Array<ValidateFuncType>;
 }
 
-const ValidatedArrayFieldComponent = <T,>({
+const ValidatedFieldArrayComponent = <T,>({
 	component,
 	componentProps,
 	field: fieldMeta,
 	name,
 	setItems,
 	validators,
-}: ValidatedArrayFieldProps<T>): JSX.Element => {
+}: ValidatedFieldArrayProps<T>): JSX.Element => {
 	const listRef = useRef<HTMLElement>(null);
 
 	const stateList = useList(name);
@@ -74,6 +74,6 @@ const ValidatedArrayFieldComponent = <T,>({
 	});
 };
 
-export const ValidatedArrayField = React.memo(
-	ValidatedArrayFieldComponent,
-) as typeof ValidatedArrayFieldComponent;
+export const ValidatedFieldArray = React.memo(
+	ValidatedFieldArrayComponent,
+) as typeof ValidatedFieldArrayComponent;

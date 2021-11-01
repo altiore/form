@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {ArrayFieldContext} from '~/@common/array-field-context';
+import {FieldArrayContext} from '~/@common/field-array-context';
 import {FormContext} from '~/@common/form-context';
 import {useRegisterField} from '~/@common/hooks/use-register-field';
 import {
-	ArrayFieldState,
+	FieldArrayState,
 	FormContextState,
 	ValidateFuncType,
 } from '~/@common/types';
@@ -15,19 +15,19 @@ import ValidatedField, {
 } from './validated-field';
 
 type NamedFieldProps<T> = Omit<ValidatedFieldProps<T>, 'field' | 'name'> & {
-	arrayFieldState: ArrayFieldState;
+	fieldArrayState: FieldArrayState;
 	formState: FormContextState;
 	providedName: string;
 };
 
 const NamedField = <T,>({
-	arrayFieldState,
+	fieldArrayState,
 	formState,
 	providedName,
 	...rest
 }: NamedFieldProps<T>) => {
 	const {field, isInsideForm, name} = useRegisterField(
-		arrayFieldState,
+		fieldArrayState,
 		formState,
 		providedName,
 	);
@@ -77,11 +77,11 @@ export const createField = <T extends FieldProps>(
 		return (
 			<FormContext.Consumer>
 				{(formState) => (
-					<ArrayFieldContext.Consumer>
-						{(arrayFieldState) => {
+					<FieldArrayContext.Consumer>
+						{(fieldArrayState) => {
 							return (
 								<NamedField<Omit<T, 'name' | 'validators'>>
-									arrayFieldState={arrayFieldState}
+									fieldArrayState={fieldArrayState}
 									formState={formState}
 									component={component}
 									componentProps={props}
@@ -90,7 +90,7 @@ export const createField = <T extends FieldProps>(
 								/>
 							);
 						}}
-					</ArrayFieldContext.Consumer>
+					</FieldArrayContext.Consumer>
 				)}
 			</FormContext.Consumer>
 		);

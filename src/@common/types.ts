@@ -37,7 +37,7 @@ export type FormContextState = {
 	setItems: (fieldName: string, setItems: (i: number[]) => number[]) => void;
 };
 
-export interface ArrayFieldState {
+export interface FieldArrayState {
 	name: string;
 }
 

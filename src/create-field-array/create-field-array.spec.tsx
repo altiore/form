@@ -3,13 +3,13 @@ import React from 'react';
 import {mount} from 'enzyme';
 import sinon from 'sinon';
 
-import {createArrayField} from '~/create-array-field/create-array-field';
+import {createFieldArray} from '~/create-field-array/create-field-array';
 import Field from '~/create-field/field';
 
-describe('~/create-array-field', () => {
+describe('~/create-field-array', () => {
 	describe('не перерендеривать, если рендерится родитель, но пропсы не меняются', () => {
 		const memoizedRenderEvent = sinon.spy();
-		const ArrayField = createArrayField(({list}) => {
+		const FieldArray = createFieldArray(({list}) => {
 			memoizedRenderEvent();
 			return (
 				<>
@@ -26,7 +26,7 @@ describe('~/create-array-field', () => {
 			return (
 				<div>
 					<span>{name}</span>
-					<ArrayField name="ingredients" />
+					<FieldArray name="ingredients" />
 				</div>
 			);
 		};
