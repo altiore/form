@@ -45,7 +45,52 @@ export type ArrayFieldProps = {
 	name: string;
 	validators?: Array<(v: any) => string | undefined>;
 };
-
+/**
+ * Создает массив полей
+ *
+ * @component
+ *
+ * @param {string} имя поля
+ * @param {(string|undefined)} валидаторы - правила, по которым валидируются поля
+ *
+ * @typedef createArrayField
+ * @return {Array} возвращает массив полей
+ *
+ *
+ * @example
+ *
+ * import React from 'react';
+ * import {ArrayFieldProps, createArrayField} from '~/create-array-field';
+ *
+ * const ArrayField = createArrayField<IFieldArray>(({list}) => {
+ *	return (
+ *		<div>
+ *			{list.map(({key, remove, append, prepend}) => {
+ *				return (
+ *					<div key={key}>
+ *						<div style={{display: 'flex'}}>
+ * 							<Field label={''} name="ingredient" validators={[minLength(3)]} />
+ *							<ArrayTags name="tags" />
+ *							<button onClick={remove} type="button">
+ *								-
+ *							</button>
+ *							<button onClick={append} type="button">
+ *								after
+ *							</button>
+ *							<button onClick={prepend} type="button">
+ *								before
+ *							</button>
+ *						</div>
+ *					</div>
+ *				);
+ *			})}
+ *			<button onClick={list.add} type="button">
+ *				Добавить ингредиент
+ *			</button>
+ *		</div>
+ *	);
+ * });
+ */
 export const createArrayField = <T extends ArrayFieldProps>(
 	component: (
 		props: Omit<T, 'validators'> & InternalArrayFieldProps,
