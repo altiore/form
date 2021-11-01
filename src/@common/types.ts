@@ -41,4 +41,6 @@ export interface ArrayFieldState {
 	name: string;
 }
 
-export type ValidateFuncType = (value: any) => string | undefined;
+export type ValidateFuncType = {
+	validate: (value: any) => {error: Error; value: any} | undefined;
+};

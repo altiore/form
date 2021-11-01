@@ -1,11 +1,16 @@
 import {ValidateFuncType} from '~/@common/types';
 
-export const regexp =
-	(regex: RegExp): ValidateFuncType =>
-	(value) => {
+export const regexp = (regex: RegExp): ValidateFuncType => ({
+	validate: (value) => {
 		const stringedValue = value.toString();
 		if (!regex.test(stringedValue)) {
-			return `${stringedValue} does not fit the regular expression ${regex}`;
+			return {
+				error: new Error(
+					`${stringedValue} does not fit the regular expression ${regex}`,
+				),
+				value,
+			};
 		}
 		return undefined;
-	};
+	},
+});
