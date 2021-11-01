@@ -3,7 +3,11 @@ import React, {useMemo} from 'react';
 import {FieldArrayContext} from '~/@common/field-array-context';
 import {FormContext} from '~/@common/form-context';
 import {useRegisterField} from '~/@common/hooks/use-register-field';
-import {FieldArrayState, FormContextState} from '~/@common/types';
+import {
+	FieldArrayState,
+	FormContextState,
+	ValidateFuncType,
+} from '~/@common/types';
 
 import FieldArray, {
 	InternalFieldArrayProps,
@@ -43,7 +47,7 @@ const NamedField = <T,>({
 
 export type FieldArrayProps = {
 	name: string;
-	validators?: Array<(v: any) => string | undefined>;
+	validators?: Array<ValidateFuncType>;
 };
 /**
  * Создает массив полей
@@ -51,7 +55,6 @@ export type FieldArrayProps = {
  * @component
  *
  * @param {string} имя поля
- * @param {(string|undefined)} валидаторы - правила, по которым валидируются поля
  *
  * @typedef createFieldArray
  * @return {Array} возвращает массив полей
