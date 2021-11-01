@@ -7,6 +7,8 @@ import {minLength} from '~/validators/min-length';
 
 import Field from './field';
 
+import * as Joi from 'joi';
+
 export default {
 	argTypes: {onSubmit: {action: 'submit'}},
 	component: Field,
@@ -24,7 +26,15 @@ export const InsideFormField: ComponentStory<typeof Field> = ({
 	onSubmit,
 }: any) => (
 	<Form onSubmit={onSubmit}>
-		<Field name="first" label="First" validators={[minLength(3)]} />
+		<Field
+			name="first"
+			label="First"
+			validators={[
+				Joi.string().max(5).min(2).messages({
+					'string.min': 'Слишком коротко',
+				}),
+			]}
+		/>
 		<Field name="second" label="Second" validators={[minLength(3)]} />
 	</Form>
 );
