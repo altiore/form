@@ -12,7 +12,7 @@ import ArrayField, {
 
 type NamedFieldProps<T> = Omit<
 	ValidatedArrayFieldProps<T>,
-	'field' | 'name' | 'getList'
+	'field' | 'name' | 'setItems'
 > & {
 	arrayFieldState: ArrayFieldState;
 	formState: FormContextState;
@@ -32,13 +32,13 @@ const NamedField = <T,>({
 		true,
 	);
 
-	const getList = useMemo(() => formState?.getList, [formState?.getList]);
+	const setItems = useMemo(() => formState?.setItems, [formState?.setItems]);
 
 	if (isInsideForm && !field) {
 		return null;
 	}
 
-	return <ArrayField {...rest} field={field} getList={getList} name={name} />;
+	return <ArrayField {...rest} field={field} setItems={setItems} name={name} />;
 };
 
 export type ArrayFieldProps = {
@@ -96,7 +96,7 @@ export const createArrayField = <T extends ArrayFieldProps>(
 		props: Omit<T, 'validators'> & InternalArrayFieldProps,
 	) => JSX.Element,
 ): ((props: T) => JSX.Element) => {
-	return ({name, validators, ...props}) => {
+	return React.memo(({name, validators, ...props}) => {
 		return (
 			<FormContext.Consumer>
 				{(formState) => (
@@ -117,5 +117,5 @@ export const createArrayField = <T extends ArrayFieldProps>(
 				)}
 			</FormContext.Consumer>
 		);
-	};
+	});
 };

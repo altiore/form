@@ -9,12 +9,11 @@
 	],
 	"scripts": {
 		"start": "npm run story",
-		"test:jest": "jest",
-		"build": "rm -rf dist && tsc && tscpaths -p tsconfig.json -s ./src -o ./dist",
+		"build": "rm -rf dist && tsc && tscpaths -p tsconfig.build.json -s ./src -o ./dist",
 		"npm:patch": "npm version patch && npm publish --access=public && git push && git push --tags",
 		"npm:minor": "npm version minor && npm publish --access=public && git push && git push --tags",
 		"npm:major": "npm version major && npm publish --access=public && git push && git push --tags",
-		"test": "npm run build",
+		"test": "jest",
 		"lint": "tsc --noEmit && prettier --write \"**/*.{js,jsx,ts,tsx,json,md,yml}\" && eslint . --fix --ext .js,.jsx,.ts,.tsx --max-warnings=0",
 		"lint:ci": "tsc --noEmit && prettier --check \"**/*.{js,jsx,ts,tsx,json,md,yml}\" && eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0",
 		"jsdoc": "jsdoc -c jsdoc.json",
@@ -61,7 +60,7 @@
 	},
 	"homepage": "https://github.com/altiore/form#readme",
 	"dependencies": {
-		"lodash.debounce": "4.0.8"
+		"lodash": "4.17.21"
 	},
 	"devDependencies": {
 		"@babel/core": "7.14.8",
@@ -71,13 +70,18 @@
 		"@storybook/addon-links": "6.3.8",
 		"@storybook/react": "6.3.8",
 		"@storybook/storybook-deployer": "^2.8.10",
+		"@types/enzyme": "3.10.10",
 		"@types/jest": "^27.0.2",
+		"@types/jsdom": "16.2.13",
 		"@types/lodash": "^4.14.173",
 		"@types/node": "16.4.9",
+		"@types/sinon": "10.0.6",
 		"@typescript-eslint/eslint-plugin": "4.28.5",
 		"@typescript-eslint/parser": "4.28.5",
+		"@wojtekmaj/enzyme-adapter-react-17": "0.6.5",
 		"babel-loader": "^8.2.2",
 		"better-docs": "^2.3.2",
+		"enzyme": "3.11.0",
 		"eslint": "7.32.0",
 		"eslint-config-prettier": "8.3.0",
 		"eslint-plugin-ordered-imports": "0.5.0",
@@ -86,10 +90,12 @@
 		"husky": "^7.0.1",
 		"jest": "^27.3.1",
 		"joi": "17.4.2",
+		"jsdom": "18.0.0",
 		"lint-staged": "^11.1.1",
 		"prettier": "2.3.2",
-		"react": "^16.14.0",
-		"react-dom": "^16.14.0",
+		"react": "17.0.2",
+		"react-dom": "17.0.2",
+		"sinon": "11.1.2",
 		"ts-jest": "^27.0.7",
 		"tscpaths": "0.0.9",
 		"typescript": "4.4.3"
@@ -97,7 +103,9 @@
 	"jest": {
 		"moduleFileExtensions": [
 			"js",
+			"jsx",
 			"ts",
+			"tsx",
 			"json"
 		],
 		"rootDir": "./",
@@ -105,10 +113,13 @@
 			"@root-dir/(.*)": "<rootDir>/$1",
 			"~/(.*)": "<rootDir>/src/$1"
 		},
-		"testRegex": ".*\\.spec\\.ts$",
+		"testRegex": ".*\\.spec\\.ts(x)?$",
 		"transform": {
-			"^.+\\.(t|j)s$": "ts-jest"
+			"^.+\\.(t|j)s(x)?$": "ts-jest"
 		},
+		"setupFilesAfterEnv": [
+			"<rootDir>/src/setupTests.js"
+		],
 		"testEnvironment": "node"
 	},
 	"peerDependencies": {

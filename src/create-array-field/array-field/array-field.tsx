@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 
 import {ArrayFieldProps, createArrayField} from '~/create-array-field';
 import Field from '~/create-field/field';
@@ -27,27 +27,29 @@ export interface IFieldArray extends ArrayFieldProps {
 }
 
 export const ArrayField = createArrayField<IFieldArray>(({list}) => {
+	const cb = useCallback(({key, remove, append, prepend}) => {
+		return (
+			<div key={key}>
+				<div style={{display: 'flex'}}>
+					<Field label={''} name="ingredient" validators={[minLength(3)]} />
+					<ArrayTags name="tags" />
+					<button onClick={remove} type="button">
+						-
+					</button>
+					<button onClick={append} type="button">
+						after
+					</button>
+					<button onClick={prepend} type="button">
+						before
+					</button>
+				</div>
+			</div>
+		);
+	}, []);
+
 	return (
 		<div>
-			{list.map(({key, remove, append, prepend}) => {
-				return (
-					<div key={key}>
-						<div style={{display: 'flex'}}>
-							<Field label={''} name="ingredient" validators={[minLength(3)]} />
-							<ArrayTags name="tags" />
-							<button onClick={remove} type="button">
-								-
-							</button>
-							<button onClick={append} type="button">
-								after
-							</button>
-							<button onClick={prepend} type="button">
-								before
-							</button>
-						</div>
-					</div>
-				);
-			})}
+			{list.map(cb)}
 			<button onClick={list.add} type="button">
 				Добавить ингредиент
 			</button>
@@ -56,25 +58,23 @@ export const ArrayField = createArrayField<IFieldArray>(({list}) => {
 });
 
 export const ArrayFieldSimplest = createArrayField<IFieldArray>(({list}) => {
+	const cb = useCallback(({key, remove}) => {
+		return (
+			<div key={key}>
+				<div style={{display: 'flex'}}>
+					<Field label="Title" name="title" validators={[minLength(3)]} />
+					<Field label="Description" name="desc" validators={[minLength(3)]} />
+					<button onClick={remove} type="button">
+						-
+					</button>
+				</div>
+			</div>
+		);
+	}, []);
+
 	return (
 		<>
-			{list.map(({key, remove}) => {
-				return (
-					<div key={key}>
-						<div style={{display: 'flex'}}>
-							<Field label="Title" name="title" validators={[minLength(3)]} />
-							<Field
-								label="Description"
-								name="desc"
-								validators={[minLength(3)]}
-							/>
-							<button onClick={remove} type="button">
-								-
-							</button>
-						</div>
-					</div>
-				);
-			})}
+			{list.map(cb)}
 			<button onClick={list.add} type="button">
 				Добавить ингредиент
 			</button>

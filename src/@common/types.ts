@@ -32,9 +32,9 @@ export type FieldMeta = {
 
 export type FormContextState = {
 	fields: Record<string, FieldMeta>;
-	registerField: RegisterField;
-	getList: (fieldMeta: FieldMeta) => ListInterface;
 	formRef: MutableRefObject<HTMLFormElement>;
+	registerField: RegisterField;
+	setItems: (fieldName: string, setItems: (i: number[]) => number[]) => void;
 };
 
 export interface ArrayFieldState {

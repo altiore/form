@@ -6,6 +6,7 @@ import {Form} from '~/form';
 import {minLength} from '~/validators/min-length';
 
 import Field from './field';
+import {Parent} from './parent';
 
 import * as Joi from 'joi';
 
@@ -17,8 +18,10 @@ export default {
 
 export const SimplestField: ComponentStory<typeof Field> = () => (
 	<form>
-		<Field name="first" label="First" validators={[minLength(3)]} />
-		<Field name="second" label="Second" validators={[minLength(3)]} />
+		<Parent>
+			<Field name="first" label="First" validators={[minLength(3)]} />
+			<Field name="second" label="Second" validators={[minLength(3)]} />
+		</Parent>
 	</form>
 );
 

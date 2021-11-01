@@ -1,6 +1,7 @@
-package-lock.json
-node_modules
 .husky
 dist
-.prettierrc
+node_modules
 storybook-static
+
+.prettierrc
+package-lock.json
