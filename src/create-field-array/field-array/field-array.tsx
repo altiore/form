@@ -1,10 +1,10 @@
 import React, {useCallback} from 'react';
 
-import {ArrayFieldProps, createArrayField} from '~/create-array-field';
+import {FieldArrayProps, createFieldArray} from '~/create-field-array';
 import Field from '~/create-field/field';
 import {minLength} from '~/validators';
 
-export const ArrayTags = createArrayField<IFieldArray>(({list}) => {
+export const TagsArray = createFieldArray<FieldArrayProps>(({list}) => {
 	return (
 		<div>
 			{list.map(({key, remove}) => {
@@ -22,17 +22,17 @@ export const ArrayTags = createArrayField<IFieldArray>(({list}) => {
 	);
 });
 
-export interface IFieldArray extends ArrayFieldProps {
+export interface IFieldArray extends FieldArrayProps {
 	label?: string;
 }
 
-export const ArrayField = createArrayField<IFieldArray>(({list}) => {
+export const FieldArray = createFieldArray<IFieldArray>(({list}) => {
 	const cb = useCallback(({key, remove, append, prepend}) => {
 		return (
 			<div key={key}>
 				<div style={{display: 'flex'}}>
 					<Field label={''} name="ingredient" validators={[minLength(3)]} />
-					<ArrayTags name="tags" />
+					<TagsArray name="tags" />
 					<button onClick={remove} type="button">
 						-
 					</button>
@@ -57,7 +57,7 @@ export const ArrayField = createArrayField<IFieldArray>(({list}) => {
 	);
 });
 
-export const ArrayFieldSimplest = createArrayField<IFieldArray>(({list}) => {
+export const FieldArraySimplest = createFieldArray<IFieldArray>(({list}) => {
 	const cb = useCallback(({key, remove}) => {
 		return (
 			<div key={key}>

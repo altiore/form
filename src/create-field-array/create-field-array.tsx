@@ -1,32 +1,32 @@
 import React, {useMemo} from 'react';
 
-import {ArrayFieldContext} from '~/@common/array-field-context';
+import {FieldArrayContext} from '~/@common/field-array-context';
 import {FormContext} from '~/@common/form-context';
 import {useRegisterField} from '~/@common/hooks/use-register-field';
-import {ArrayFieldState, FormContextState} from '~/@common/types';
+import {FieldArrayState, FormContextState} from '~/@common/types';
 
-import ArrayField, {
-	InternalArrayFieldProps,
-	ValidatedArrayFieldProps,
-} from './validated-array-field';
+import FieldArray, {
+	InternalFieldArrayProps,
+	ValidatedFieldArrayProps,
+} from './validated-field-array';
 
 type NamedFieldProps<T> = Omit<
-	ValidatedArrayFieldProps<T>,
+	ValidatedFieldArrayProps<T>,
 	'field' | 'name' | 'setItems'
 > & {
-	arrayFieldState: ArrayFieldState;
+	fieldArrayState: FieldArrayState;
 	formState: FormContextState;
 	providedName: string;
 };
 
 const NamedField = <T,>({
-	arrayFieldState,
+	fieldArrayState,
 	formState,
 	providedName,
 	...rest
 }: NamedFieldProps<T>) => {
 	const {field, isInsideForm, name} = useRegisterField(
-		arrayFieldState,
+		fieldArrayState,
 		formState,
 		providedName,
 		true,
@@ -38,10 +38,10 @@ const NamedField = <T,>({
 		return null;
 	}
 
-	return <ArrayField {...rest} field={field} setItems={setItems} name={name} />;
+	return <FieldArray {...rest} field={field} setItems={setItems} name={name} />;
 };
 
-export type ArrayFieldProps = {
+export type FieldArrayProps = {
 	name: string;
 	validators?: Array<(v: any) => string | undefined>;
 };
@@ -53,16 +53,16 @@ export type ArrayFieldProps = {
  * @param {string} имя поля
  * @param {(string|undefined)} валидаторы - правила, по которым валидируются поля
  *
- * @typedef createArrayField
+ * @typedef createFieldArray
  * @return {Array} возвращает массив полей
  *
  *
  * @example
  *
  * import React from 'react';
- * import {ArrayFieldProps, createArrayField} from '~/create-array-field';
+ * import {FieldArrayProps, createFieldArray} from '~/create-field-array';
  *
- * const ArrayField = createArrayField<IFieldArray>(({list}) => {
+ * const FieldArray = createFieldArray<FieldArrayProps>(({list}) => {
  *	return (
  *		<div>
  *			{list.map(({key, remove, append, prepend}) => {
@@ -91,20 +91,20 @@ export type ArrayFieldProps = {
  *	);
  * });
  */
-export const createArrayField = <T extends ArrayFieldProps>(
+export const createFieldArray = <T extends FieldArrayProps>(
 	component: (
-		props: Omit<T, 'validators'> & InternalArrayFieldProps,
+		props: Omit<T, 'validators'> & InternalFieldArrayProps,
 	) => JSX.Element,
 ): ((props: T) => JSX.Element) => {
 	return React.memo(({name, validators, ...props}) => {
 		return (
 			<FormContext.Consumer>
 				{(formState) => (
-					<ArrayFieldContext.Consumer>
-						{(arrayFieldState) => {
+					<FieldArrayContext.Consumer>
+						{(fieldArrayState) => {
 							return (
 								<NamedField<Omit<T, 'name' | 'validators'>>
-									arrayFieldState={arrayFieldState}
+									fieldArrayState={fieldArrayState}
 									formState={formState}
 									component={component}
 									componentProps={props}
@@ -113,7 +113,7 @@ export const createArrayField = <T extends ArrayFieldProps>(
 								/>
 							);
 						}}
-					</ArrayFieldContext.Consumer>
+					</FieldArrayContext.Consumer>
 				)}
 			</FormContext.Consumer>
 		);

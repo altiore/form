@@ -5,35 +5,35 @@ import {ComponentMeta, ComponentStory} from '@storybook/react';
 import Field from '~/create-field/field';
 import {Form} from '~/form';
 
-import ArrayField, {ArrayFieldSimplest} from './array-field';
+import FieldArray, {FieldArraySimplest} from './field-array';
 
 export default {
 	argTypes: {onSubmit: {action: 'submit'}},
-	component: ArrayField,
-	title: '@altiore/create-array-field',
-} as ComponentMeta<typeof ArrayField>;
+	component: FieldArray,
+	title: '@altiore/create-field-array',
+} as ComponentMeta<typeof FieldArray>;
 
-export const SimplestArrayField: ComponentStory<typeof ArrayField> = () => (
-	<ArrayField name="ingredients" />
+export const SimplestFieldArray: ComponentStory<typeof FieldArray> = () => (
+	<FieldArray name="ingredients" />
 );
 
-export const InsideFormArrayFieldSimplest: ComponentStory<typeof ArrayField> =
+export const InsideFormFieldArraySimplest: ComponentStory<typeof FieldArray> =
 	({onSubmit}: any) => (
 		<div>
 			<Form onSubmit={onSubmit}>
 				<Field label="Title" name="title" />
-				<ArrayFieldSimplest name="ingredients" />
+				<FieldArraySimplest name="ingredients" />
 				<button type="submit">submit</button>
 			</Form>
 		</div>
 	);
 
-export const InsideFormArrayField: ComponentStory<typeof ArrayField> = ({
+export const InsideFormFieldArray: ComponentStory<typeof FieldArray> = ({
 	onSubmit,
 }: any) => (
 	<Form onSubmit={onSubmit}>
 		<Field label="Title" name="title" />
-		<ArrayField name="ingredients" />
+		<FieldArray name="ingredients" />
 		<button type="submit">Submit</button>
 	</Form>
 );

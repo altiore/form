@@ -1,11 +1,11 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {ArrayFieldContext} from '~/@common/array-field-context';
+import {FieldArrayContext} from '~/@common/field-array-context';
 import {ListInterface, ListItem} from '~/@common/types';
 
 const Item = React.memo(({add, cb, remove, name, index}: any) => {
 	return (
-		<ArrayFieldContext.Provider key={name} value={{name}}>
+		<FieldArrayContext.Provider key={name} value={{name}}>
 			{cb(
 				{
 					append: () => add({}, index),
@@ -15,7 +15,7 @@ const Item = React.memo(({add, cb, remove, name, index}: any) => {
 				},
 				index,
 			)}
-		</ArrayFieldContext.Provider>
+		</FieldArrayContext.Provider>
 	);
 });
 
