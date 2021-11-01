@@ -73,7 +73,7 @@ export type FieldProps = {
 export const createField = <T extends FieldProps>(
 	component: (props: Omit<T, 'validators'> & InternalFieldProps) => JSX.Element,
 ): ((props: T) => JSX.Element) => {
-	return ({name, validators, ...props}): JSX.Element => {
+	return React.memo(({name, validators, ...props}): JSX.Element => {
 		return (
 			<FormContext.Consumer>
 				{(formState) => (
@@ -94,5 +94,5 @@ export const createField = <T extends FieldProps>(
 				)}
 			</FormContext.Consumer>
 		);
-	};
+	});
 };

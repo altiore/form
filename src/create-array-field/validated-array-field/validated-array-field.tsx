@@ -3,7 +3,7 @@ import React, {MutableRefObject, useMemo, useRef} from 'react';
 import {useValidateList} from '~/@common/hooks/use-validate-list';
 import {FieldMeta, ListInterface, ValidateFuncType} from '~/@common/types';
 
-import {useList} from './use-list';
+import {add, map, remove, useList} from './validated-array-field.utils';
 
 export type InternalArrayFieldProps = {
 	listRef: MutableRefObject<HTMLElement>;
@@ -17,17 +17,17 @@ export interface ValidatedArrayFieldProps<T> {
 	) => JSX.Element;
 	componentProps: T;
 	field: FieldMeta;
-	getList: (fieldMeta: FieldMeta) => ListInterface;
 	name: string;
+	setItems: (fieldName: string, setItems: (i: number[]) => number[]) => void;
 	validators: Array<ValidateFuncType>;
 }
 
 const ValidatedArrayFieldComponent = <T,>({
 	component,
 	componentProps,
-	field,
-	getList,
+	field: fieldMeta,
 	name,
+	setItems,
 	validators,
 }: ValidatedArrayFieldProps<T>): JSX.Element => {
 	const listRef = useRef<HTMLElement>(null);
@@ -35,14 +35,35 @@ const ValidatedArrayFieldComponent = <T,>({
 	const stateList = useList(name);
 
 	const list = useMemo(() => {
-		if (typeof getList === 'function') {
-			return getList(field);
+		if (typeof setItems === 'function') {
+			const fieldName = fieldMeta.name;
+			const addHandler = (field: any, index?: number) =>
+				setItems(fieldName, (items: number[]) =>
+					add(items, fieldName, field, index),
+				);
+			const removeHandler = (index: number) =>
+				setItems(fieldName, (items: number[]) =>
+					remove(items, fieldName, index),
+				);
+			const items = fieldMeta.items || [];
+			const mapHandler = map.bind(
+				{},
+				addHandler,
+				removeHandler,
+				items,
+				fieldName,
+			);
+			return {
+				add: addHandler,
+				map: mapHandler,
+				remove: removeHandler,
+			};
 		}
 
 		return stateList;
-	}, [field, getList, stateList]);
+	}, [fieldMeta, setItems, stateList]);
 
-	const errors = useValidateList(listRef, validators, field);
+	const errors = useValidateList(listRef, validators, fieldMeta);
 
 	return React.createElement(component, {
 		...componentProps,

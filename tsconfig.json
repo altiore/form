@@ -18,5 +18,5 @@
 		"lib": ["dom", "es2015", "es2017"]
 	},
 	"include": ["./src/**/*"],
-	"exclude": ["**/**.stories.tsx"]
+	"exclude": []
 }

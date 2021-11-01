@@ -21,6 +21,10 @@ jobs:
         run: |
           npm run lint:ci
 
+      - name: Tests (please, run `npm run test` locally before merge)
+        run: |
+          npm run test
+
       - name: Build (please, run `npm run build` locally before merge)
         run: |
           npm run build
