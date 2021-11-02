@@ -22,9 +22,9 @@ export const useValidateInput = (
 
 				const errors: string[] = [];
 				validators.forEach((validate) => {
-					const {error} = validate.validate(value);
-					if (error) {
-						errors.push(error.message);
+					const result = validate.validate(value);
+					if (result?.error) {
+						errors.push(result.error.message);
 					}
 				});
 				if (field?.setErrors) {
