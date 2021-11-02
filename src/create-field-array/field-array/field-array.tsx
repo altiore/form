@@ -5,16 +5,18 @@ import Field from '~/create-field/field';
 import {minLength} from '~/validators';
 
 export const TagsArray = createFieldArray<FieldArrayProps>(({list}) => {
+	const cb = useCallback(({key, remove}) => {
+		return (
+			<div key={key}>
+				<Field label={'Tag'} name="tag" />
+				<button onClick={remove}>remove tag</button>
+			</div>
+		);
+	}, []);
+
 	return (
 		<div>
-			{list.map(({key, remove}) => {
-				return (
-					<div key={key}>
-						<Field label={'Tag'} name="tag" />
-						<button onClick={remove}>remove tag</button>
-					</div>
-				);
-			})}
+			{list.map(cb)}
 			<button onClick={list.add} type="button">
 				Добавить Тэг
 			</button>

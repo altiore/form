@@ -5,6 +5,7 @@ import {FormContext} from '~/@common/form-context';
 import {useRegisterField} from '~/@common/hooks/use-register-field';
 import {
 	FieldArrayState,
+	FieldMeta,
 	FormContextState,
 	ValidateFuncType,
 } from '~/@common/types';
@@ -71,7 +72,9 @@ export type FieldProps = {
  * });
  */
 export const createField = <T extends FieldProps>(
-	component: (props: Omit<T, 'validators'> & InternalFieldProps) => JSX.Element,
+	component: (
+		props: Omit<T, 'validators'> & InternalFieldProps & FieldMeta,
+	) => JSX.Element,
 ): ((props: T) => JSX.Element) => {
 	return React.memo(({name, validators, ...props}): JSX.Element => {
 		return (

@@ -6,13 +6,13 @@ import {FieldMeta, ValidateFuncType} from '~/@common/types';
 import {useInput} from './validated-field.hooks';
 
 export type InternalFieldProps = {
-	defaultValue?: any;
 	inputRef: MutableRefObject<HTMLInputElement>;
-	errors: string[];
 };
 
 export interface ValidatedFieldProps<T> {
-	component: (props: Omit<T, 'validators'> & InternalFieldProps) => JSX.Element;
+	component: (
+		props: Omit<T, 'validators'> & InternalFieldProps & FieldMeta,
+	) => JSX.Element;
 	componentProps: T;
 	field: FieldMeta;
 	name: string;
@@ -28,7 +28,7 @@ const ValidatedFieldComponent = <T,>({
 }: ValidatedFieldProps<T>): JSX.Element => {
 	const inputRef = useInput();
 
-	const errors = useValidateInput(
+	const {errors, setErrors} = useValidateInput(
 		inputRef,
 		validators as ValidateFuncType[],
 		field,
@@ -40,6 +40,7 @@ const ValidatedFieldComponent = <T,>({
 		errors,
 		inputRef,
 		name,
+		setErrors,
 	});
 };
 
