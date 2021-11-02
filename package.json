@@ -9,7 +9,7 @@
 	],
 	"scripts": {
 		"start": "npm run story",
-		"build": "rm -rf dist && tsc && tscpaths -p tsconfig.build.json -s ./src -o ./dist",
+		"build": "rimraf dist && tsc && tscpaths -p tsconfig.build.json -s ./src -o ./dist",
 		"npm:patch": "npm version patch && npm publish --access=public && git push && git push --tags",
 		"npm:minor": "npm version minor && npm publish --access=public && git push && git push --tags",
 		"npm:major": "npm version major && npm publish --access=public && git push && git push --tags",
@@ -95,6 +95,7 @@
 		"prettier": "2.3.2",
 		"react": "17.0.2",
 		"react-dom": "17.0.2",
+		"rimraf": "^3.0.2",
 		"sinon": "11.1.2",
 		"ts-jest": "^27.0.7",
 		"tscpaths": "0.0.9",
