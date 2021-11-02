@@ -5,11 +5,16 @@ import isEqual from 'lodash/isEqual';
 
 import {FieldMeta, ValidateFuncType} from '~/@common/types';
 
+type ValidateInputRes = {
+	errors: string[];
+	setErrors: (errors: string[]) => void;
+};
+
 export const useValidateInput = (
 	inputRef: MutableRefObject<HTMLInputElement>,
 	validators: Array<ValidateFuncType>,
 	field?: FieldMeta,
-): string[] => {
+): ValidateInputRes => {
 	const [errors, setErrors] = useState<string[]>([]);
 
 	const handleDebounceFn = useCallback(
@@ -65,5 +70,8 @@ export const useValidateInput = (
 		};
 	}, [inputRef, validators]);
 
-	return field?.errors ?? errors;
+	return {
+		errors: field?.errors ?? errors,
+		setErrors: field?.setErrors ?? setErrors,
+	};
 };

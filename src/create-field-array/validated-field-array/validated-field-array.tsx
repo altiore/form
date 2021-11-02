@@ -1,4 +1,4 @@
-import React, {MutableRefObject, useMemo, useRef} from 'react';
+import React, {MutableRefObject, useCallback, useMemo, useRef} from 'react';
 
 import {useValidateList} from '~/@common/hooks/use-validate-list';
 import {FieldMeta, ListInterface, ValidateFuncType} from '~/@common/types';
@@ -34,34 +34,34 @@ const ValidatedFieldArrayComponent = <T,>({
 
 	const stateList = useList(name);
 
+	const addHandler = useCallback(
+		(fieldName: string, field: any, index?: number) =>
+			setItems(fieldName, (items: number[]) =>
+				add(items, fieldName, field, index),
+			),
+		[setItems],
+	);
+
+	const removeHandler = useCallback(
+		(fieldName: string, index: number) =>
+			setItems(fieldName, (items: number[]) => remove(items, fieldName, index)),
+		[setItems],
+	);
+
 	const list = useMemo(() => {
 		if (typeof setItems === 'function') {
 			const fieldName = fieldMeta.name;
-			const addHandler = (field: any, index?: number) =>
-				setItems(fieldName, (items: number[]) =>
-					add(items, fieldName, field, index),
-				);
-			const removeHandler = (index: number) =>
-				setItems(fieldName, (items: number[]) =>
-					remove(items, fieldName, index),
-				);
+
 			const items = fieldMeta.items || [];
-			const mapHandler = map.bind(
-				{},
-				addHandler,
-				removeHandler,
-				items,
-				fieldName,
-			);
 			return {
-				add: addHandler,
-				map: mapHandler,
-				remove: removeHandler,
+				add: addHandler.bind({}, fieldName),
+				map: map.bind({}, addHandler, removeHandler, items, fieldName),
+				remove: removeHandler.bind({}, fieldName),
 			};
 		}
 
 		return stateList;
-	}, [fieldMeta, setItems, stateList]);
+	}, [addHandler, fieldMeta, removeHandler, setItems, stateList]);
 
 	const errors = useValidateList(listRef, validators, fieldMeta);
 

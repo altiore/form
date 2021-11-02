@@ -6,8 +6,12 @@ export interface IField extends FieldProps {
 	label: string;
 }
 
-export const Field = createField<IField>(({errors, inputRef, label, name}) => {
-	console.log('Field.render');
+export const Field = createField<IField>((props) => {
+	const {errors, inputRef, label, name} = props;
+
+	console.log('Field.render', {
+		props,
+	});
 	return (
 		<div>
 			<span>{label}</span>

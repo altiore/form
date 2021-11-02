@@ -3,15 +3,35 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {FieldArrayContext} from '~/@common/field-array-context';
 import {ListInterface, ListItem} from '~/@common/types';
 
-const Item = React.memo(({add, cb, remove, name, index}: any) => {
+const Item = React.memo(({add, cb, fieldName, remove, name, index}: any) => {
+	const handleRemove = useCallback(() => {
+		remove(fieldName, index);
+	}, [fieldName, index, remove]);
+
+	const append = useCallback(
+		(object: any) => {
+			// TODO: уточнить реализацию
+			add(fieldName, object, index);
+		},
+		[add, fieldName, index],
+	);
+
+	const prepend = useCallback(
+		(object: any) => {
+			// TODO: уточнить реализацию
+			add(fieldName, object, index);
+		},
+		[add, fieldName, index],
+	);
+
 	return (
 		<FieldArrayContext.Provider key={name} value={{name}}>
 			{cb(
 				{
-					append: () => add({}, index),
+					append,
 					key: name,
-					prepend: () => add({}, index - 1),
-					remove: () => remove(index),
+					prepend,
+					remove: handleRemove,
 				},
 				index,
 			)}
@@ -35,6 +55,7 @@ export const map = (
 				cb={callback}
 				remove={remove}
 				name={name}
+				fieldName={fieldName}
 				index={index}
 			/>
 		);
