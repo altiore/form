@@ -41,7 +41,7 @@ const Item = React.memo(({add, cb, fieldName, remove, name, index}: any) => {
 
 export const map = (
 	add: (fieldState: Record<string, any>, index?: number) => void,
-	remove: (index: number) => void,
+	remove: (fieldName: string, index: number) => void,
 	list: number[],
 	fieldName: string,
 	callback: (el: ListItem, index: number) => JSX.Element,
@@ -101,10 +101,10 @@ export const useList = (fieldName: string): ListInterface => {
 	);
 
 	const removeHandler = useCallback(
-		(index: number) => {
+		(fieldName: string, index: number) => {
 			setItems((s) => remove(s, fieldName, index));
 		},
-		[fieldName, setItems],
+		[setItems],
 	);
 
 	const mapHandler = useCallback(
@@ -118,7 +118,7 @@ export const useList = (fieldName: string): ListInterface => {
 		return {
 			add: addHandler,
 			map: mapHandler,
-			remove: removeHandler,
+			remove: removeHandler.bind({}, fieldName),
 		};
-	}, [addHandler, items, mapHandler, removeHandler]);
+	}, [addHandler, fieldName, items, mapHandler, removeHandler]);
 };
