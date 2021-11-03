@@ -1,13 +1,24 @@
-import {MutableRefObject, useState} from 'react';
+import {MutableRefObject, useMemo} from 'react';
 
-import {FieldMeta, ValidateFuncType} from '~/@common/types';
+import {ValidateFuncType} from '~/@common/types';
 
 export const useValidateList = (
 	inputRef: MutableRefObject<HTMLElement>,
 	validators: Array<ValidateFuncType>,
-	field?: FieldMeta,
+	items: Array<number>,
 ): string[] => {
-	const [errors] = useState<string[]>([]);
-
-	return field?.errors ?? errors;
+	return useMemo(() => {
+		console.log(items);
+		const hasValidation = Boolean(validators?.length);
+		const ers: string[] = [];
+		if (hasValidation) {
+			validators.forEach((validate) => {
+				const result = validate.validate(items);
+				if (result?.error) {
+					ers.push(result.error.message);
+				}
+			});
+		}
+		return ers;
+	}, [validators, items]);
 };

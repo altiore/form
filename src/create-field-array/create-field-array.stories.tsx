@@ -7,6 +7,8 @@ import {Form} from '~/form';
 
 import FieldArray, {FieldArraySimplest} from './field-array';
 
+import Joi from 'joi';
+
 export default {
 	argTypes: {onSubmit: {action: 'submit'}},
 	component: FieldArray,
@@ -28,12 +30,12 @@ export const InsideFormFieldArraySimplest: ComponentStory<typeof FieldArray> =
 		</div>
 	);
 
-export const InsideFormFieldArray: ComponentStory<typeof FieldArray> = ({
-	onSubmit,
-}: any) => (
+export const InsideFormFieldArrayWithValidators: ComponentStory<
+	typeof FieldArray
+> = ({onSubmit}: any) => (
 	<Form onSubmit={onSubmit}>
 		<Field label="Title" name="title" />
-		<FieldArray name="ingredients" />
+		<FieldArray name="ingredients" validators={[Joi.array().min(2)]} />
 		<button type="submit">Submit</button>
 	</Form>
 );

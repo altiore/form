@@ -111,7 +111,7 @@ export const useList = (
 		fieldName: string,
 		setItems: (i: number[]) => number[],
 	) => void,
-): ListInterface => {
+): [ListInterface, number[]] => {
 	const fieldName = useMemo(() => {
 		return fieldMeta?.name ?? name;
 	}, [name, fieldMeta?.name]);
@@ -122,10 +122,8 @@ export const useList = (
 		if (fieldMeta?.items) {
 			return fieldMeta.items;
 		}
-
 		return localItems;
 	}, [fieldMeta, localItems]);
-
 	const setItems = useCallback(
 		(set: (i: number[]) => number[]) => {
 			if (setFormContextItems) {
@@ -163,10 +161,13 @@ export const useList = (
 	);
 
 	return useMemo(() => {
-		return {
-			add: addHandler,
-			map: mapHandler,
-			remove: removeHandler,
-		};
+		return [
+			{
+				add: addHandler,
+				map: mapHandler,
+				remove: removeHandler,
+			},
+			items,
+		];
 	}, [addHandler, fieldName, items, mapHandler, removeHandler]);
 };
