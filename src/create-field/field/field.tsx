@@ -7,7 +7,7 @@ export interface IField extends FieldProps {
 }
 
 export const Field = createField<IField>((props) => {
-	const {errors, inputRef, label, name} = props;
+	const {defaultValue, errors, inputRef, label, name} = props;
 
 	console.log('Field.render', {
 		props,
@@ -16,7 +16,7 @@ export const Field = createField<IField>((props) => {
 		<div>
 			<span>{label}</span>
 			<span>{name}</span>
-			<input name={name} ref={inputRef} />
+			<input defaultValue={defaultValue} name={name} ref={inputRef} />
 			<span>{errors[0]}</span>
 		</div>
 	);

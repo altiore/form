@@ -17,24 +17,40 @@ export default {
 
 export const SimplestField: ComponentStory<typeof Field> = () => (
 	<form>
-		<Field name="first" label="First" validators={[minLength(3)]} />
-		<Field name="second" label="Second" validators={[minLength(3)]} />
+		<Field
+			name="first"
+			defaultValue="Default"
+			label="First"
+			validators={[minLength(3)]}
+		/>
+		<Field
+			name="second"
+			label="Second"
+			defaultValue=""
+			validators={[minLength(3)]}
+		/>
 	</form>
 );
 
 export const InsideFormField: ComponentStory<typeof Field> = ({
 	onSubmit,
 }: any) => (
-	<Form onSubmit={onSubmit}>
+	<Form onSubmit={onSubmit} defaultValues={{first: 'NOT DEFAULT'}}>
 		<Field
 			name="first"
 			label="First"
+			defaultValue={'DEFAULT'}
 			validators={[
 				Joi.string().max(5).min(2).messages({
 					'string.min': 'Слишком коротко',
 				}),
 			]}
 		/>
-		<Field name="second" label="Second" validators={[minLength(3)]} />
+		<Field
+			name="second"
+			label="Second"
+			defaultValue={'test'}
+			validators={[minLength(3)]}
+		/>
 	</Form>
 );

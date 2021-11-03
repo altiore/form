@@ -42,6 +42,7 @@ const NamedField = <T,>({
 
 export type FieldProps = {
 	name: string;
+	defaultValue?: string;
 	validators?: Array<ValidateFuncType>;
 };
 
