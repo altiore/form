@@ -15,10 +15,10 @@ import unset from 'lodash/unset';
 import {FormContext} from '~/@common/form-context';
 import {FormContextState} from '~/@common/types';
 
-export interface FormProps {
+export interface FormProps<Values extends Record<string, any>> {
 	children: ReactNode;
-	defaultValues?: Record<string, any>;
-	onSubmit: (values: unknown) => void;
+	defaultValues?: Partial<Values>;
+	onSubmit: (values: Partial<Values>) => void;
 }
 
 /**
@@ -39,11 +39,11 @@ export interface FormProps {
  * return (any)
  */
 
-export const Form = ({
+export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	children,
 	defaultValues,
 	onSubmit,
-}: FormProps): JSX.Element => {
+}: FormProps<Values>): JSX.Element => {
 	const formRef = useRef<HTMLFormElement>(null);
 	const [fields, setFields] = useState<FormContextState['fields']>({});
 
@@ -133,7 +133,7 @@ export const Form = ({
 					}
 				});
 
-			onSubmit(resValues);
+			onSubmit(resValues as Values);
 		},
 		[fields, onSubmit],
 	);
