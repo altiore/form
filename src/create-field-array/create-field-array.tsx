@@ -98,7 +98,9 @@ export const createFieldArray = <T extends FieldArrayProps>(
 	component: (
 		props: Omit<T, 'validators'> & InternalFieldArrayProps,
 	) => JSX.Element,
-): ((props: T) => JSX.Element) => {
+): (<Values extends Record<string, any> = Record<string, any>>(
+	props: T & {name: keyof Values},
+) => JSX.Element) => {
 	return React.memo(({name, validators, ...props}) => {
 		return (
 			<FormContext.Consumer>

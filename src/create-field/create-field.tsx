@@ -42,7 +42,7 @@ const NamedField = <T,>({
 
 export type FieldProps = {
 	name: string;
-	defaultValue?: string;
+	defaultValue?: any;
 	validators?: Array<ValidateFuncType>;
 };
 
@@ -76,7 +76,9 @@ export const createField = <T extends FieldProps>(
 	component: (
 		props: Omit<T, 'validators'> & InternalFieldProps & FieldMeta,
 	) => JSX.Element,
-): ((props: T) => JSX.Element) => {
+): (<Values extends Record<string, any> = Record<string, any>>(
+	props: T & {name: keyof Values},
+) => JSX.Element) => {
 	return React.memo(({name, validators, ...props}): JSX.Element => {
 		return (
 			<FormContext.Consumer>

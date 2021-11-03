@@ -32,11 +32,16 @@ export const SimplestField: ComponentStory<typeof Field> = () => (
 	</form>
 );
 
+type T = {
+	first: string;
+	second: string;
+};
+
 export const InsideFormField: ComponentStory<typeof Field> = ({
 	onSubmit,
 }: any) => (
-	<Form onSubmit={onSubmit} defaultValues={{first: 'NOT DEFAULT'}}>
-		<Field
+	<Form<T> onSubmit={onSubmit} defaultValues={{first: 'NOT DEFAULT'}}>
+		<Field<T>
 			name="first"
 			label="First"
 			defaultValue={'DEFAULT'}
@@ -46,7 +51,7 @@ export const InsideFormField: ComponentStory<typeof Field> = ({
 				}),
 			]}
 		/>
-		<Field
+		<Field<T>
 			name="second"
 			label="Second"
 			defaultValue={'test'}
