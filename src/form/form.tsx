@@ -6,9 +6,11 @@ import React, {
 	useState,
 } from 'react';
 
+import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
 import set from 'lodash/set';
+import unset from 'lodash/unset';
 
 import {FormContext} from '~/@common/form-context';
 import {FormContextState} from '~/@common/types';
@@ -111,13 +113,29 @@ export const Form = ({
 			evt.preventDefault();
 			const formData = new FormData(formRef.current ?? undefined);
 			const values: Record<string, unknown> = {};
-			formData.forEach((value: unknown, key: string) => {
-				const keyArr = key.split('.');
-				set(values, keyArr, value);
+			formData.forEach((value: unknown, name: string) => {
+				set(values, name, value);
 			});
-			onSubmit(values);
+			const resValues: Record<string, unknown> = cloneDeep(values);
+
+			Object.keys(fields)
+				.reverse()
+				.forEach((fieldKey) => {
+					const items = fields[fieldKey].items;
+
+					if (Array.isArray(items)) {
+						const value = items.map((index: number) => {
+							return (cloneDeep(get(resValues, fieldKey)) as any[])[index];
+						});
+
+						unset(resValues, fieldKey);
+						set(resValues, fieldKey, value);
+					}
+				});
+
+			onSubmit(resValues);
 		},
-		[onSubmit],
+		[fields, onSubmit],
 	);
 
 	return (
