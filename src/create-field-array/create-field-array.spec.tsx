@@ -14,7 +14,9 @@ describe('~/create-field-array', () => {
 			return (
 				<>
 					{list.map(({key}) => {
-						return <Field key={key} label="Title" name="title" />;
+						return (
+							<Field validators={[]} key={key} label="Title" name="title" />
+						);
 					})}
 				</>
 			);

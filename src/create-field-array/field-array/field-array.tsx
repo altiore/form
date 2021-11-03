@@ -28,7 +28,7 @@ export interface IFieldArray extends FieldArrayProps {
 	label?: string;
 }
 
-export const FieldArray = createFieldArray<IFieldArray>(({list}) => {
+export const FieldArray = createFieldArray<IFieldArray>(({list, errors}) => {
 	const cb = useCallback(({key, remove, append, prepend}) => {
 		return (
 			<div key={key}>
@@ -51,6 +51,7 @@ export const FieldArray = createFieldArray<IFieldArray>(({list}) => {
 
 	return (
 		<div>
+			<div>{errors[0]}</div>
 			{list.map(cb)}
 			<button onClick={list.add} type="button">
 				Добавить ингредиент
@@ -78,7 +79,7 @@ export const FieldArraySimplest = createFieldArray<IFieldArray>(({list}) => {
 		<>
 			{list.map(cb)}
 			<button onClick={list.add} type="button">
-				Добавить ингредиент
+				Добавить ингредиент 1
 			</button>
 		</>
 	);
