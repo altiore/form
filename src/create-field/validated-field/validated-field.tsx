@@ -1,5 +1,7 @@
 import React, {MutableRefObject} from 'react';
 
+import merge from 'lodash/merge';
+
 import {useValidateInput} from '~/@common/hooks';
 import {FieldMeta, ValidateFuncType} from '~/@common/types';
 
@@ -28,15 +30,10 @@ const ValidatedFieldComponent = <T,>({
 }: ValidatedFieldProps<T>): JSX.Element => {
 	const inputRef = useInput();
 
-	const {errors, setErrors} = useValidateInput(
-		inputRef,
-		validators as ValidateFuncType[],
-		field,
-	);
+	const {errors, setErrors} = useValidateInput(inputRef, validators, field);
 
 	return React.createElement(component, {
-		...componentProps,
-		...(field ?? {}),
+		...merge(componentProps, field),
 		errors,
 		inputRef,
 		name,
