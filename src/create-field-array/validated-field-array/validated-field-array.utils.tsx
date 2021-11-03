@@ -1,25 +1,28 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {SyntheticEvent, useCallback, useMemo, useState} from 'react';
 
 import {FieldArrayContext} from '~/@common/field-array-context';
-import {ListInterface, ListItem} from '~/@common/types';
+import {FieldMeta, ListInterface, ListItem} from '~/@common/types';
+
+enum InsertPosition {
+	BEFORE = 0,
+	AFTER = 1,
+}
 
 const Item = React.memo(({add, cb, fieldName, remove, name, index}: any) => {
-	const handleRemove = useCallback(() => {
-		remove(fieldName, index);
-	}, [fieldName, index, remove]);
+	const removeHandler = useCallback(() => {
+		remove(index);
+	}, [index, remove]);
 
 	const append = useCallback(
 		(object: any) => {
-			// TODO: уточнить реализацию
-			add(fieldName, object, index);
+			add(object, index, InsertPosition.AFTER);
 		},
-		[add, fieldName, index],
+		[add, index],
 	);
 
 	const prepend = useCallback(
 		(object: any) => {
-			// TODO: уточнить реализацию
-			add(fieldName, object, index);
+			add(object, index, InsertPosition.BEFORE);
 		},
 		[add, fieldName, index],
 	);
@@ -31,7 +34,7 @@ const Item = React.memo(({add, cb, fieldName, remove, name, index}: any) => {
 					append,
 					key: name,
 					prepend,
-					remove: handleRemove,
+					remove: removeHandler,
 				},
 				index,
 			)}
@@ -41,7 +44,7 @@ const Item = React.memo(({add, cb, fieldName, remove, name, index}: any) => {
 
 export const map = (
 	add: (fieldState: Record<string, any>, index?: number) => void,
-	remove: (fieldName: string, index: number) => void,
+	remove: (index: number) => void,
 	list: number[],
 	fieldName: string,
 	callback: (el: ListItem, index: number) => JSX.Element,
@@ -65,21 +68,32 @@ export const map = (
 export const add = (
 	list: number[],
 	fieldName: string,
-	fieldState: Record<string, any> | Event | undefined = undefined,
+	fieldState: Record<string, any> | SyntheticEvent | undefined = undefined,
 	index?: number,
+	offset?: InsertPosition,
 ): number[] => {
-	// TODO: проверить, что это не событие
-	const field = fieldState.hasOwnProperty('originalEvent')
-		? undefined
-		: fieldState;
+	const fieldDefaultValue =
+		typeof fieldState.persist === 'function' ? undefined : fieldState;
 
+	// TODO: добавить fieldDefaultValue значение в дефолтные значения
 	console.log('add item to element', {
-		field,
+		fieldDefaultValue,
 		fieldName,
 		index,
 	});
 
-	return [...list, list.length ? Math.max(...list) + 1 : 0];
+	const lastElement = Math.max(...list);
+
+	if (typeof index === 'number') {
+		const baseListItemIndex = list.indexOf(index);
+		return [
+			...list.slice(0, baseListItemIndex + offset ?? InsertPosition.AFTER),
+			lastElement + 1,
+			...list.slice(baseListItemIndex + offset ?? InsertPosition.AFTER),
+		];
+	}
+
+	return [...list, list.length ? lastElement + 1 : 0];
 };
 
 export const remove = (
@@ -90,21 +104,55 @@ export const remove = (
 	return list.filter((i) => i !== index);
 };
 
-export const useList = (fieldName: string): ListInterface => {
-	const [items, setItems] = useState<number[]>([]);
+export const useList = (
+	name: string,
+	fieldMeta?: FieldMeta,
+	setFormContextItems?: (
+		fieldName: string,
+		setItems: (i: number[]) => number[],
+	) => void,
+): ListInterface => {
+	const fieldName = useMemo(() => {
+		return fieldMeta?.name ?? name;
+	}, [name, fieldMeta?.name]);
+
+	const [localItems, setLocalItems] = useState<number[]>([]);
+
+	const items = useMemo(() => {
+		if (fieldMeta?.items) {
+			return fieldMeta.items;
+		}
+
+		return localItems;
+	}, [fieldMeta, localItems]);
+
+	const setItems = useCallback(
+		(set: (i: number[]) => number[]) => {
+			if (setFormContextItems) {
+				setFormContextItems(fieldName, set);
+			} else {
+				setLocalItems(set);
+			}
+		},
+		[fieldName, setFormContextItems, setLocalItems],
+	);
 
 	const addHandler = useCallback(
-		(fieldState: Record<string, any>, index?: number) => {
-			setItems((s) => add(s, fieldName, fieldState, index));
+		(
+			fieldState: Record<string, any>,
+			index?: number,
+			offset?: InsertPosition,
+		) => {
+			setItems((s) => add(s, fieldName, fieldState, index, offset));
 		},
 		[fieldName, setItems],
 	);
 
 	const removeHandler = useCallback(
-		(fieldName: string, index: number) => {
+		(index: number) => {
 			setItems((s) => remove(s, fieldName, index));
 		},
-		[setItems],
+		[fieldName, setItems],
 	);
 
 	const mapHandler = useCallback(
@@ -118,7 +166,7 @@ export const useList = (fieldName: string): ListInterface => {
 		return {
 			add: addHandler,
 			map: mapHandler,
-			remove: removeHandler.bind({}, fieldName),
+			remove: removeHandler,
 		};
 	}, [addHandler, fieldName, items, mapHandler, removeHandler]);
 };
