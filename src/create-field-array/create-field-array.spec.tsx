@@ -4,7 +4,7 @@ import {mount} from 'enzyme';
 import sinon from 'sinon';
 
 import {createFieldArray} from '~/create-field-array/create-field-array';
-import Field from '~/create-field/field';
+import Field from '~/stories/field';
 
 describe('~/create-field-array', () => {
 	describe('не перерендеривать, если рендерится родитель, но пропсы не меняются', () => {

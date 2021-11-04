@@ -2,9 +2,9 @@ import React from 'react';
 
 import {ComponentMeta, ComponentStory} from '@storybook/react';
 
-import Field from '~/create-field/field';
+import Field from '~/stories/field';
 
-import {Form} from './form';
+import {Form} from '../form/form';
 
 export default {
 	component: Form,

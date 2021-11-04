@@ -1,10 +1,4 @@
-import React, {
-	FormEvent,
-	ReactNode,
-	useCallback,
-	useRef,
-	useState,
-} from 'react';
+import React, {FormEvent, useCallback, useRef, useState} from 'react';
 
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
@@ -14,6 +8,8 @@ import unset from 'lodash/unset';
 
 import {FormContext} from '~/@common/form-context';
 import {FormContextState} from '~/@common/types';
+
+import {FormProps} from './types/form-props';
 
 export interface FormProps<Values extends Record<string, any>> {
 	children: ReactNode;

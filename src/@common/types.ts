@@ -1,5 +1,16 @@
 import {MouseEventHandler, MutableRefObject} from 'react';
 
+export type NamedFieldProps<T, R extends string> = Omit<T, R> & {
+	fieldArrayState: FieldArrayState;
+	formState: FormContextState;
+	providedName: string;
+};
+
+export enum InsertPosition {
+	BEFORE = 0,
+	AFTER = 1,
+}
+
 export interface ListItem {
 	key: string;
 	append: () => void;
