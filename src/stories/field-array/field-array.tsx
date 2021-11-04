@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 
 import {FieldArrayProps, createFieldArray} from '~/create-field-array';
-import Field from '~/create-field/field';
+import Field from '~/stories/field';
 import {minLength} from '~/validators';
 
 export const TagsArray = createFieldArray<FieldArrayProps>(({list}) => {

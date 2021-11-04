@@ -8,7 +8,6 @@ export const useValidateList = (
 	items: Array<number>,
 ): string[] => {
 	return useMemo(() => {
-		console.log(items);
 		const hasValidation = Boolean(validators?.length);
 		const ers: string[] = [];
 		if (hasValidation) {

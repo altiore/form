@@ -2,43 +2,9 @@ import React from 'react';
 
 import {FieldArrayContext} from '~/@common/field-array-context';
 import {FormContext} from '~/@common/form-context';
-import {useRegisterField} from '~/@common/hooks/use-register-field';
-import {
-	FieldArrayState,
-	FieldMeta,
-	FormContextState,
-	ValidateFuncType,
-} from '~/@common/types';
+import {FieldMeta, ValidateFuncType} from '~/@common/types';
 
-import ValidatedField, {
-	InternalFieldProps,
-	ValidatedFieldProps,
-} from './validated-field';
-
-type NamedFieldProps<T> = Omit<ValidatedFieldProps<T>, 'field' | 'name'> & {
-	fieldArrayState: FieldArrayState;
-	formState: FormContextState;
-	providedName: string;
-};
-
-const NamedField = <T,>({
-	fieldArrayState,
-	formState,
-	providedName,
-	...rest
-}: NamedFieldProps<T>) => {
-	const {field, isInsideForm, name} = useRegisterField(
-		fieldArrayState,
-		formState,
-		providedName,
-	);
-
-	if (isInsideForm && !field) {
-		return null;
-	}
-
-	return <ValidatedField {...rest} field={field} name={name} />;
-};
+import NamedField, {InternalFieldProps} from './named-field';
 
 export type FieldProps = {
 	name: string;
