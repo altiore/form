@@ -31,7 +31,7 @@ yarn add @altiore/form
 
 ## Простейшее использование
 
-```bash
+```tsx
 import React, {useCallback} from 'react';
 
 import {Form} from '@altiore/form';
@@ -47,5 +47,5 @@ const MyForm = () => {
 			<button type="submit">Submit</button>
 		</Form>
 	);
-}
+};
 ```
