@@ -2,20 +2,20 @@
 
 `@altiore/form`
 
-powerful forms with [**@altiore/form**](https://www.npmjs.com/package/@altiore/form)
+мощные формы от [**@altiore/form**](https://www.npmjs.com/package/@altiore/form)
 
 <a href="https://www.npmjs.com/package/@altiore/form" target="_blank">
   <img src="https://img.shields.io/npm/v/@altiore/form.svg" alt="NPM Version" />
 </a>
 
-**русская версия**
-[**README.RU.md**](https://github.com/altiore/form/blob/main/README.md)
+**английская версия**
+[**README.md**](https://github.com/altiore/form/blob/main/README.md)
 
-## Why?
+## Зачем?
 
-To simplify work with forms
+Чтобы облегчить работу с формами
 
-## Installation:
+## Установка:
 
 #### npm
 
@@ -29,7 +29,7 @@ npm i @altiore/form -S
 yarn add @altiore/form
 ```
 
-## Simplest usage
+## Простейшее использование
 
 ```bash
 import React, {useCallback} from 'react';
