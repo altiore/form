@@ -9,7 +9,7 @@ powerful forms with [**@altiore/form**](https://www.npmjs.com/package/@altiore/f
 </a>
 
 **русская версия**
-[**README.RU.md**](https://github.com/altiore/form/blob/main/README.md)
+[**README.RU.md**](README.RU.md)
 
 ## Why?
 
@@ -31,7 +31,7 @@ yarn add @altiore/form
 
 ## Simplest usage
 
-```bash
+```tsx
 import React, {useCallback} from 'react';
 
 import {Form} from '@altiore/form';
@@ -47,5 +47,5 @@ const MyForm = () => {
 			<button type="submit">Submit</button>
 		</Form>
 	);
-}
+};
 ```
