@@ -2,7 +2,7 @@ import React from 'react';
 
 import {FieldArrayContext} from '~/@common/field-array-context';
 import {FormContext} from '~/@common/form-context';
-import {FieldMeta, ValidateFuncType} from '~/@common/types';
+import {FieldMeta, FieldType, ValidateFuncType} from '~/@common/types';
 
 import NamedField, {InternalFieldProps} from './named-field';
 
@@ -38,13 +38,47 @@ export type FieldProps = {
  *   );
  * });
  */
-export const createField = <T extends FieldProps>(
+
+export function createField<T extends FieldProps>(
+	fieldType: FieldType,
 	component: (
 		props: Omit<T, 'validators'> & InternalFieldProps & FieldMeta,
 	) => JSX.Element,
-): (<Values extends Record<string, any> = Record<string, any>>(
+): <Values extends Record<string, any> = Record<string, any>>(
 	props: T & {name: keyof Values},
-) => JSX.Element) => {
+) => JSX.Element;
+
+export function createField<T extends FieldProps>(
+	component: (
+		props: Omit<T, 'validators'> & InternalFieldProps & FieldMeta,
+	) => JSX.Element,
+): <Values extends Record<string, any> = Record<string, any>>(
+	props: T & {name: keyof Values},
+) => JSX.Element;
+
+export function createField<T extends FieldProps>(
+	fieldTypeOrComponent:
+		| FieldType
+		| ((
+				props: Omit<T, 'validators'> & InternalFieldProps & FieldMeta,
+		  ) => JSX.Element),
+	componentInSecondParam?: (
+		props: Omit<T, 'validators'> & InternalFieldProps & FieldMeta,
+	) => JSX.Element,
+): <Values extends Record<string, any> = Record<string, any>>(
+	props: T & {name: keyof Values},
+) => JSX.Element {
+	const fieldType = componentInSecondParam
+		? (fieldTypeOrComponent as FieldType)
+		: undefined;
+	const component: (
+		props: Omit<T, 'validators'> & InternalFieldProps & FieldMeta,
+	) => JSX.Element =
+		componentInSecondParam ??
+		(fieldTypeOrComponent as (
+			props: Omit<T, 'validators'> & InternalFieldProps & FieldMeta,
+		) => JSX.Element);
+
 	return React.memo(({name, validators, ...props}): JSX.Element => {
 		return (
 			<FormContext.Consumer>
@@ -58,6 +92,7 @@ export const createField = <T extends FieldProps>(
 									component={component}
 									componentProps={props}
 									providedName={name}
+									type={fieldType}
 									validators={validators}
 								/>
 							);
@@ -67,4 +102,4 @@ export const createField = <T extends FieldProps>(
 			</FormContext.Consumer>
 		);
 	});
-};
+}

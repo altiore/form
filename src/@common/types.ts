@@ -1,5 +1,16 @@
 import {MouseEventHandler, MutableRefObject} from 'react';
 
+/**
+ * "button|checkbox|file|hidden|image|password|radio|reset|submit|text
+ */
+export enum FieldType {
+	ARRAY = 'array',
+	BOOLEAN = 'checkbox',
+	CHECKBOX = 'checkbox',
+	NUMBER = 'number',
+	TEXT = 'text',
+}
+
 export type NamedFieldProps<T, R extends string> = Omit<T, R> & {
 	fieldArrayState: FieldArrayState;
 	formState: FormContextState;
@@ -29,16 +40,18 @@ export type ListInterface<
 	remove: (index: number) => void;
 };
 
-export type RegisterField = (fieldName: string, isArray: boolean) => void;
+export type RegisterField = (fieldName: string, fieldType?: FieldType) => void;
 
 export type SetErrors = (name: string, errors: string[] | undefined) => void;
 
-export type FieldMeta = {
+export type FieldMeta<ValueType = any> = {
 	name: string;
-	defaultValue?: any;
+	defaultValue?: ValueType;
 	errors: string[];
+	// Array only for fieldType === FieldType.ARRAY
 	items?: number[];
 	setErrors: (errors: string[]) => void;
+	type?: FieldType;
 };
 
 export type FormContextState = {

@@ -6,6 +6,7 @@ import {Form} from '~/form';
 import {minLength} from '~/validators/min-length';
 
 import Field from './field';
+import {FieldNumber} from './field-typed';
 
 import * as Joi from 'joi';
 
@@ -57,5 +58,20 @@ export const InsideFormField: ComponentStory<typeof Field> = ({
 			defaultValue={'test'}
 			validators={[minLength(3)]}
 		/>
+	</Form>
+);
+
+type T2 = {
+	string: string;
+	number: number;
+};
+
+export const InsideFormTypedField: ComponentStory<typeof FieldNumber> = ({
+	onSubmit,
+}: any) => (
+	<Form<T2> onSubmit={onSubmit} defaultValues={{number: 12}}>
+		<Field<T2> name="string" label="String" defaultValue={'string'} />
+		<FieldNumber<T2> name="number" label="Number" defaultValue={4} />
+		<button type="submit">Отправить</button>
 	</Form>
 );

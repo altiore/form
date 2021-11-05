@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {useRegisterField} from '~/@common/hooks/use-register-field';
-import {NamedFieldProps} from '~/@common/types';
+import {FieldType, NamedFieldProps} from '~/@common/types';
 
 import ValidatedField, {ValidatedFieldProps} from './validated-field';
 
@@ -10,12 +10,16 @@ export const NamedField = <T,>({
 	fieldArrayState,
 	formState,
 	providedName,
+	type,
 	...rest
-}: NamedFieldProps<ValidatedFieldProps<T>, 'field' | 'name'>) => {
+}: NamedFieldProps<ValidatedFieldProps<T>, 'field' | 'name'> & {
+	type?: FieldType;
+}) => {
 	const {field, isInsideForm, name} = useRegisterField(
 		fieldArrayState,
 		formState,
 		providedName,
+		type,
 	);
 
 	if (isInsideForm && !field) {
