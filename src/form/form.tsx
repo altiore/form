@@ -9,13 +9,7 @@ import unset from 'lodash/unset';
 import {FormContext} from '~/@common/form-context';
 import {FormContextState} from '~/@common/types';
 
-import {FormProps} from './types/form-props';
-
-export interface FormProps<Values extends Record<string, any>> {
-	children: ReactNode;
-	defaultValues?: Partial<Values>;
-	onSubmit: (values: Partial<Values>) => void;
-}
+import {FormProps} from './types';
 
 /**
  * Компонент Form принимает children, defaultValues, onSubmit
