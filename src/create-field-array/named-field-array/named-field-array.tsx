@@ -21,6 +21,9 @@ export const NamedFieldArray = <T,>({
 		fieldArrayState,
 		formState,
 		providedName,
+		// undefined здесь означат, что пользователь не задал никакого типа для предоставленного поля
+		// (для массива мы не поддерживаем пользовательские типы полей)
+		undefined,
 		true,
 	);
 

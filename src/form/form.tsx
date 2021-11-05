@@ -7,7 +7,7 @@ import set from 'lodash/set';
 import unset from 'lodash/unset';
 
 import {FormContext} from '~/@common/form-context';
-import {FormContextState} from '~/@common/types';
+import {FieldType, FormContextState} from '~/@common/types';
 
 import {FormProps} from './types';
 
@@ -69,7 +69,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	);
 
 	const registerField = useCallback(
-		(fieldName: string, isArray: boolean) => {
+		(fieldName: string, fieldType: FieldType) => {
 			setFields((s): FormContextState['fields'] => {
 				const defaultValue = get(defaultValues, fieldName.split('.'));
 				return {
@@ -77,9 +77,10 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 					[fieldName]: {
 						defaultValue,
 						errors: [],
-						items: isArray ? [] : undefined,
+						items: fieldType === FieldType.ARRAY ? [] : undefined,
 						name: fieldName,
 						setErrors: setErrors.bind({}, fieldName),
+						type: fieldType,
 					},
 				};
 			});
@@ -112,6 +113,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				.reverse()
 				.forEach((fieldKey) => {
 					const items = fields[fieldKey].items;
+					const fieldType = fields[fieldKey].type;
 
 					if (Array.isArray(items)) {
 						const value = items.map((index: number) => {
@@ -120,6 +122,16 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 
 						unset(resValues, fieldKey);
 						set(resValues, fieldKey, value);
+					} else {
+						// TODO: добавить универсальный механизм подготовки данных перед отправкой для всех
+						//  поддерживаемых типов полей
+						if (fieldType === FieldType.NUMBER) {
+							set(
+								resValues,
+								fieldKey,
+								parseInt(get(resValues, fieldKey) as string, 10),
+							);
+						}
 					}
 				});
 

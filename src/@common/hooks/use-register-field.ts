@@ -1,6 +1,11 @@
 import {useEffect, useMemo} from 'react';
 
-import {FieldArrayState, FieldMeta, FormContextState} from '~/@common/types';
+import {
+	FieldArrayState,
+	FieldMeta,
+	FieldType,
+	FormContextState,
+} from '~/@common/types';
 
 type ResType = {
 	isInsideForm: boolean;
@@ -12,7 +17,8 @@ export const useRegisterField = (
 	fieldArrayState: FieldArrayState,
 	formState: FormContextState,
 	providedName: string,
-	isArray = false,
+	fieldType?: FieldType,
+	isArray?: boolean,
 ): ResType => {
 	const fieldName = useMemo(() => {
 		return fieldArrayState?.name &&
@@ -30,9 +36,19 @@ export const useRegisterField = (
 
 	useEffect(() => {
 		if (isInsideForm) {
-			return registerField(fieldName, isArray);
+			return registerField(
+				fieldName,
+				fieldType ?? (isArray ? FieldType.ARRAY : undefined),
+			);
+		} else {
+			if (fieldType) {
+				console.warn(
+					'Указанный fieldType будет проигнорирован вне контекста формы. Разместите' +
+						' ваш инпут внутри компонента формы, чтоб это заработало',
+				);
+			}
 		}
-	}, [fieldName, isArray, isInsideForm, registerField]);
+	}, [fieldName, fieldType, isArray, isInsideForm, registerField]);
 
 	const fields = useMemo(() => formState?.fields, [formState?.fields]);
 

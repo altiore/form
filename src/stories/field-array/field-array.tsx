@@ -2,6 +2,7 @@ import React, {useCallback} from 'react';
 
 import {FieldArrayProps, createFieldArray} from '~/create-field-array';
 import Field from '~/stories/field';
+import {FieldNumber} from '~/stories/field-typed';
 import {minLength} from '~/validators';
 
 export const TagsArray = createFieldArray<FieldArrayProps>(({list}) => {
@@ -9,6 +10,7 @@ export const TagsArray = createFieldArray<FieldArrayProps>(({list}) => {
 		return (
 			<div key={key}>
 				<Field label={'Tag'} name="tag" />
+				<FieldNumber label="Amount" name="amount" />
 				<button onClick={remove}>remove tag</button>
 			</div>
 		);
