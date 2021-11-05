@@ -2,6 +2,7 @@ import React, {useCallback} from 'react';
 
 import {FieldArrayProps, createFieldArray} from '~/create-field-array';
 import Field from '~/stories/field';
+import {Field3} from '~/stories/field/field';
 import {minLength} from '~/validators';
 
 export const TagsArray = createFieldArray<FieldArrayProps>(({list}) => {
@@ -65,8 +66,12 @@ export const FieldArraySimplest = createFieldArray<IFieldArray>(({list}) => {
 		return (
 			<div key={key}>
 				<div style={{display: 'flex'}}>
-					<Field label="Title" name="title" validators={[minLength(3)]} />
-					<Field label="Description" name="desc" validators={[minLength(3)]} />
+					<Field3 label="Title" name="title" validators={[minLength(3)]} />
+					{/*<Field*/}
+					{/*	label="Description"*/}
+					{/*	name="desc"*/}
+					{/*	validators={[minLength(3), equalField('title')]}*/}
+					{/*/>*/}
 					<button onClick={remove} type="button">
 						-
 					</button>
