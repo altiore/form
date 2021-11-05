@@ -1,7 +1,7 @@
 import {ReactNode} from 'react';
 
-export interface FormProps {
+export interface FormProps<Values extends Record<string, any>> {
 	children: ReactNode;
-	defaultValues?: Record<string, any>;
-	onSubmit: (values: unknown) => void;
+	defaultValues?: Partial<Values>;
+	onSubmit: (values: Partial<Values>) => void;
 }

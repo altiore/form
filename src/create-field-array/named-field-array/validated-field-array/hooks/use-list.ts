@@ -43,7 +43,7 @@ export const useList = (
 			index?: number,
 			offset?: InsertPosition,
 		) => {
-			setItems((s) => add(s, fieldName, index, offset));
+			setItems((s) => add(s, fieldName, fieldState, index, offset));
 		},
 		[fieldName, setItems],
 	);
