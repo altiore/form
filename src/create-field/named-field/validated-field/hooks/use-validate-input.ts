@@ -14,6 +14,8 @@ export const useValidateInput = (
 	inputRef: MutableRefObject<HTMLInputElement>,
 	validators: Array<ValidateFuncType>,
 	field?: FieldMeta,
+	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+	formState?: any,
 ): ValidateInputRes => {
 	const [errors, setErrors] = useState<string[]>([]);
 
@@ -27,7 +29,7 @@ export const useValidateInput = (
 
 				const errors: string[] = [];
 				validators.forEach((validate) => {
-					const result = validate.validate(value);
+					const result = validate.validate(value, formState);
 					if (result?.error) {
 						errors.push(result.error.message);
 					}

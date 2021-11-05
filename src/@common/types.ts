@@ -66,5 +66,8 @@ export interface FieldArrayState {
 }
 
 export type ValidateFuncType = {
-	validate: (value: any) => {error: Error; value: any} | undefined | any;
+	validate: (
+		value: any,
+		ref?: any,
+	) => {error: Error; value: any} | undefined | any;
 };

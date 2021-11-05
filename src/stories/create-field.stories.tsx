@@ -2,6 +2,8 @@ import React from 'react';
 
 import {ComponentMeta, ComponentStory} from '@storybook/react';
 
+import {ValidateFuncType} from '~/@common/types';
+import {getInput} from '~/create-field/named-field/validated-field/hooks/use-input';
 import {Form} from '~/form';
 import {minLength} from '~/validators/min-length';
 
@@ -34,31 +36,47 @@ export const SimplestField: ComponentStory<typeof Field> = () => (
 );
 
 type T = {
-	first: string;
-	second: string;
+	password: string;
+	passwordConfirm: string;
 };
+
+const equalValidator = (name: string): ValidateFuncType => ({
+	validate: (value: string | any[] = '', formState) => {
+		// мы не можем использовать хуки вне компонента :/
+		const inputRef = getInput(name, formState);
+
+		if (inputRef.value !== value) {
+			return {
+				error: new Error('Пароли не совпадают'),
+				value: value,
+			};
+		}
+		return undefined;
+	},
+});
 
 export const InsideFormField: ComponentStory<typeof Field> = ({
 	onSubmit,
 }: any) => (
-	<Form<T> onSubmit={onSubmit} defaultValues={{first: 'NOT DEFAULT'}}>
-		<Field<T>
-			name="first"
-			label="First"
-			defaultValue={'DEFAULT'}
-			validators={[
-				Joi.string().max(5).min(2).messages({
-					'string.min': 'Слишком коротко',
-				}),
-			]}
-		/>
-		<Field<T>
-			name="second"
-			label="Second"
-			defaultValue={'test'}
-			validators={[minLength(3)]}
-		/>
-	</Form>
+	<div>
+		<input type="text" name={'gg'} />
+		<Form<T> onSubmit={onSubmit} defaultValues={{password: 'NOT DEFAULT'}}>
+			<Field<T>
+				name="password"
+				label="p1: "
+				validators={[
+					Joi.string().max(5).min(2).messages({
+						'string.min': 'Слишком коротко',
+					}),
+				]}
+			/>
+			<Field<T>
+				name="passwordConfirm"
+				label="p2: "
+				validators={[equalValidator('password')]}
+			/>
+		</Form>
+	</div>
 );
 
 type T2 = {

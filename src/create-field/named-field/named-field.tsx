@@ -26,5 +26,7 @@ export const NamedField = <T,>({
 		return null;
 	}
 
-	return <ValidatedField {...rest} field={field} name={name} />;
+	return (
+		<ValidatedField {...rest} formState={formState} field={field} name={name} />
+	);
 };

@@ -9,11 +9,17 @@ const ValidatedFieldComponent = <T,>({
 	component,
 	componentProps,
 	field: fieldMeta,
+	formState,
 	name,
 	validators,
 }: ValidatedFieldProps<T>): JSX.Element => {
 	const inputRef = useInput();
-	const {errors, setErrors} = useValidateInput(inputRef, validators, fieldMeta);
+	const {errors, setErrors} = useValidateInput(
+		inputRef,
+		validators,
+		fieldMeta,
+		formState,
+	);
 	return React.createElement(component, {
 		...mergeMetaPropsToField(fieldMeta, componentProps),
 		errors,
