@@ -1,0 +1,20 @@
+import {ArgsTable, Meta, Story, Canvas} from '@storybook/addon-docs';
+
+import Field from '~/create-field/field';
+
+import {Form} from './form';
+
+<Meta title = 'MDX/Simplest Form' component = {Form}/>
+
+# Простейшая форма
+
+Форма - элемент взаимодействия пользователя с сайтом или приложением.
+
+export const Template = ({children, ...args}) =>
+	<Form {...args}>{children}</Form>
+
+    <Story name = 'SimplestForm' args = {{args}}>
+        <SimplestForm/>
+    </Story>
+
+    <ArgsTable story = 'SimplestForm'/>

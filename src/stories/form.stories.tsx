@@ -26,6 +26,7 @@ SimplestForm.args = {
 		field: 'initial field',
 	},
 };
+
 SimplestForm.parameters = {
 	docs: {
 		source: {
@@ -63,6 +64,7 @@ FormWithCustomField.args = {
 		field: 'initial field',
 	},
 };
+
 FormWithCustomField.parameters = {
 	docs: {
 		source: {
