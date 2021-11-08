@@ -11,22 +11,9 @@ import {FieldType, FormContextState} from '~/@common/types';
 
 import {FormProps} from './types';
 
-/**
- * Компонент Form принимает children, defaultValues, onSubmit
+/** Форма - элемент взаимодействия пользователя с сайтом или приложением
  *
- * @component
- *
- * @typedef Form
- * @prop {React.ReactNode} [children] Childrens формы
- * @prop {React.ReactNode} [defaultValues] Дефолтные значения
- * @prop {func} [onSubmit] ...
- *
- * @example
- *import {Form} from '@altiore/form';
- * const Template: ComponentStory<typeof Form> = ({children, ...args}) => (
- *<Form {...args}>{children}</Form>
- *);
- * return (any)
+ *  Простейший вариант формы выглядит следующим образом: мы используем элементы <input name="name"/> и <button type="submit">Submit</button>, предварительно импортировав ее из библиотеки <a href ='https://github.com/altiore/form'>@altiore/form</a>.
  */
 
 export const Form = <Values extends Record<string, any> = Record<string, any>>({
