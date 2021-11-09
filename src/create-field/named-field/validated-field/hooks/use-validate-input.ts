@@ -3,7 +3,16 @@ import {MutableRefObject, useCallback, useEffect, useState} from 'react';
 import _debounce from 'lodash/debounce';
 import isEqual from 'lodash/isEqual';
 
-import {FieldMeta, ValidateFuncType} from '~/@common/types';
+import {FieldMeta, FieldType, ValidateFuncType} from '~/@common/types';
+
+const getValue = (evt: Event) => (evt.target as any).value;
+const getChecked = (evt: Event) => (evt.target as any).checked;
+
+const getValueByType = new Map<FieldType, (evt: Event) => any>([
+	[FieldType.BOOLEAN, getChecked],
+	[FieldType.NUMBER, getValue],
+	[FieldType.TEXT, getValue],
+]);
 
 type ValidateInputRes = {
 	errors: string[];
@@ -14,6 +23,7 @@ export const useValidateInput = (
 	inputRef: MutableRefObject<HTMLInputElement>,
 	validators: Array<ValidateFuncType>,
 	field?: FieldMeta,
+	type?: FieldType,
 ): ValidateInputRes => {
 	const [errors, setErrors] = useState<string[]>([]);
 
@@ -23,7 +33,8 @@ export const useValidateInput = (
 
 			const hasValidation = Boolean(validators?.length && e.target);
 			if (hasValidation) {
-				const {value} = e.target as never;
+				const getCurrentValue = getValueByType.get(type) ?? getValue;
+				const value = getCurrentValue(e);
 
 				const errors: string[] = [];
 				validators.forEach((validate) => {
@@ -44,7 +55,7 @@ export const useValidateInput = (
 				}
 			}
 		},
-		[field?.setErrors, setErrors, validators],
+		[field?.setErrors, setErrors, type, validators],
 	);
 
 	const debounceHandle = useCallback(_debounce(handleDebounceFn, 200), []);

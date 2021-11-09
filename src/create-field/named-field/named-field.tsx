@@ -1,20 +1,17 @@
 import React from 'react';
 
 import {useRegisterField} from '~/@common/hooks/use-register-field';
-import {FieldType, NamedFieldProps} from '~/@common/types';
+import {NamedFieldProps} from '~/@common/types';
 
 import ValidatedField, {ValidatedFieldProps} from './validated-field';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const NamedField = <T,>({
 	fieldArrayState,
 	formState,
 	providedName,
 	type,
 	...rest
-}: NamedFieldProps<ValidatedFieldProps<T>, 'field' | 'name'> & {
-	type?: FieldType;
-}) => {
+}: NamedFieldProps<ValidatedFieldProps<T>, 'field' | 'name'>): JSX.Element => {
 	const {field, isInsideForm, name} = useRegisterField(
 		fieldArrayState,
 		formState,
@@ -26,5 +23,5 @@ export const NamedField = <T,>({
 		return null;
 	}
 
-	return <ValidatedField {...rest} field={field} name={name} />;
+	return <ValidatedField {...rest} field={field} name={name} type={type} />;
 };

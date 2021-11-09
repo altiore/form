@@ -11,9 +11,18 @@ import {FieldType, FormContextState} from '~/@common/types';
 
 import {FormProps} from './types';
 
-/** Форма - элемент взаимодействия пользователя с сайтом или приложением
+const parseBoolean = (value: string | undefined): any => value === 'on';
+const parseNumber = (value: string): any => parseInt(value, 10);
+
+const getValueByType = new Map([
+	[FieldType.BOOLEAN, parseBoolean],
+	[FieldType.NUMBER, parseNumber],
+]);
+
+/**
+ * Форма - элемент взаимодействия пользователя с сайтом или приложением
  *
- *  Простейший вариант формы выглядит следующим образом: мы используем элементы <input name="name"/> и <button type="submit">Submit</button>, предварительно импортировав ее из библиотеки <a href ='https://github.com/altiore/form'>@altiore/form</a>.
+ * Простейший вариант формы выглядит следующим образом: мы используем элементы <input name="name"/> и <button type="submit">Submit</button>, предварительно импортировав ее из библиотеки <a href ='https://github.com/altiore/form'>@altiore/form</a>.
  */
 
 export const Form = <Values extends Record<string, any> = Record<string, any>>({
@@ -110,14 +119,12 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 						unset(resValues, fieldKey);
 						set(resValues, fieldKey, value);
 					} else {
-						// TODO: добавить универсальный механизм подготовки данных перед отправкой для всех
-						//  поддерживаемых типов полей
-						if (fieldType === FieldType.NUMBER) {
-							set(
-								resValues,
-								fieldKey,
-								parseInt(get(resValues, fieldKey) as string, 10),
-							);
+						const prepareValue = getValueByType.get(fieldType);
+
+						if (prepareValue) {
+							const typedValue = prepareValue(get(resValues, fieldKey) as any);
+
+							set(resValues, fieldKey, typedValue);
 						}
 					}
 				});
