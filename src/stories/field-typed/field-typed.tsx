@@ -10,7 +10,7 @@ export interface IField extends FieldProps {
 export const FieldNumber = createField<IField>(FieldType.NUMBER, (props) => {
 	const {defaultValue, errors, inputRef, label, name} = props;
 
-	console.log('FieldTyped.render', {
+	console.log('FieldNumber.render', {
 		props,
 	});
 	return (
@@ -20,6 +20,27 @@ export const FieldNumber = createField<IField>(FieldType.NUMBER, (props) => {
 			<input
 				type="number"
 				defaultValue={defaultValue}
+				name={name}
+				ref={inputRef}
+			/>
+			<span>{errors[0]}</span>
+		</div>
+	);
+});
+
+export const FieldBoolean = createField<IField>(FieldType.BOOLEAN, (props) => {
+	const {defaultValue, errors, inputRef, label, name} = props;
+
+	console.log('FieldBoolean.render', {
+		props,
+	});
+	return (
+		<div>
+			<span>{label}</span>
+			<span>{name}</span>
+			<input
+				type="checkbox"
+				defaultChecked={defaultValue}
 				name={name}
 				ref={inputRef}
 			/>
