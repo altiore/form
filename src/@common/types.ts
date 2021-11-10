@@ -9,6 +9,7 @@ export enum FieldType {
 	CHECKBOX = 'checkbox',
 	NUMBER = 'number',
 	TEXT = 'text',
+	ENUM = 'enum',
 }
 
 export type NamedFieldProps<T, R extends string> = Omit<T, R> & {

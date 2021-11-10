@@ -6,6 +6,7 @@ import {Form} from '~/form';
 import {minLength} from '~/validators/min-length';
 
 import Field from './field';
+import FieldRadio from './field-radio';
 import {FieldBoolean, FieldNumber} from './field-typed';
 
 import * as Joi from 'joi';
@@ -74,6 +75,7 @@ export const InsideFormTypedField: ComponentStory<typeof FieldNumber> = ({
 		<Field<T2> name="string" label="String" defaultValue={'string'} />
 		<FieldNumber<T2> name="number" label="Number" defaultValue={4} />
 		<FieldBoolean<T2> name="boolean" label="Boolean" defaultValue={true} />
+		<FieldRadio label="Radio" name="radio" defaultValue="email" />
 		<button type="submit">Отправить</button>
 	</Form>
 );
