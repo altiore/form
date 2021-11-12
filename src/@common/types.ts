@@ -48,13 +48,16 @@ export type SetErrors = (name: string, errors: string[] | undefined) => void;
 export type FieldMeta<ValueType = any> = {
 	name: string;
 	defaultValue?: ValueType;
-	error?: string;
 	errors: string[];
-	isInvalid: boolean;
-	// Array only for fieldType === FieldType.ARRAY
+	// массив номеров в порядке, в котором элементы массива расположены на экране
+	// используюет только для fieldType === FieldType.ARRAY
 	items?: number[];
 	setErrors: (errors: string[]) => void;
 	type?: FieldType;
+
+	// избыточные поля, которые нужны ТОЛЬКО для удобства
+	isInvalid: boolean;
+	error?: string;
 };
 
 export type FormContextState = {
