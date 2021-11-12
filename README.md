@@ -49,3 +49,45 @@ const MyForm = () => {
 	);
 };
 ```
+
+## Custom form
+
+\*\*Custom form allows adding fields of any type to vary your forms. Adding and deleting fields to form gives you new advantages.
+
+```tsx
+import React, {useCallback} from 'react';
+
+import {createField, Form} from '@altiore/form';
+
+export const Field = createField(
+	({
+		errors,
+		inputRef,
+		name,
+		/* you can add any extra fields here: */ label,
+	}) => {
+		return (
+			<div>
+				<label htmlFor="input-id">
+					{label}
+					<input id="input-id" name={name} ref="{inputRef}" />
+				</label>
+				<span>{errors[0]}</span>
+			</div>
+		);
+	},
+);
+
+const MyForm = () => {
+	const handleSubmit = useCallback((values) => {
+		console.log('form.values is', values);
+	}, []);
+
+	return (
+		<Form onSubmit={handleSubmit}>
+			<Field label="Field Label" name="name" />
+			<button type="submit">Submit</button>
+		</Form>
+	);
+};
+```
