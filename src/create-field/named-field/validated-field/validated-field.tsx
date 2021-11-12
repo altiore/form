@@ -21,9 +21,11 @@ const ValidatedFieldComponent = <T,>({
 		type,
 	);
 	return React.createElement(component, {
-		...mergeMetaPropsToField(fieldMeta, componentProps),
+		...mergeMetaPropsToField(componentProps, fieldMeta),
+		error: errors?.[0],
 		errors,
 		inputRef,
+		isInvalid: Boolean(errors.length),
 		name,
 		setErrors,
 	});
