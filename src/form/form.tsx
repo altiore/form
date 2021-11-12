@@ -72,7 +72,9 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 					...s,
 					[fieldName]: {
 						defaultValue,
+						error: undefined,
 						errors: [],
+						isInvalid: false,
 						items: fieldType === FieldType.ARRAY ? [] : undefined,
 						name: fieldName,
 						setErrors: setErrors.bind({}, fieldName),

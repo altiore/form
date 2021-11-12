@@ -18,7 +18,9 @@ const ValidatedFieldArrayComponent = <T,>({
 
 	return React.createElement(component, {
 		...componentProps,
+		error: errors?.[0],
 		errors,
+		isInvalid: Boolean(errors.length),
 		list,
 		listRef,
 		name,

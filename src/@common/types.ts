@@ -48,7 +48,9 @@ export type SetErrors = (name: string, errors: string[] | undefined) => void;
 export type FieldMeta<ValueType = any> = {
 	name: string;
 	defaultValue?: ValueType;
+	error?: string;
 	errors: string[];
+	isInvalid: boolean;
 	// Array only for fieldType === FieldType.ARRAY
 	items?: number[];
 	setErrors: (errors: string[]) => void;
