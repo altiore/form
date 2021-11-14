@@ -5,13 +5,16 @@ import {NamedFieldProps} from '~/@common/types';
 
 import ValidatedField, {ValidatedFieldProps} from './validated-field';
 
-export const NamedField = <T,>({
+export const NamedField = <T, Input extends HTMLElement = HTMLInputElement>({
 	fieldArrayState,
 	formState,
 	providedName,
 	type,
 	...rest
-}: NamedFieldProps<ValidatedFieldProps<T>, 'field' | 'name'>): JSX.Element => {
+}: NamedFieldProps<
+	ValidatedFieldProps<T, Input>,
+	'field' | 'name'
+>): JSX.Element => {
 	const {field, isInsideForm, name} = useRegisterField(
 		fieldArrayState,
 		formState,
@@ -23,5 +26,13 @@ export const NamedField = <T,>({
 		return null;
 	}
 
-	return <ValidatedField {...rest} field={field} name={name} type={type} />;
+	return (
+		<ValidatedField
+			{...rest}
+			formRef={formState?.formRef}
+			field={field}
+			name={name}
+			type={type}
+		/>
+	);
 };

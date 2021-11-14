@@ -19,8 +19,8 @@ type ValidateInputRes = {
 	setErrors: (errors: string[]) => void;
 };
 
-export const useValidateInput = (
-	inputRef: MutableRefObject<HTMLInputElement>,
+export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
+	inputRef: MutableRefObject<T>,
 	validators: Array<ValidateFuncType>,
 	field?: FieldMeta,
 	type?: FieldType,

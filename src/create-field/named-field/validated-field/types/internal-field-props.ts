@@ -1,5 +1,5 @@
 import {MutableRefObject} from 'react';
 
-export type InternalFieldProps = {
-	inputRef: MutableRefObject<HTMLInputElement>;
+export type InternalFieldProps<T = HTMLInputElement> = {
+	inputRef: MutableRefObject<T>;
 };

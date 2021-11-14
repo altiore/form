@@ -39,31 +39,40 @@ export type FieldProps = {
  * });
  */
 
-export function createField<T extends FieldProps>(
+export function createField<
+	T extends FieldProps,
+	Input extends HTMLElement = HTMLInputElement,
+>(
 	fieldType: FieldType,
 	component: (
-		props: Omit<T, 'validators'> & InternalFieldProps & FieldMeta,
+		props: Omit<T, 'validators'> & InternalFieldProps<Input> & FieldMeta,
 	) => JSX.Element,
 ): <Values extends Record<string, any> = Record<string, any>>(
 	props: T & {name: keyof Values},
 ) => JSX.Element;
 
-export function createField<T extends FieldProps>(
+export function createField<
+	T extends FieldProps,
+	Input extends HTMLElement = HTMLInputElement,
+>(
 	component: (
-		props: Omit<T, 'validators'> & InternalFieldProps & FieldMeta,
+		props: Omit<T, 'validators'> & InternalFieldProps<Input> & FieldMeta,
 	) => JSX.Element,
 ): <Values extends Record<string, any> = Record<string, any>>(
 	props: T & {name: keyof Values},
 ) => JSX.Element;
 
-export function createField<T extends FieldProps>(
+export function createField<
+	T extends FieldProps,
+	Input extends HTMLElement = HTMLInputElement,
+>(
 	fieldTypeOrComponent:
 		| FieldType
 		| ((
-				props: Omit<T, 'validators'> & InternalFieldProps & FieldMeta,
+				props: Omit<T, 'validators'> & InternalFieldProps<Input> & FieldMeta,
 		  ) => JSX.Element),
 	componentInSecondParam?: (
-		props: Omit<T, 'validators'> & InternalFieldProps & FieldMeta,
+		props: Omit<T, 'validators'> & InternalFieldProps<Input> & FieldMeta,
 	) => JSX.Element,
 ): <Values extends Record<string, any> = Record<string, any>>(
 	props: T & {name: keyof Values},
@@ -72,11 +81,11 @@ export function createField<T extends FieldProps>(
 		? (fieldTypeOrComponent as FieldType)
 		: undefined;
 	const component: (
-		props: Omit<T, 'validators'> & InternalFieldProps & FieldMeta,
+		props: Omit<T, 'validators'> & InternalFieldProps<Input> & FieldMeta,
 	) => JSX.Element =
 		componentInSecondParam ??
 		(fieldTypeOrComponent as (
-			props: Omit<T, 'validators'> & InternalFieldProps & FieldMeta,
+			props: Omit<T, 'validators'> & InternalFieldProps<Input> & FieldMeta,
 		) => JSX.Element);
 
 	return React.memo(({name, validators, ...props}): JSX.Element => {
@@ -86,7 +95,7 @@ export function createField<T extends FieldProps>(
 					<FieldArrayContext.Consumer>
 						{(fieldArrayState) => {
 							return (
-								<NamedField<Omit<T, 'name' | 'validators'>>
+								<NamedField<Omit<T, 'name' | 'validators'>, Input>
 									fieldArrayState={fieldArrayState}
 									formState={formState}
 									component={component}
