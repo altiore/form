@@ -51,7 +51,7 @@ export const InsideFormField: ComponentStory<typeof Field> = ({
 			validators={[
 				Joi.string().max(5).min(2).messages({
 					'string.min': 'Слишком коротко',
-				}),
+				}).validate,
 			]}
 		/>
 		<Field<T>
