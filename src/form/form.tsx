@@ -29,6 +29,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	children,
 	defaultValues,
 	onSubmit,
+	...props
 }: FormProps<Values>): JSX.Element => {
 	const formRef = useRef<HTMLFormElement>(null);
 	const [fields, setFields] = useState<FormContextState['fields']>({});
@@ -137,7 +138,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	);
 
 	return (
-		<form onSubmit={handleSubmit} ref={formRef}>
+		<form {...props} onSubmit={handleSubmit} ref={formRef}>
 			<FormContext.Provider
 				value={{
 					fields,
