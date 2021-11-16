@@ -13,9 +13,7 @@ export const minLength =
 		}
 		if (value.length < length) {
 			return {
-				error: new Error(
-					`The length of the entered value should be more than ${length} characters`,
-				),
+				error: new Error(`Минимальная длина введенного значения - ${length}`),
 				value,
 			};
 		}

@@ -42,26 +42,27 @@ type T = {
 
 export const InsideFormField: ComponentStory<typeof Field> = ({
 	onSubmit,
-}: any) => (
-	<Form<T> onSubmit={onSubmit} defaultValues={{first: 'NOT DEFAULT'}}>
-		<Field<T>
-			name="first"
-			label="First"
-			defaultValue={'DEFAULT'}
-			validators={[
-				Joi.string().max(5).min(2).messages({
-					'string.min': 'Слишком коротко',
-				}).validate,
-			]}
-		/>
-		<Field<T>
-			name="second"
-			label="Second"
-			defaultValue={'test'}
-			validators={[minLength(3)]}
-		/>
-	</Form>
-);
+}: any) => {
+	const lengthValidator = Joi.string().max(5).min(2).messages({
+		'string.min': 'Слишком коротко',
+	});
+	return (
+		<Form<T> onSubmit={onSubmit} defaultValues={{first: 'NOT DEFAULT'}}>
+			<Field<T>
+				name="first"
+				label="First"
+				defaultValue={'DEFAULT'}
+				validators={[lengthValidator.validate]}
+			/>
+			<Field<T>
+				name="second"
+				label="Second"
+				defaultValue={'test'}
+				validators={[minLength(3)]}
+			/>
+		</Form>
+	);
+};
 
 type T2 = {
 	string: string;

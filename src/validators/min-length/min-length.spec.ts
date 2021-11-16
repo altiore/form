@@ -3,9 +3,7 @@ import {minLength} from '~/validators';
 describe('minLength()', () => {
 	it('Некорректные данные, которые должны выдать ошибку пользователю', () => {
 		expect(minLength(15)('wrong text')).toEqual({
-			error: new Error(
-				'The length of the entered value should be more than 15 characters',
-			),
+			error: new Error('Минимальная длина введенного значения - 15'),
 			value: 'wrong text',
 		});
 	});
