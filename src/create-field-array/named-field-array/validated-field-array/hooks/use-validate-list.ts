@@ -2,6 +2,9 @@ import {MutableRefObject, useMemo} from 'react';
 
 import {ValidateFuncType} from '~/@common/types';
 
+const DEF_GET_VALUE = () =>
+	console.info('Получение переменной внутри валидации массива не реализовано');
+
 export const useValidateList = (
 	inputRef: MutableRefObject<HTMLElement>,
 	validators: Array<ValidateFuncType>,
@@ -12,7 +15,7 @@ export const useValidateList = (
 		const ers: string[] = [];
 		if (hasValidation) {
 			validators.forEach((validate) => {
-				const result = validate.validate(items);
+				const result = validate.validate(items, DEF_GET_VALUE);
 				if (result?.error) {
 					ers.push(result.error.message);
 				}

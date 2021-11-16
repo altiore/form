@@ -72,5 +72,9 @@ export interface FieldArrayState {
 }
 
 export type ValidateFuncType = {
-	validate: (value: any) => {error: Error; value: any} | undefined | any;
+	validate: (
+		value: any,
+		getFieldValueByName?: ((name: string) => any) | any, // второе any здесь, чтоб работала
+		// библитека Joi, которая вторым параметром принимает свои options
+	) => {error: Error; value: any} | undefined | any;
 };
