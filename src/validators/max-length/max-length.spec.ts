@@ -6,9 +6,7 @@ describe('maxLength()', () => {
 	});
 	it('Некорректные данные', () => {
 		expect(maxLength(5)('text that more than 5 chars')).toEqual({
-			error: new Error(
-				'The length of the entered value should be no more than 5 characters',
-			),
+			error: new Error('Максимальная длина введенного значения - 5'),
 			value: 'text that more than 5 chars',
 		});
 	});

@@ -9,9 +9,7 @@ export const maxLength =
 		}
 		if (stringedValue.length > length) {
 			return {
-				error: new Error(
-					`The length of the entered value should be no more than ${length} characters`,
-				),
+				error: new Error(`Максимальная длина введенного значения - ${length}`),
 				value,
 			};
 		}
