@@ -1,7 +1,8 @@
 import {ValidateFuncType} from '~/@common/types';
 
-export const regexp = (regex: RegExp): ValidateFuncType => ({
-	validate: (value) => {
+export const regexp =
+	(regex: RegExp): ValidateFuncType =>
+	(value) => {
 		const stringedValue = value.toString();
 		if (!regex.test(stringedValue)) {
 			return {
@@ -12,5 +13,4 @@ export const regexp = (regex: RegExp): ValidateFuncType => ({
 			};
 		}
 		return undefined;
-	},
-});
+	};

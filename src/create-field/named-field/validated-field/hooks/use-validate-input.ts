@@ -109,7 +109,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 
 				const errors: string[] = [];
 				validators.forEach((validate) => {
-					const result = validate.validate(value, getFormValueByName);
+					const result = validate(value, getFormValueByName);
 					if (result?.error) {
 						errors.push(result.error.message);
 					}

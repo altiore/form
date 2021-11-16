@@ -15,7 +15,7 @@ export const useValidateList = (
 		const ers: string[] = [];
 		if (hasValidation) {
 			validators.forEach((validate) => {
-				const result = validate.validate(items, DEF_GET_VALUE);
+				const result = validate(items, DEF_GET_VALUE);
 				if (result?.error) {
 					ers.push(result.error.message);
 				}

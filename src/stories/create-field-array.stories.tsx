@@ -35,7 +35,7 @@ export const InsideFormFieldArrayWithValidators: ComponentStory<
 > = ({onSubmit}: any) => (
 	<Form onSubmit={onSubmit}>
 		<Field label="Title" name="title" />
-		<FieldArray name="ingredients" validators={[Joi.array().min(2)]} />
+		<FieldArray name="ingredients" validators={[Joi.array().min(2).validate]} />
 		<button type="submit">Submit</button>
 	</Form>
 );
