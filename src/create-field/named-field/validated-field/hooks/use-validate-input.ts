@@ -1,4 +1,10 @@
-import {MutableRefObject, useCallback, useEffect, useState} from 'react';
+import {
+	MutableRefObject,
+	useCallback,
+	useEffect,
+	useMemo,
+	useState,
+} from 'react';
 
 import _debounce from 'lodash/debounce';
 import isEqual from 'lodash/isEqual';
@@ -14,17 +20,82 @@ const getValueByType = new Map<FieldType, (evt: Event) => any>([
 	[FieldType.TEXT, getValue],
 ]);
 
+const getNodeByName = <T>(
+	name: string,
+	formRef?: MutableRefObject<HTMLFormElement>,
+): null | MutableRefObject<T> => {
+	if (formRef?.current) {
+		const input = formRef.current.querySelector(`[name="${name}"]`) as any;
+		if (input) {
+			return {
+				current: input,
+			} as MutableRefObject<T>;
+		}
+	} else {
+		const input = document.querySelector(`[name="${name}"]`) as any;
+		if (input) {
+			return {
+				current: input,
+			} as MutableRefObject<T>;
+		}
+	}
+
+	return null;
+};
+
 type ValidateInputRes = {
 	errors: string[];
 	setErrors: (errors: string[]) => void;
 };
 
 export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
-	inputRef: MutableRefObject<T>,
+	customRef: MutableRefObject<T>,
 	validators: Array<ValidateFuncType>,
+	formRef?: MutableRefObject<HTMLFormElement>,
 	field?: FieldMeta,
 	type?: FieldType,
 ): ValidateInputRes => {
+	const [mounted, setMounted] = useState(false);
+	useEffect(() => {
+		setMounted(true);
+	}, [setMounted]);
+
+	const inputRef = useMemo<MutableRefObject<T>>(() => {
+		if (customRef.current) {
+			return customRef;
+		}
+
+		if (mounted && field?.name) {
+			const ref = getNodeByName<T>(field?.name, formRef);
+			if (ref) {
+				return ref;
+			} else {
+				throw new Error(
+					'Не удалось найти ссылку на инпут. Добавьте корректное имя вашему полю' +
+						' input, или используйте inputRef',
+				);
+			}
+		}
+
+		return {
+			current: null,
+		} as MutableRefObject<T>;
+	}, [customRef, formRef, mounted, field?.name]);
+
+	const getFormValueByName = useCallback(
+		(name: string) => {
+			const fountInputRef = getNodeByName<any>(name, formRef);
+			if (fountInputRef) {
+				return typeof fountInputRef.current.checked === 'boolean'
+					? fountInputRef.current.checked
+					: fountInputRef.current.value;
+			}
+
+			return null;
+		},
+		[formRef],
+	);
+
 	const [errors, setErrors] = useState<string[]>([]);
 
 	const handleDebounceFn = useCallback(
@@ -38,7 +109,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 
 				const errors: string[] = [];
 				validators.forEach((validate) => {
-					const result = validate.validate(value);
+					const result = validate.validate(value, getFormValueByName);
 					if (result?.error) {
 						errors.push(result.error.message);
 					}
@@ -55,7 +126,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 				}
 			}
 		},
-		[field?.setErrors, setErrors, type, validators],
+		[getFormValueByName, field?.setErrors, setErrors, type, validators],
 	);
 
 	const debounceHandle = useCallback(_debounce(handleDebounceFn, 200), []);
