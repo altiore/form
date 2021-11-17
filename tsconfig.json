@@ -17,6 +17,5 @@
 		"allowJs": true,
 		"lib": ["dom", "es2015", "es2017"]
 	},
-	"include": ["./src/**/*"],
-	"exclude": []
+	"include": ["./src/**/*"]
 }
