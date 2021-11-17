@@ -52,7 +52,7 @@ const MyForm = () => {
 
 ## Custom form
 
-\*\*Custom form allows adding fields of any type to vary your forms. Adding and deleting fields to form gives you new advantages.
+**Custom form allows adding fields of any type to vary your forms. Adding and deleting fields to form gives you new advantages.**
 
 ```tsx
 import React, {useCallback} from 'react';

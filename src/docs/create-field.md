@@ -1,8 +1,11 @@
 ## Create Field
 
+**русская версия** [**create-field.ru.md**](create-field.ru.md)
+
 ```tsx
 import React from 'react';
 import {createField} from '@altiore/form';
+
 export const Field = createField(
 	({error, name, /* you can add any extra fields here: */ label}) => {
 		return (
@@ -21,7 +24,12 @@ export const Field = createField(
 **How to use**
 
 ```tsx
-import Field from '@altiore/form';
-
-() => <Field name="title" />;
+const MyForm;
+() => {
+	return (
+		<Form>
+			<Field name="title" />
+		</Form>
+	);
+};
 ```

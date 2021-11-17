@@ -9,7 +9,7 @@
 </a>
 
 **английская версия**
-[**README.md**](https://github.com/altiore/form/blob/main/README.md)
+[**README.md**](README.md)
 
 ## Зачем?
 

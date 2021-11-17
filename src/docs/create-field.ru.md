@@ -1,10 +1,10 @@
-## Create Field
+## Создание поля ввода:
 
-**Создание поля ввода:**
+**английская версия** [**create-field.md**](create-field.md)
 
 ```tsx
 import React from 'react';
-import {createField} from '@altiore/form';
+import {createField, Form} from '@altiore/form';
 export const Field = createField(
 	({
 		error,
@@ -27,7 +27,11 @@ export const Field = createField(
 **Как использовать**
 
 ```tsx
-import Field from '@altiore/form';
-
-() => <Field name="title" />;
+const MyForm = () => {
+	return (
+		<Form>
+			<Field name="title" />
+		</Form>
+	);
+};
 ```
