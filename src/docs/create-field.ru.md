@@ -23,3 +23,11 @@ export const Field = createField(
 	},
 );
 ```
+
+**Как использовать**
+
+```tsx
+import Field from '@altiore/form';
+
+() => <Field name="title" />;
+```
