@@ -1,15 +1,16 @@
 import {MouseEventHandler, MutableRefObject} from 'react';
 
 /**
- * "button|checkbox|file|hidden|image|password|radio|reset|submit|text
+ * "button|checkbox|file|hidden|image|password|radio|reset|submit|text|password
  */
 export enum FieldType {
 	ARRAY = 'array',
 	BOOLEAN = 'checkbox',
 	CHECKBOX = 'checkbox',
-	NUMBER = 'number',
-	TEXT = 'text',
 	ENUM = 'enum',
+	NUMBER = 'number',
+	PASSWORD = 'password',
+	TEXT = 'text',
 }
 
 export type NamedFieldProps<T, R extends string> = Omit<T, R> & {
