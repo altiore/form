@@ -1,0 +1,49 @@
+## Create FieldArray
+
+**русская версия** [**create-field-array.ru.md**](create-field-array.ru.md)
+
+```tsx
+import React from 'react';
+import {createFieldArray} from '@altiore/form';
+
+const FieldArray = createFieldArray(({list}) => {
+	return (
+		<div>
+			{list.map(({key, remove, append, prepend}) => {
+				return (
+					<div key={key}>
+						<div>
+							<Field label={''} name="title" />
+							<button onClick={remove} type="button">
+								-
+							</button>
+							<button onClick={append} type="button">
+								after
+							</button>
+							<button onClick={prepend} type="button">
+								before
+							</button>
+						</div>
+					</div>
+				);
+			})}
+			<button onClick={list.add} type="button">
+				Добавить
+			</button>
+		</div>
+	);
+});
+```
+
+**How to use**
+
+```tsx
+const MyForm;
+() => {
+	return (
+		<Form>
+			<FieldArray name="FieldArrayName" />
+		</Form>
+	);
+};
+```
