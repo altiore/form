@@ -52,7 +52,7 @@ const MyForm = () => {
 
 ## Пользовательская форма
 
-\*\*Пользовательский вариант дает возможность разнообразить форму
+**Пользовательский вариант дает возможность разнообразить форму**
 
 ```tsx
 import React, {useCallback} from 'react';
@@ -60,19 +60,14 @@ import React, {useCallback} from 'react';
 import {createField, Form} from '@altiore/form';
 
 export const Field = createField(
-	({
-		errors,
-		inputRef,
-		name,
-		/* you can add any extra fields here: */ label,
-	}) => {
+	({error, name, label /* you can add any extra fields here: */}) => {
 		return (
 			<div>
 				<label htmlFor="input-id">
 					{label}
 					<input id="input-id" name={name} ref="{inputRef}" />
 				</label>
-				<span>{errors[0]}</span>
+				<span>{error}</span>
 			</div>
 		);
 	},

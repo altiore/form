@@ -52,7 +52,8 @@ const MyForm = () => {
 
 ## Custom form
 
-**Custom form allows adding fields of any type to vary your forms. Adding and deleting fields to form gives you new advantages.**
+**Custom form allows adding fields of any type to vary your forms. Adding and deleting fields to form gives you new
+advantages.**
 
 ```tsx
 import React, {useCallback} from 'react';
@@ -60,19 +61,14 @@ import React, {useCallback} from 'react';
 import {createField, Form} from '@altiore/form';
 
 export const Field = createField(
-	({
-		errors,
-		inputRef,
-		name,
-		/* you can add any extra fields here: */ label,
-	}) => {
+	({error, name, label /* you can add any extra fields here: */}) => {
 		return (
 			<div>
 				<label htmlFor="input-id">
 					{label}
 					<input id="input-id" name={name} ref="{inputRef}" />
 				</label>
-				<span>{errors[0]}</span>
+				<span>{error}</span>
 			</div>
 		);
 	},
