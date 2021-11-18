@@ -4,10 +4,10 @@
 
 ```tsx
 import React from 'react';
-import {createField} from '@altiore/form';
+import {createField, Form} from '@altiore/form';
 
 export const Field = createField(
-	({error, name, /* you can add any extra fields here: */ label}) => {
+	({error, name, label /* you can add any extra fields here: */}) => {
 		return (
 			<div>
 				<label htmlFor="input-id">
