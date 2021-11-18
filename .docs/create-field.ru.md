@@ -5,11 +5,12 @@
 ```tsx
 import React from 'react';
 import {createField, Form} from '@altiore/form';
+
 export const Field = createField(
 	({
 		error,
 		name,
-		/* вы можете добавить сюда любые дополнительные поля: */ label,
+		label /* вы можете добавить сюда любые дополнительные поля: */,
 	}) => {
 		return (
 			<div>
