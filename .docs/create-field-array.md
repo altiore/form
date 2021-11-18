@@ -38,8 +38,7 @@ const FieldArray = createFieldArray(({list}) => {
 **How to use**
 
 ```tsx
-const MyForm;
-() => {
+const MyForm = () => {
 	return (
 		<Form>
 			<FieldArray name="FieldArrayName" />
