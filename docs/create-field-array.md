@@ -28,7 +28,7 @@ const FieldArray = createFieldArray(({list}) => {
 				);
 			})}
 			<button onClick={list.add} type="button">
-				Добавить
+				 Добавить
 			</button>
 		</div>
 	);
