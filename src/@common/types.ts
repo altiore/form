@@ -35,10 +35,7 @@ export type ListInterface<
 	Item extends Record<string, any> = Record<string, any>,
 > = {
 	map: (arg: (el: ListItem, index: number) => JSX.Element) => JSX.Element[];
-	add:
-		| MouseEventHandler
-		| (() => void)
-		| ((item: Item, index?: number) => void);
+	add: MouseEventHandler | (() => void) | Item;
 	remove: (index: number) => void;
 };
 
@@ -66,6 +63,7 @@ export type FormContextState = {
 	formRef: MutableRefObject<HTMLFormElement>;
 	registerField: RegisterField;
 	setItems: (fieldName: string, setItems: (i: number[]) => number[]) => void;
+	setDefValue: (fieldName: string, defValue: any) => void;
 };
 
 export interface FieldArrayState {

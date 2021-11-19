@@ -9,11 +9,12 @@ const ValidatedFieldArrayComponent = <T,>({
 	componentProps,
 	field: fieldMeta,
 	name,
+	setDefValue,
 	setItems,
 	validators,
 }: ValidatedFieldArrayProps<T>): JSX.Element => {
 	const listRef = useRef<HTMLElement>(null);
-	const [list, items] = useList(name, fieldMeta, setItems);
+	const [list, items] = useList(name, fieldMeta, setItems, setDefValue);
 	const errors = useValidateList(listRef, validators, items);
 
 	return React.createElement(component, {

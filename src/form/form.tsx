@@ -33,6 +33,9 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 }: FormProps<Values>): JSX.Element => {
 	const formRef = useRef<HTMLFormElement>(null);
 	const [fields, setFields] = useState<FormContextState['fields']>({});
+	const [dynamicDefaults, setDynamicDefaults] = useState<Record<string, any>>(
+		{},
+	);
 
 	const setErrors = useCallback(
 		(fieldName: string, errors: string[]) => {
@@ -52,6 +55,21 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 		[setFields],
 	);
 
+	const setDefValue = useCallback(
+		(fieldName: string, defaultValue: any) => {
+			setDynamicDefaults((s) => {
+				if (isEqual(s[fieldName], defaultValue)) {
+					return s;
+				}
+				return {
+					...s,
+					[fieldName]: defaultValue,
+				};
+			});
+		},
+		[setDynamicDefaults],
+	);
+
 	const setItems = useCallback(
 		(fieldName: string, setItems: (i: number[]) => number[]) => {
 			setFields((s) => ({
@@ -69,6 +87,9 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 		(fieldName: string, fieldType: FieldType) => {
 			setFields((s): FormContextState['fields'] => {
 				const defaultValue = get(defaultValues, fieldName.split('.'));
+				console.log('registerField', {
+					dynamicDefaults,
+				});
 				return {
 					...s,
 					[fieldName]: {
@@ -95,7 +116,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				});
 			};
 		},
-		[defaultValues, setFields],
+		[defaultValues, dynamicDefaults, setFields],
 	);
 
 	const handleSubmit = useCallback(
@@ -137,6 +158,9 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 		[fields, onSubmit],
 	);
 
+	console.log('render form', {
+		fields,
+	});
 	return (
 		<form {...props} onSubmit={handleSubmit} ref={formRef}>
 			<FormContext.Provider
@@ -144,6 +168,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 					fields,
 					formRef,
 					registerField,
+					setDefValue,
 					setItems,
 				}}>
 				{children}

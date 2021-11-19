@@ -5,7 +5,10 @@ import {ComponentMeta, ComponentStory} from '@storybook/react';
 import {Form} from '~/form';
 import Field from '~/stories/field';
 
-import FieldArray, {FieldArraySimplest} from './field-array';
+import FieldArray, {
+	FieldArraySimplest,
+	FieldArrayWithAddingDefValue,
+} from './field-array';
 
 import Joi from 'joi';
 
@@ -36,6 +39,16 @@ export const InsideFormFieldArrayWithValidators: ComponentStory<
 	<Form onSubmit={onSubmit}>
 		<Field label="Title" name="title" />
 		<FieldArray name="ingredients" validators={[Joi.array().min(2).validate]} />
+		<button type="submit">Submit</button>
+	</Form>
+);
+
+export const InsideFormFieldArrayWithAddingDefValue: ComponentStory<
+	typeof FieldArray
+> = ({onSubmit}: any) => (
+	<Form onSubmit={onSubmit}>
+		<Field label="Title" name="title" />
+		<FieldArrayWithAddingDefValue name="ingredients" />
 		<button type="submit">Submit</button>
 	</Form>
 );

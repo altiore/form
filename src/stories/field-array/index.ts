@@ -1,1 +1,5 @@
-export {FieldArray as default, FieldArraySimplest} from './field-array';
+export {
+	FieldArray as default,
+	FieldArraySimplest,
+	FieldArrayWithAddingDefValue,
+} from './field-array';

@@ -16,6 +16,7 @@ export const useList = (
 		fieldName: string,
 		setItems: (i: number[]) => number[],
 	) => void,
+	setDefValue?: (fieldName: string, defValue: any) => void,
 ): [ListInterface, number[]] => {
 	const fieldName = useMemo(() => {
 		return fieldMeta?.name ?? name;
@@ -43,9 +44,19 @@ export const useList = (
 			index?: number,
 			offset?: InsertPosition,
 		) => {
+			if (setDefValue && !fieldState.persist) {
+				console.log('addHandler', {
+					fieldName,
+					fieldState,
+					index,
+					keys: Object.keys(fieldState),
+					offset,
+					setDefValue,
+				});
+			}
 			setItems((s) => add(s, fieldName, fieldState, index, offset));
 		},
-		[fieldName, setItems],
+		[fieldName, setDefValue, setItems],
 	);
 	const removeHandler = useCallback(
 		(index: number) => {
