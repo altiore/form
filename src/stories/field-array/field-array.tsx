@@ -86,3 +86,41 @@ export const FieldArraySimplest = createFieldArray<IFieldArray>(({list}) => {
 		</>
 	);
 });
+
+export const FieldArrayWithAddingDefValue = createFieldArray<IFieldArray>(
+	({list}) => {
+		const cb = useCallback(({key, remove}) => {
+			return (
+				<div key={key}>
+					<div style={{display: 'flex'}}>
+						<Field label="Title" name="title" validators={[minLength(3)]} />
+						<Field
+							label="Description"
+							name="desc"
+							validators={[minLength(3)]}
+						/>
+						<button onClick={remove} type="button">
+							-
+						</button>
+					</div>
+				</div>
+			);
+		}, []);
+
+		const handleAdd = useCallback(() => {
+			list.add({
+				desc: 'добавленное описание',
+				title: 'Добавленные заголовок',
+			});
+		}, [list.add]);
+
+		return (
+			<>
+				{list.map(cb)}
+				<button onClick={handleAdd} type="button">
+					Добавить ингредиент 1
+				</button>
+			</>
+		);
+	},
+);
