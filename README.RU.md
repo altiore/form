@@ -37,16 +37,16 @@ import React, {useCallback} from 'react';
 import {Form} from '@altiore/form';
 
 const MyForm = () => {
-	const handleSubmit = useCallback((values) => {
-		console.log('form.values is', values);
-	}, []);
+  const handleSubmit = useCallback((values) => {
+    console.log('form.values is', values);
+  }, []);
 
-	return (
-		<Form onSubmit={handleSubmit}>
-			<input name="name" />
-			<button type="submit">Submit</button>
-		</Form>
-	);
+  return (
+    <Form onSubmit={handleSubmit}>
+      <input name="name" />
+      <button type="submit">Submit</button>
+    </Form>
+  );
 };
 ```
 
@@ -60,29 +60,29 @@ import React, {useCallback} from 'react';
 import {createField, Form} from '@altiore/form';
 
 export const Field = createField(
-	({error, name, label /* you can add any extra fields here: */}) => {
-		return (
-			<div>
-				<label htmlFor="input-id">
-					{label}
-					<input id="input-id" name={name} ref="{inputRef}" />
-				</label>
-				<span>{error}</span>
-			</div>
-		);
-	},
+  ({error, name, label /* you can add any extra fields here: */}) => {
+    return (
+      <div>
+        <label htmlFor="input-id">
+          {label}
+          <input id="input-id" name={name} ref="{inputRef}" />
+        </label>
+        <span>{error}</span>
+      </div>
+    );
+  },
 );
 
 const MyForm = () => {
-	const handleSubmit = useCallback((values) => {
-		console.log('form.values is', values);
-	}, []);
+  const handleSubmit = useCallback((values) => {
+    console.log('form.values is', values);
+  }, []);
 
-	return (
-		<Form onSubmit={handleSubmit}>
-			<Field label="Field Label" name="name" />
-			<button type="submit">Submit</button>
-		</Form>
-	);
+  return (
+    <Form onSubmit={handleSubmit}>
+      <Field label="Field Label" name="name" />
+      <button type="submit">Submit</button>
+    </Form>
+  );
 };
 ```
