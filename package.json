@@ -14,8 +14,8 @@
 		"npm:minor": "npm version minor && npm publish --access=public && git push && git push --tags",
 		"npm:major": "npm version major && npm publish --access=public && git push && git push --tags",
 		"test": "jest",
-		"lint": "tsc --noEmit && prettier --write \"**/*.{js,jsx,ts,tsx,json,md,yml}\" && eslint . --fix --ext .js,.jsx,.ts,.tsx --max-warnings=0",
-		"lint:ci": "tsc --noEmit && prettier --check \"**/*.{js,jsx,ts,tsx,json,md,yml}\" && eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0",
+		"lint": "tsc --noEmit && prettier --write \"**/*.{js,jsx,ts,tsx,json,yml}\" && prettier --write \"**/*.md\" --use-tabs=false && eslint . --fix --ext .js,.jsx,.ts,.tsx --max-warnings=0",
+		"lint:ci": "tsc --noEmit && prettier --check \"**/*.{js,jsx,ts,tsx,json,yml}\" && prettier --check \"**/*.md\" --use-tabs=false && eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0",
 		"jsdoc": "jsdoc -c jsdoc.json",
 		"prepublish": "npm run build",
 		"prepare": "husky install",
@@ -142,7 +142,7 @@
 			"eslint --fix --max-warnings=0"
 		],
 		"*.{json,yml,md}": [
-			"prettier --write"
+			"prettier --write --use-tabs=0"
 		]
 	}
 }
