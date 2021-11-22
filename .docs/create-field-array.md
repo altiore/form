@@ -7,36 +7,36 @@ import React from 'react';
 import {createFieldArray} from '@altiore/form';
 
 const FieldArray = createFieldArray(({list}) => {
-	return (
-		<div>
-			{list.map(({key, remove, append, prepend}) => {
-				return (
-					<div key={key}>
-						<div>
-							<Field label={''} name="ingredient" />
-							<button onClick={remove} type="button">
-								-
-							</button>
-							<button onClick={append} type="button">
-								after
-							</button>
-							<button onClick={prepend} type="button">
-								before
-							</button>
-						</div>
-					</div>
-				);
-			})}
-			<button onClick={list.add} type="button">
-				Добавить
-			</button>
-		</div>
-	);
+  return (
+    <div>
+      {list.map(({key, remove, append, prepend}) => {
+        return (
+          <div key={key}>
+            <div>
+              <Field label={''} name="ingredient" />
+              <button onClick={remove} type="button">
+                -
+              </button>
+              <button onClick={append} type="button">
+                after
+              </button>
+              <button onClick={prepend} type="button">
+                before
+              </button>
+            </div>
+          </div>
+        );
+      })}
+      <button onClick={list.add} type="button">
+        Добавить
+      </button>
+    </div>
+  );
 });
 ```
 
 **How to use**
-You can choose FieldArray for advanced usage. It lets you create a set of fields or use simple [Field](create-field.md) in your [Form](README.md).
+You can choose FieldArray for other features. It lets you create a set of fields or remove fields. In other cases use simple [Field](create-field.md) in your [Form](README.md).
 
 ```tsx
 const MyForm = () => {

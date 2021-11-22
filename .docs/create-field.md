@@ -7,29 +7,29 @@ import React from 'react';
 import {createField, Form} from '@altiore/form';
 
 export const Field = createField(
-	({error, name, label /* you can add any extra fields here: */}) => {
-		return (
-			<div>
-				<label htmlFor="input-id">
-					{label}
-					<input id="input-id" name={name} />
-				</label>
-				<span>{error}</span>
-			</div>
-		);
-	},
+  ({error, name, label /* you can add any extra fields here: */}) => {
+    return (
+      <div>
+        <label htmlFor="input-id">
+          {label}
+          <input id="input-id" name={name} />
+        </label>
+        <span>{error}</span>
+      </div>
+    );
+  },
 );
 ```
 
 **How to use**
-Use Field properly in your [Form](README.md) with mandatory attribute name =''. Choose [FieldArray](create-field-array.md) for advanced usage.
+Use Field properly in your [Form](README.md) with mandatory attribute name =''. Choose [FieldArray](create-field-array.md) has some other features.
 
 ```tsx
 const MyForm = () => {
-	return (
-		<Form>
-			<Field name="title" />
-		</Form>
-	);
+  return (
+    <Form>
+      <Field name="title" />
+    </Form>
+  );
 };
 ```

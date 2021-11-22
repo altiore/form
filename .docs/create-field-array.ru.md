@@ -36,7 +36,7 @@ const FieldArray = createFieldArray(({list}) => {
 ```
 
 **How to use**
-Использование FieldArray дает множество преимуществ. Он позволяет дабавить набор полей. Или выберите простое поле [Field](create-field.ru.md) для своей формы [Form](README.RU.md)
+Использование FieldArray дает другие возможности: позволяет дабавить набор полей или удалить поля. Или выберите простое поле [Field](create-field.ru.md) для своей формы [Form](README.RU.md)
 
 ```tsx
 const MyForm = () => {
