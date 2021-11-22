@@ -7,31 +7,31 @@ import React from 'react';
 import {createFieldArray} from '@altiore/form';
 
 const FieldArray = createFieldArray(({list}) => {
-  return (
-    <div>
-      {list.map(({key, remove, append, prepend}) => {
-        return (
-          <div key={key}>
-            <div>
-              <Field label={''} name="ingredient" />
-              <button onClick={remove} type="button">
-                -
-              </button>
-              <button onClick={append} type="button">
-                after
-              </button>
-              <button onClick={prepend} type="button">
-                before
-              </button>
-            </div>
-          </div>
-        );
-      })}
-      <button onClick={list.add} type="button">
-        Добавить
-      </button>
-    </div>
-  );
+	return (
+		<div>
+			{list.map(({key, remove, append, prepend}) => {
+				return (
+					<div key={key}>
+						<div>
+							<Field label={''} name="ingredient" />
+							<button onClick={remove} type="button">
+								-
+							</button>
+							<button onClick={append} type="button">
+								after
+							</button>
+							<button onClick={prepend} type="button">
+								before
+							</button>
+						</div>
+					</div>
+				);
+			})}
+			<button onClick={list.add} type="button">
+				Добавить
+			</button>
+		</div>
+	);
 });
 ```
 
