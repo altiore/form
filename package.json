@@ -141,8 +141,11 @@
 			"prettier --write",
 			"eslint --fix --max-warnings=0"
 		],
-		"*.{json,yml,md}": [
-			"prettier --write --use-tabs=0"
+		"*.{json,yml}": [
+			"prettier --write"
+		],
+		"*.{md}": [
+			"prettier --write --use-tabs=false"
 		]
 	}
 }
