@@ -39,10 +39,10 @@ const FieldArray = createFieldArray(({list}) => {
 
 ```tsx
 const MyForm = () => {
-	return (
-		<Form>
-			<FieldArray name="FieldArrayName" />
-		</Form>
-	);
+  return (
+    <Form>
+      <FieldArray name="FieldArrayName" />
+    </Form>
+  );
 };
 ```
