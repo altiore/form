@@ -26,6 +26,7 @@ export const Field = createField(
 ```
 
 **Как использовать**
+Используйте в Вашей [форме](README.RU.md) Field правильно с обязательным атрибутом name = ''. Еще больше возможностей даст [FieldArray](create-field-array.ru.md).
 
 ```tsx
 const MyForm = () => {
