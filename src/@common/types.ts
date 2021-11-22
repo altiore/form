@@ -24,10 +24,12 @@ export enum InsertPosition {
 	AFTER = 1,
 }
 
-export interface ListItem {
+export interface ListItem<
+	Item extends Record<string, any> = Record<string, any>,
+> {
 	key: string;
-	append: () => void;
-	prepend: () => void;
+	append: (initialValue?: Item) => void;
+	prepend: (initialValue?: Item) => void;
 	remove: () => void;
 }
 
@@ -35,7 +37,7 @@ export type ListInterface<
 	Item extends Record<string, any> = Record<string, any>,
 > = {
 	map: (arg: (el: ListItem, index: number) => JSX.Element) => JSX.Element[];
-	add: MouseEventHandler | (() => void) | Item;
+	add: ((initialValue?: Item) => void) & MouseEventHandler<unknown>;
 	remove: (index: number) => void;
 };
 
@@ -63,7 +65,6 @@ export type FormContextState = {
 	formRef: MutableRefObject<HTMLFormElement>;
 	registerField: RegisterField;
 	setItems: (fieldName: string, setItems: (i: number[]) => number[]) => void;
-	setDefValue: (fieldName: string, defValue: any) => void;
 };
 
 export interface FieldArrayState {

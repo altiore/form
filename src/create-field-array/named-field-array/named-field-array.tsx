@@ -27,11 +27,6 @@ export const NamedFieldArray = <T,>({
 		true,
 	);
 
-	const setDefValue = useMemo(
-		() => formState?.setDefValue,
-		[formState?.setDefValue],
-	);
-
 	const setItems = useMemo(() => formState?.setItems, [formState?.setItems]);
 
 	if (isInsideForm && !field) {
@@ -42,7 +37,6 @@ export const NamedFieldArray = <T,>({
 		<ValidatedFieldArray
 			{...rest}
 			field={field}
-			setDefValue={setDefValue}
 			setItems={setItems}
 			name={name}
 		/>

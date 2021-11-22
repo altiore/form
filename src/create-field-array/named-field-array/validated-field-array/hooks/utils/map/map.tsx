@@ -3,42 +3,61 @@ import React, {useCallback} from 'react';
 import {FieldArrayContext} from '~/@common/field-array-context';
 import {InsertPosition, ListItem} from '~/@common/types';
 
-const Item = React.memo(({add, cb, fieldName, remove, name, index}: any) => {
-	const removeHandler = useCallback(() => {
-		remove(index);
-	}, [index, remove]);
+interface ItemProps {
+	add: (
+		fieldState: Record<string, any>,
+		index?: number,
+		offset?: InsertPosition,
+	) => void;
+	cb: (el: ListItem, index: number) => JSX.Element;
+	fieldName: string;
+	remove: (index: number) => void;
+	name: string;
+	index: number;
+}
 
-	const append = useCallback(
-		(object: any) => {
-			add(object, index, InsertPosition.AFTER);
-		},
-		[add, index],
-	);
+const Item = React.memo<ItemProps>(
+	({add, cb, fieldName, remove, name, index}) => {
+		const removeHandler = useCallback(() => {
+			remove(index);
+		}, [index, remove]);
 
-	const prepend = useCallback(
-		(object: any) => {
-			add(object, index, InsertPosition.BEFORE);
-		},
-		[add, fieldName, index],
-	);
+		const append = useCallback(
+			(initialValue?: any) => {
+				add(initialValue, index, InsertPosition.AFTER);
+			},
+			[add, index],
+		);
 
-	return (
-		<FieldArrayContext.Provider key={name} value={{name}}>
-			{cb(
-				{
-					append,
-					key: name,
-					prepend,
-					remove: removeHandler,
-				},
-				index,
-			)}
-		</FieldArrayContext.Provider>
-	);
-});
+		const prepend = useCallback(
+			(initialValue?: any) => {
+				add(initialValue, index, InsertPosition.BEFORE);
+			},
+			[add, fieldName, index],
+		);
+
+		return (
+			<FieldArrayContext.Provider key={name} value={{name}}>
+				{cb(
+					{
+						append,
+						key: name,
+						prepend,
+						remove: removeHandler,
+					},
+					index,
+				)}
+			</FieldArrayContext.Provider>
+		);
+	},
+);
 
 export const map = (
-	add: (fieldState: Record<string, any>, index?: number) => void,
+	add: (
+		fieldState: Record<string, any>,
+		index?: number,
+		offset?: InsertPosition,
+	) => void,
 	remove: (index: number) => void,
 	list: number[],
 	fieldName: string,

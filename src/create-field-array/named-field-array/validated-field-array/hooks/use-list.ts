@@ -1,4 +1,10 @@
-import {useCallback, useMemo, useState} from 'react';
+import {
+	MouseEvent,
+	MouseEventHandler,
+	useCallback,
+	useMemo,
+	useState,
+} from 'react';
 
 import {
 	FieldMeta,
@@ -15,6 +21,7 @@ export const useList = (
 	setFormContextItems?: (
 		fieldName: string,
 		setItems: (i: number[]) => number[],
+		defaultValue?: any,
 	) => void,
 	setDefValue?: (fieldName: string, defValue: any) => void,
 ): [ListInterface, number[]] => {
@@ -29,9 +36,9 @@ export const useList = (
 		return localItems;
 	}, [fieldMeta, localItems]);
 	const setItems = useCallback(
-		(set: (i: number[]) => number[]) => {
+		(set: (i: number[]) => number[], defaultValue?: any) => {
 			if (setFormContextItems) {
-				setFormContextItems(fieldName, set);
+				setFormContextItems(fieldName, set, defaultValue);
 			} else {
 				setLocalItems(set);
 			}
@@ -40,21 +47,21 @@ export const useList = (
 	);
 	const addHandler = useCallback(
 		(
-			fieldState: Record<string, any>,
+			defaultFieldStateOrEvent: Record<string, any> | MouseEvent,
 			index?: number,
 			offset?: InsertPosition,
 		) => {
-			if (setDefValue && !fieldState.persist) {
-				console.log('addHandler', {
-					fieldName,
-					fieldState,
-					index,
-					keys: Object.keys(fieldState),
-					offset,
-					setDefValue,
-				});
+			// проверяем, не является ли defaultFieldStateOrEvent синтетическим объектом события
+			if (typeof defaultFieldStateOrEvent.persist === 'function') {
+				setItems((s) => add(s, fieldName));
+			} else {
+				// в случае, если defaultFieldStateOrEvent не синтетическое событие, -
+				//   это дефолтное значение и остальные 2 параметра тоже имеют смысл
+				setItems(
+					(s) => add(s, fieldName, index, offset),
+					defaultFieldStateOrEvent,
+				);
 			}
-			setItems((s) => add(s, fieldName, fieldState, index, offset));
 		},
 		[fieldName, setDefValue, setItems],
 	);
@@ -71,11 +78,24 @@ export const useList = (
 		[addHandler, removeHandler, fieldName, items],
 	);
 
-	return useMemo(() => {
+	const simplifiedAddHandler = useCallback<
+		((defaultFieldStateOrEvent?: Record<string, any>) => void) &
+			MouseEventHandler<unknown>
+	>(
+		(defaultFieldStateOrEvent?: Record<string, any> | MouseEvent) => {
+			addHandler(defaultFieldStateOrEvent);
+		},
+		[addHandler],
+	);
+
+	return useMemo<[ListInterface, number[]]>(() => {
 		return [
 			{
-				add: addHandler,
+				add: simplifiedAddHandler,
 				map: mapHandler,
+				// TODO: этот обработчик функционирует непрозрачно для пользователя. Нужно упростить
+				//  апишку, чтоб индексом был фактический отрендереный индекс элемента,
+				//  сейчас в качестве индекса мы принимаем номерное значение элемента в массиве
 				remove: removeHandler,
 			},
 			items,
