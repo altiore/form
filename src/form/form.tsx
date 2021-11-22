@@ -33,9 +33,6 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 }: FormProps<Values>): JSX.Element => {
 	const formRef = useRef<HTMLFormElement>(null);
 	const [fields, setFields] = useState<FormContextState['fields']>({});
-	const [dynamicDefaults, setDynamicDefaults] = useState<Record<string, any>>(
-		{},
-	);
 
 	const setErrors = useCallback(
 		(fieldName: string, errors: string[]) => {
@@ -55,28 +52,18 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 		[setFields],
 	);
 
-	const setDefValue = useCallback(
-		(fieldName: string, defaultValue: any) => {
-			setDynamicDefaults((s) => {
-				if (isEqual(s[fieldName], defaultValue)) {
-					return s;
-				}
-				return {
-					...s,
-					[fieldName]: defaultValue,
-				};
-			});
-		},
-		[setDynamicDefaults],
-	);
-
 	const setItems = useCallback(
-		(fieldName: string, setItems: (i: number[]) => number[]) => {
+		(
+			fieldName: string,
+			setItemsArg: (i: number[]) => number[],
+			defaultValue?: any,
+		) => {
 			setFields((s) => ({
 				...s,
 				[fieldName]: {
 					...s[fieldName],
-					items: setItems(s[fieldName].items),
+					defaultValue,
+					items: setItemsArg(s[fieldName].items),
 				},
 			}));
 		},
@@ -86,10 +73,17 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	const registerField = useCallback(
 		(fieldName: string, fieldType: FieldType) => {
 			setFields((s): FormContextState['fields'] => {
-				const defaultValue = get(defaultValues, fieldName.split('.'));
-				console.log('registerField', {
-					dynamicDefaults,
-				});
+				const fieldNameArr = fieldName.split('.');
+
+				let dynamicDefault: any = undefined;
+				const fieldNameArrLength = fieldNameArr.length;
+				if (fieldNameArrLength > 2) {
+					dynamicDefault =
+						s?.[fieldNameArr.slice(0, fieldNameArrLength - 2).join('.')]
+							?.defaultValue?.[fieldNameArr[fieldNameArrLength - 1]];
+				}
+				const defaultValue = dynamicDefault ?? get(defaultValues, fieldNameArr);
+
 				return {
 					...s,
 					[fieldName]: {
@@ -116,7 +110,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				});
 			};
 		},
-		[defaultValues, dynamicDefaults, setFields],
+		[defaultValues, setFields],
 	);
 
 	const handleSubmit = useCallback(
@@ -158,9 +152,6 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 		[fields, onSubmit],
 	);
 
-	console.log('render form', {
-		fields,
-	});
 	return (
 		<form {...props} onSubmit={handleSubmit} ref={formRef}>
 			<FormContext.Provider
@@ -168,7 +159,6 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 					fields,
 					formRef,
 					registerField,
-					setDefValue,
 					setItems,
 				}}>
 				{children}

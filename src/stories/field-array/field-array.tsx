@@ -118,7 +118,10 @@ export const FieldArrayWithAddingDefValue = createFieldArray<IFieldArray>(
 			<>
 				{list.map(cb)}
 				<button onClick={handleAdd} type="button">
-					Добавить ингредиент 1
+					Добавить конкретный ингредиент
+				</button>
+				<button onClick={list.add} type="button">
+					Добавить пустой ингредиент
 				</button>
 			</>
 		);
