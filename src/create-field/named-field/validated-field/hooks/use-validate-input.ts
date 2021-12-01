@@ -86,7 +86,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 		(name: string) => {
 			const fountInputRef = getNodeByName<any>(name, formRef);
 			if (fountInputRef) {
-				return typeof fountInputRef.current.checked === 'boolean'
+				return fountInputRef.current.type === 'checkbox'
 					? fountInputRef.current.checked
 					: fountInputRef.current.value;
 			}
