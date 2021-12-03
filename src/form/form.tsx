@@ -19,6 +19,24 @@ const getValueByType = new Map([
 	[FieldType.NUMBER, parseNumber],
 ]);
 
+const toFlatErrors = (errors: any, setErrors: any) => {
+	Object.keys(errors).forEach((namePart) => {
+		const v = errors[namePart];
+		if (Array.isArray(v) && typeof v[0] === 'string') {
+			setErrors(namePart, v);
+		} else {
+			const newObj = Object.entries(v).reduce<Record<string, any>>(
+				(r, [name, value]) => {
+					r[`${namePart}.${name}`] = value;
+					return r;
+				},
+				{},
+			);
+			toFlatErrors(newObj, setErrors);
+		}
+	});
+};
+
 /**
  * Форма - элемент взаимодействия пользователя с сайтом или приложением
  *
@@ -50,6 +68,13 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 			});
 		},
 		[setFields],
+	);
+
+	const setNestedErrors = useCallback(
+		(errors: Record<string, any>) => {
+			toFlatErrors(errors, setErrors);
+		},
+		[setErrors],
 	);
 
 	const setItems = useCallback(
@@ -147,9 +172,9 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 					}
 				});
 
-			onSubmit(resValues as Values);
+			onSubmit(resValues as Values, setNestedErrors);
 		},
-		[fields, onSubmit],
+		[fields, onSubmit, setNestedErrors],
 	);
 
 	return (

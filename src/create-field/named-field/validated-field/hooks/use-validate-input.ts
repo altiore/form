@@ -102,28 +102,30 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 		(e: Event) => {
 			e.preventDefault();
 
+			const errors: string[] = [];
+
 			const hasValidation = Boolean(validators?.length && e.target);
 			if (hasValidation) {
 				const getCurrentValue = getValueByType.get(type) ?? getValue;
 				const value = getCurrentValue(e);
 
-				const errors: string[] = [];
 				validators.forEach((validate) => {
 					const result = validate(value, getFormValueByName);
 					if (result?.error) {
 						errors.push(result.error.message);
 					}
 				});
-				if (field?.setErrors) {
-					field.setErrors(errors);
-				} else {
-					setErrors((s) => {
-						if (isEqual(s, errors)) {
-							return s;
-						}
-						return errors;
-					});
-				}
+			}
+
+			if (field?.setErrors) {
+				field.setErrors(errors);
+			} else {
+				setErrors((s) => {
+					if (isEqual(s, errors)) {
+						return s;
+					}
+					return errors;
+				});
 			}
 		},
 		[getFormValueByName, field?.setErrors, setErrors, type, validators],
@@ -140,7 +142,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 
 	useEffect(() => {
 		const input = inputRef.current;
-		const hasEventHandler = Boolean(validators?.length && input);
+		const hasEventHandler = Boolean(input);
 		if (hasEventHandler) {
 			input.addEventListener('blur', handleBlur);
 		}
@@ -150,7 +152,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 				input.removeEventListener('blur', handleBlur);
 			}
 		};
-	}, [inputRef, validators]);
+	}, [inputRef]);
 
 	return {
 		errors: field?.errors ?? errors,

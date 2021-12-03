@@ -4,5 +4,8 @@ export interface FormProps<Values extends Record<string, any>>
 	extends Omit<FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
 	children: ReactNode;
 	defaultValues?: Partial<Values>;
-	onSubmit: (values: Partial<Values>) => void;
+	onSubmit: (
+		values: Partial<Values>,
+		setErrors: (errors: Record<string, any>) => void,
+	) => any;
 }

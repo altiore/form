@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 
 import {ComponentMeta, ComponentStory} from '@storybook/react';
 
@@ -74,13 +74,22 @@ type T2 = {
 
 export const InsideFormTypedField: ComponentStory<typeof FieldNumber> = ({
 	onSubmit,
-}: any) => (
-	<Form<T2> onSubmit={onSubmit} defaultValues={{number: 12}}>
-		<Field<T2> name="string" label="String" defaultValue={'string'} />
-		<FieldNumber<T2> name="number" label="Number" defaultValue={4} />
-		<FieldBoolean<T2> name="boolean" label="Boolean" defaultValue={true} />
-		<FieldRadio<T2> label="Radio" name="radio" defaultValue="email" />
-		<FieldSelect<T2> label="Select" name="select" defaultValue="one" />
-		<button type="submit">Отправить</button>
-	</Form>
-);
+}: any) => {
+	const handleSubmit = useCallback(
+		(values, setErrors) => {
+			onSubmit(values);
+			setErrors({string: ['test error']});
+		},
+		[onSubmit],
+	);
+	return (
+		<Form<T2> onSubmit={handleSubmit} defaultValues={{number: 12}}>
+			<Field<T2> name="string" label="String" defaultValue={'string'} />
+			<FieldNumber<T2> name="number" label="Number" defaultValue={4} />
+			<FieldBoolean<T2> name="boolean" label="Boolean" defaultValue={true} />
+			<FieldRadio<T2> label="Radio" name="radio" defaultValue="email" />
+			<FieldSelect<T2> label="Select" name="select" defaultValue="one" />
+			<button type="submit">Отправить</button>
+		</Form>
+	);
+};

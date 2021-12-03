@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 
 import {ComponentMeta, ComponentStory} from '@storybook/react';
 
@@ -52,3 +52,25 @@ export const InsideFormFieldArrayWithAddingDefValue: ComponentStory<
 		<button type="submit">Submit</button>
 	</Form>
 );
+
+export const InsideFormFieldArrayWithSettingErrors: ComponentStory<
+	typeof FieldArray
+> = ({onSubmit}: any) => {
+	const handleSubmit = useCallback((values, setErrors) => {
+		onSubmit(values);
+		setErrors({
+			ingredients: {
+				'0': {
+					ingredient: ['Ingredient error'],
+				},
+			},
+		});
+	}, []);
+	return (
+		<Form onSubmit={handleSubmit}>
+			<Field label="Title" name="title" />
+			<FieldArray name="ingredients" />
+			<button type="submit">Submit</button>
+		</Form>
+	);
+};
