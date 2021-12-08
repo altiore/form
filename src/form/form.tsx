@@ -55,7 +55,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	const setErrors = useCallback(
 		(fieldName: string, errors: string[]) => {
 			setFields((s) => {
-				if (isEqual(s[fieldName].errors, errors)) {
+				if (!s[fieldName] || isEqual(s[fieldName]?.errors, errors)) {
 					return s;
 				}
 				return {
