@@ -6,7 +6,6 @@ import {
 	useState,
 } from 'react';
 
-import _debounce from 'lodash/debounce';
 import isEqual from 'lodash/isEqual';
 
 import {FieldMeta, FieldType, ValidateFuncType} from '~/@common/types';
@@ -98,7 +97,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 
 	const [errors, setErrors] = useState<string[]>([]);
 
-	const handleDebounceFn = useCallback(
+	const handleBlur = useCallback(
 		(e: Event) => {
 			e.preventDefault();
 
@@ -138,13 +137,22 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 		],
 	);
 
-	const debounceHandle = useCallback(_debounce(handleDebounceFn, 200), []);
-
-	const handleBlur = useCallback(
+	const handleFocus = useCallback(
 		(e: Event) => {
-			debounceHandle(e);
+			e.preventDefault();
+
+			if (field?.setErrors) {
+				field.setErrors([]);
+			} else {
+				setErrors((s) => {
+					if (isEqual(s, [])) {
+						return s;
+					}
+					return [];
+				});
+			}
 		},
-		[debounceHandle],
+		[field?.setErrors, setErrors],
 	);
 
 	useEffect(() => {
@@ -152,11 +160,13 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 		const hasEventHandler = Boolean(input);
 		if (hasEventHandler) {
 			input.addEventListener('blur', handleBlur);
+			input.addEventListener('focus', handleFocus);
 		}
 
 		return () => {
 			if (hasEventHandler) {
 				input.removeEventListener('blur', handleBlur);
+				input.removeEventListener('focus', handleFocus);
 			}
 		};
 	}, [inputRef]);
