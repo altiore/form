@@ -1,21 +1,20 @@
-import {ValidateFuncType} from '~/@common/types';
+import {ReusableValidator, ValidateFuncType} from '~/@common/types';
+import {getErrorMessage} from '~/validators/@common/get-error-message';
 
-export const minLength =
-	(length: number): ValidateFuncType =>
+export const minLength: ReusableValidator<number> =
+	(getMessage, length: number): ValidateFuncType =>
 	(value: string | any[] = '') => {
 		if (typeof value?.length !== 'number') {
 			throw new Error(
-				`Not supported type "${typeof value}" provided to validate function "minLength"`,
+				`Неподдерживаемый тип значения для валидации "${typeof value}" передан функции для проверки данных "minLength"`,
 			);
 		}
 		if (length < 0) {
-			throw new Error(`Param 'length' cannot be less than 0`);
+			throw new Error(`Заданная длина не может быть меньше нуля`);
 		}
 		if (value.length < length) {
-			return {
-				error: new Error(`Минимальная длина введенного значения - ${length}`),
-				value,
-			};
+			const defError = `Минимальная длина введенного значения - ${length}`;
+			return getErrorMessage(value, length, defError, getMessage);
 		}
 		return undefined;
 	};

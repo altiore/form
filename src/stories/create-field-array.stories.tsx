@@ -4,13 +4,12 @@ import {ComponentMeta, ComponentStory} from '@storybook/react';
 
 import {Form} from '~/form';
 import Field from '~/stories/field';
+import {minLength} from '~/validators';
 
 import FieldArray, {
 	FieldArraySimplest,
 	FieldArrayWithAddingDefValue,
 } from './field-array';
-
-import Joi from 'joi';
 
 export default {
 	argTypes: {onSubmit: {action: 'submit'}},
@@ -38,7 +37,7 @@ export const InsideFormFieldArrayWithValidators: ComponentStory<
 > = ({onSubmit}: any) => (
 	<Form onSubmit={onSubmit}>
 		<Field label="Title" name="title" />
-		<FieldArray name="ingredients" validators={[Joi.array().min(2).validate]} />
+		<FieldArray name="ingredients" validators={[minLength(null, 2)]} />
 		<button type="submit">Submit</button>
 	</Form>
 );

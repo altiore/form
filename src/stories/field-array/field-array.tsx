@@ -35,7 +35,11 @@ export const FieldArray = createFieldArray<IFieldArray>(({list, errors}) => {
 		return (
 			<div key={key}>
 				<div style={{display: 'flex'}}>
-					<Field label={''} name="ingredient" validators={[minLength(3)]} />
+					<Field
+						label={''}
+						name="ingredient"
+						validators={[minLength(null, 3)]}
+					/>
 					<TagsArray name="tags" />
 					<button onClick={remove} type="button">
 						-
@@ -67,8 +71,12 @@ export const FieldArraySimplest = createFieldArray<IFieldArray>(({list}) => {
 		return (
 			<div key={key}>
 				<div style={{display: 'flex'}}>
-					<Field label="Title" name="title" validators={[minLength(3)]} />
-					<Field label="Description" name="desc" validators={[minLength(3)]} />
+					<Field label="Title" name="title" validators={[minLength(null, 3)]} />
+					<Field
+						label="Description"
+						name="desc"
+						validators={[minLength(null, 3)]}
+					/>
 					<button onClick={remove} type="button">
 						-
 					</button>
@@ -93,11 +101,15 @@ export const FieldArrayWithAddingDefValue = createFieldArray<IFieldArray>(
 			return (
 				<div key={key}>
 					<div style={{display: 'flex'}}>
-						<Field label="Title" name="title" validators={[minLength(3)]} />
+						<Field
+							label="Title"
+							name="title"
+							validators={[minLength(null, 3)]}
+						/>
 						<Field
 							label="Description"
 							name="desc"
-							validators={[minLength(3)]}
+							validators={[minLength(null, 3)]}
 						/>
 						<button onClick={remove} type="button">
 							-

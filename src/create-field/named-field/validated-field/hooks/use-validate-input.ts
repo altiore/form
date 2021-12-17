@@ -110,9 +110,9 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 				const value = getCurrentValue(e);
 
 				validators.forEach((validate) => {
-					const result = validate(value, getFormValueByName);
-					if (result?.error) {
-						errors.push(result.error.message);
+					const result = validate(value, field?.name, getFormValueByName);
+					if (result) {
+						errors.push(result);
 					}
 				});
 			}
@@ -128,7 +128,14 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 				});
 			}
 		},
-		[getFormValueByName, field?.setErrors, setErrors, type, validators],
+		[
+			getFormValueByName,
+			field?.setErrors,
+			field?.name,
+			setErrors,
+			type,
+			validators,
+		],
 	);
 
 	const debounceHandle = useCallback(_debounce(handleDebounceFn, 200), []);

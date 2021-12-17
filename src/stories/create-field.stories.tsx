@@ -10,8 +10,6 @@ import FieldRadio from './field-radio';
 import FieldSelect from './field-select';
 import {FieldBoolean, FieldNumber} from './field-typed';
 
-import * as Joi from 'joi';
-
 export default {
 	argTypes: {onSubmit: {action: 'submit'}},
 	component: Field,
@@ -24,13 +22,13 @@ export const SimplestField: ComponentStory<typeof Field> = () => (
 			name="first"
 			defaultValue="Default"
 			label="First"
-			validators={[minLength(3)]}
+			validators={[minLength(null, 3)]}
 		/>
 		<Field
 			name="second"
 			label="Second"
 			defaultValue=""
-			validators={[minLength(3)]}
+			validators={[minLength(null, 3)]}
 		/>
 	</form>
 );
@@ -43,22 +41,14 @@ type T = {
 export const InsideFormField: ComponentStory<typeof Field> = ({
 	onSubmit,
 }: any) => {
-	const lengthValidator = Joi.string().max(5).min(2).messages({
-		'string.min': 'Слишком коротко',
-	});
 	return (
 		<Form<T> onSubmit={onSubmit} defaultValues={{first: 'NOT DEFAULT'}}>
-			<Field<T>
-				name="first"
-				label="First"
-				defaultValue={'DEFAULT'}
-				validators={[lengthValidator.validate]}
-			/>
+			<Field<T> name="first" label="First" defaultValue={'DEFAULT'} />
 			<Field<T>
 				name="second"
 				label="Second"
 				defaultValue={'test'}
-				validators={[minLength(3)]}
+				validators={[minLength(null, 3)]}
 			/>
 		</Form>
 	);

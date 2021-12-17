@@ -1,18 +1,19 @@
-import {minLength} from '~/validators';
+import {minLength as rawMinLength} from '~/validators';
+
+const minLength = rawMinLength.bind(undefined, null);
 
 describe('minLength()', () => {
 	it('Некорректные данные, которые должны выдать ошибку пользователю', () => {
-		expect(minLength(15)('wrong text')).toEqual({
-			error: new Error('Минимальная длина введенного значения - 15'),
-			value: 'wrong text',
-		});
+		expect(minLength(15)('wrong text')).toEqual(
+			'Минимальная длина введенного значения - 15',
+		);
 	});
 	it('Корректные данные', () => {
 		expect(minLength(5)('this is normal text')).toBeUndefined();
 	});
 	it('Длина не должна быть меньше 0', () => {
 		expect(() => minLength(-1)('the text doesnt matter')).toThrow(
-			`Param 'length' cannot be less than 0`,
+			`Заданная длина не может быть меньше нуля`,
 		);
 	});
 });

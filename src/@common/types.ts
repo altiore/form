@@ -71,8 +71,14 @@ export interface FieldArrayState {
 	name: string;
 }
 
+// Если возвращает строку - это означает, что есть ошибка. undefined означает, что ошибки нет
 export type ValidateFuncType = (
 	value: any,
-	getFieldValueByName?: ((name: string) => any) | any, // второе any здесь, чтоб работала
-	// библитека Joi, которая вторым параметром принимает свои options
-) => {error: Error; value: any} | undefined | any;
+	fieldName?: string,
+	getFieldValueByName?: (name: string) => any,
+) => string | undefined;
+
+export type ReusableValidator<T> = (
+	getMessage: null | undefined | string | ((value: any, forCheck: T) => string),
+	forCheck?: T,
+) => ValidateFuncType;
