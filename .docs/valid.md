@@ -2,38 +2,33 @@
 
 ```tsx
 import React from 'react';
-import {Field, Form} from '@altiore/form';
 
-import {ValidateFuncType} from '~/@common/types';
+import {Form, createField} from '@altiore/form';
 
-const minLength =
-  (length: number): ValidateFuncType =>
-  (value: string | any[] = '') => {
-    if (typeof value?.length !== 'number') {
-      throw new Error(
-        `Not supported type "${typeof value}" provided to validate function "minLength"`,
-      );
-    }
-    if (length < 0) {
-      throw new Error(`Param 'length' cannot be less than 0`);
-    }
-    if (value.length < length) {
-      return {
-        error: new Error(`Минимальная длина введенного значения - ${length}`),
-        value,
-      };
-    }
-    return undefined;
-  };
+const Field = createField(({error, name}) => {
+  return (
+    <div>
+      <input name={name} />
+      <span>Ошибка валидации: {error}</span>
+    </div>
+  );
+});
+
+const customFieldLevelValidation = (value) => {
+  if (value && value.length < 3) {
+    return 'Значение не может быть меньше 3';
+  }
+  return undefined;
+};
 
 const SimplestFieldWithValidator = () => (
-  <form>
+  <Form>
     <Field
       name="second"
       label="Second"
       defaultValue=""
-      validators={[minLength(3)]}
+      validators={[customFieldLevelValidation]}
     />
-  </form>
+  </Form>
 );
 ```

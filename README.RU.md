@@ -13,7 +13,7 @@
 
 ## Зачем?
 
-Чтобы облегчить работу с формами
+Чтобы облегчить работу с формами. Если вы устали от страшно медленных форм React
 
 ## Установка:
 
@@ -50,28 +50,32 @@ const MyForm = () => {
 };
 ```
 
-## Пользовательская форма
+## Кастомизируем поле ввода, добавляя в него доп. функции
 
-**Пользовательский вариант дает возможность разнообразить форму при помощи дополнительного поля [Field](.docs/create-field.ru.md). Другие возможности дает [FieldArray](.docs/create-field-array.ru.md)**
+**Позволяет кастомизировать внешний вид полей ввода, добавляет функционал валидации и несколько других полезных функций. [Кастомизированное поле ввода в деталях](.docs/create-field.ru.md)**
+**Вы так же можете использовать [FieldArray](.docs/create-field-array.ru.md) для массивов**
 
 ```tsx
 import React, {useCallback} from 'react';
 
 import {createField, Form} from '@altiore/form';
 
-export const Field = createField(
-  ({error, name, label /* you can add any extra fields here: */}) => {
-    return (
-      <div>
-        <label htmlFor="input-id">
-          {label}
-          <input id="input-id" name={name} ref="{inputRef}" />
-        </label>
-        <span>{error}</span>
-      </div>
-    );
-  },
-);
+/**
+ * error и name добавляются вспомогательной функцией createField
+ */
+const FieldView = ({error, name, label}) => {
+  return (
+    <div>
+      <label htmlFor="input-id">
+        {label}
+        <input id="input-id" name={name} />
+      </label>
+      <span>{error}</span>
+    </div>
+  );
+};
+
+export const Field = createField(FieldView);
 
 const MyForm = () => {
   const handleSubmit = useCallback((values) => {
@@ -80,9 +84,21 @@ const MyForm = () => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Field label="Field Label" name="name" />
+      <Field
+        label="Field Label"
+        name="name"
+        validators={
+          [
+            /* здесь вы можете добавить функции для валидации */
+          ]
+        }
+      />
       <button type="submit">Submit</button>
     </Form>
   );
 };
 ```
+
+## Валидации форм
+
+[Детальный пример валидации](.docs/valid.md)
