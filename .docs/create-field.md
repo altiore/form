@@ -22,7 +22,7 @@ export const Field = createField(
 ```
 
 **How to use**
-Use Field properly in your [Form](README.md) with mandatory attribute name =''. Choose [FieldArray](create-field-array.md) has some other features.
+Use Field properly in your [Form](README.md) with mandatory attribute name =''. Choose [FieldArray](create-field-array.md) for arrays.
 
 ```tsx
 const MyForm = () => {
