@@ -13,7 +13,7 @@ powerful forms with [**@altiore/form**](https://www.npmjs.com/package/@altiore/f
 
 ## Why?
 
-To simplify work with forms. If you are tired of the terribly slow forms of React
+To simplify and speed up work with forms. If you are tired of the terribly slow forms of React
 
 ## Installation:
 
