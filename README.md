@@ -2,7 +2,7 @@
 
 `@altiore/form`
 
-powerful forms with [**@altiore/form**](https://www.npmjs.com/package/@altiore/form)
+Productive, flexible and extensible forms with easy-to-use validation and the most user-friendly API [**@altiore/form**](https://www.npmjs.com/package/@altiore/form)
 
 <a href="https://www.npmjs.com/package/@altiore/form" target="_blank">
   <img src="https://img.shields.io/npm/v/@altiore/form.svg" alt="NPM Version" />
@@ -13,7 +13,7 @@ powerful forms with [**@altiore/form**](https://www.npmjs.com/package/@altiore/f
 
 ## Why?
 
-To simplify and speed up work with forms. If you are tired of the terribly slow forms of React
+To simplify and speed up work with forms. If you are tired of the terribly slow forms of React and tired to write the same things again and again
 
 ## Installation:
 

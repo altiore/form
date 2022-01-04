@@ -2,7 +2,7 @@
 
 `@altiore/form`
 
-мощные формы от [**@altiore/form**](https://www.npmjs.com/package/@altiore/form)
+Производительные гибкие и легко расширяемые формы с простой в использовании валидацией и наиболее удобным API [**@altiore/form**](https://www.npmjs.com/package/@altiore/form)
 
 <a href="https://www.npmjs.com/package/@altiore/form" target="_blank">
   <img src="https://img.shields.io/npm/v/@altiore/form.svg" alt="NPM Version" />
@@ -13,7 +13,7 @@
 
 ## Зачем?
 
-Чтобы облегчить и ускорить работу с формами. Если вы устали от страшно медленных форм React
+Чтобы облегчить и ускорить работу с формами. Если вы устали от страшно медленных форм React и устали постоянно писать одно и то же
 
 ## Установка:
 
