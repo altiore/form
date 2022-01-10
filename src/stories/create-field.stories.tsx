@@ -1,14 +1,17 @@
 import React, {useCallback} from 'react';
+import Form from 'react-bootstrap/Form';
 
 import {ComponentMeta, ComponentStory} from '@storybook/react';
 
-import {Form} from '~/form';
+// import {Form} from '~/form';
 import {minLength} from '~/validators/min-length';
 
 import Field from './field';
 import FieldRadio from './field-radio';
 import FieldSelect from './field-select';
 import {FieldBoolean, FieldNumber} from './field-typed';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default {
 	argTypes: {onSubmit: {action: 'submit'}},
@@ -17,20 +20,20 @@ export default {
 } as ComponentMeta<typeof Field>;
 
 export const SimplestField: ComponentStory<typeof Field> = () => (
-	<form>
-		<Field
+	<Form>
+		<Form.Label>First</Form.Label>
+		<Form.Control
 			name="first"
 			defaultValue="Default"
-			label="First"
-			validators={[minLength(null, 3)]}
+			// validators={[minLength(null, 3)]}
 		/>
-		<Field
+		<Form.Label>Second</Form.Label>
+		<Form.Control
 			name="second"
-			label="Second"
 			defaultValue=""
-			validators={[minLength(null, 3)]}
+			// validators={[minLength(null, 3)]}
 		/>
-	</form>
+	</Form>
 );
 
 type T = {

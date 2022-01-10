@@ -1,9 +1,13 @@
 import React from 'react';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 import {ComponentMeta, ComponentStory} from '@storybook/react';
 
-import {Form} from '~/form';
-import Field from '~/stories/field';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+// import {Form} from '~/form';
+// import Field from '~/stories/field';
 
 export default {
 	component: Form,
@@ -18,8 +22,8 @@ export const SimplestForm = Template.bind({});
 SimplestForm.args = {
 	children: (
 		<>
-			<input name="name" />
-			<button type="submit">Submit</button>
+			<Form.Control name="name" />
+			<Button type="submit">Submit</Button>
 		</>
 	),
 	defaultValues: {
@@ -56,8 +60,9 @@ export const FormWithCustomField = Template.bind({});
 FormWithCustomField.args = {
 	children: (
 		<>
-			<Field label="Field Label" name="name" />
-			<button type="submit">Submit</button>
+			<Form.Label>Field Label</Form.Label>
+			<Form.Control name="name" />
+			<Button type="submit">Submit</Button>
 		</>
 	),
 	defaultValues: {
