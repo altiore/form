@@ -27,7 +27,9 @@ export const InsideFormFieldArraySimplest: ComponentStory<typeof FieldArray> =
 			<Form onSubmit={onSubmit}>
 				<Field label="Title" name="title" />
 				<FieldArraySimplest name="ingredients" />
-				<button type="submit">submit</button>
+				<button className="btn btn-success" type="submit">
+					submit
+				</button>
 			</Form>
 		</div>
 	);
@@ -38,7 +40,9 @@ export const InsideFormFieldArrayWithValidators: ComponentStory<
 	<Form onSubmit={onSubmit}>
 		<Field label="Title" name="title" />
 		<FieldArray name="ingredients" validators={[minLength(null, 2)]} />
-		<button type="submit">Submit</button>
+		<button className="btn btn-success" type="submit">
+			Submit
+		</button>
 	</Form>
 );
 
@@ -48,7 +52,9 @@ export const InsideFormFieldArrayWithAddingDefValue: ComponentStory<
 	<Form onSubmit={onSubmit}>
 		<Field label="Title" name="title" />
 		<FieldArrayWithAddingDefValue name="ingredients" />
-		<button type="submit">Submit</button>
+		<button className="btn btn-success" type="submit">
+			Submit
+		</button>
 	</Form>
 );
 
@@ -69,7 +75,9 @@ export const InsideFormFieldArrayWithSettingErrors: ComponentStory<
 		<Form onSubmit={handleSubmit}>
 			<Field label="Title" name="title" />
 			<FieldArray name="ingredients" />
-			<button type="submit">Submit</button>
+			<button className="btn btn-success" type="submit">
+				Submit
+			</button>
 		</Form>
 	);
 };

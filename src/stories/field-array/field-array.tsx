@@ -8,10 +8,12 @@ import {minLength} from '~/validators';
 export const TagsArray = createFieldArray<FieldArrayProps>(({list}) => {
 	const cb = useCallback(({key, remove}) => {
 		return (
-			<div key={key}>
+			<div className="mb-3" key={key}>
 				<Field label={'Tag'} name="tag" />
 				<FieldNumber label="Amount" name="amount" />
-				<button onClick={remove}>remove tag</button>
+				<button className="btn btn-outline-secondary" onClick={remove}>
+					remove tag
+				</button>
 			</div>
 		);
 	}, []);
@@ -19,7 +21,10 @@ export const TagsArray = createFieldArray<FieldArrayProps>(({list}) => {
 	return (
 		<div>
 			{list.map(cb)}
-			<button onClick={list.add} type="button">
+			<button
+				className="btn btn-outline-secondary"
+				onClick={list.add}
+				type="button">
 				Добавить Тэг
 			</button>
 		</div>
@@ -41,13 +46,22 @@ export const FieldArray = createFieldArray<IFieldArray>(({list, errors}) => {
 						validators={[minLength(null, 3)]}
 					/>
 					<TagsArray name="tags" />
-					<button onClick={remove} type="button">
+					<button
+						className="btn btn-outline-secondary"
+						onClick={remove}
+						type="button">
 						-
 					</button>
-					<button onClick={append} type="button">
+					<button
+						className="btn btn-outline-secondary"
+						onClick={append}
+						type="button">
 						after
 					</button>
-					<button onClick={prepend} type="button">
+					<button
+						className="btn btn-outline-secondary"
+						onClick={prepend}
+						type="button">
 						before
 					</button>
 				</div>
@@ -59,7 +73,10 @@ export const FieldArray = createFieldArray<IFieldArray>(({list, errors}) => {
 		<div>
 			<div>{errors[0]}</div>
 			{list.map(cb)}
-			<button onClick={list.add} type="button">
+			<button
+				className="btn btn-outline-secondary"
+				onClick={list.add}
+				type="button">
 				Добавить ингредиент
 			</button>
 		</div>
@@ -77,7 +94,10 @@ export const FieldArraySimplest = createFieldArray<IFieldArray>(({list}) => {
 						name="desc"
 						validators={[minLength(null, 3)]}
 					/>
-					<button onClick={remove} type="button">
+					<button
+						className="btn btn-outline-secondary"
+						onClick={remove}
+						type="button">
 						-
 					</button>
 				</div>
@@ -88,7 +108,10 @@ export const FieldArraySimplest = createFieldArray<IFieldArray>(({list}) => {
 	return (
 		<>
 			{list.map(cb)}
-			<button onClick={list.add} type="button">
+			<button
+				className="btn btn-outline-secondary"
+				onClick={list.add}
+				type="button">
 				Добавить ингредиент 1
 			</button>
 		</>
@@ -111,7 +134,10 @@ export const FieldArrayWithAddingDefValue = createFieldArray<IFieldArray>(
 							name="desc"
 							validators={[minLength(null, 3)]}
 						/>
-						<button onClick={remove} type="button">
+						<button
+							className="btn btn-outline-secondary"
+							onClick={remove}
+							type="button">
 							-
 						</button>
 					</div>
@@ -129,10 +155,16 @@ export const FieldArrayWithAddingDefValue = createFieldArray<IFieldArray>(
 		return (
 			<>
 				{list.map(cb)}
-				<button onClick={handleAdd} type="button">
+				<button
+					className="btn btn-outline-secondary"
+					onClick={handleAdd}
+					type="button">
 					Добавить конкретный ингредиент
 				</button>
-				<button onClick={list.add} type="button">
+				<button
+					className="btn btn-outline-secondary"
+					onClick={list.add}
+					type="button">
 					Добавить пустой ингредиент
 				</button>
 			</>
