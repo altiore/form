@@ -19,7 +19,9 @@ SimplestForm.args = {
 	children: (
 		<>
 			<input name="name" />
-			<button type="submit">Submit</button>
+			<button className="btn btn-success btn-sm" type="submit">
+				Submit
+			</button>
 		</>
 	),
 	defaultValues: {
@@ -57,7 +59,9 @@ FormWithCustomField.args = {
 	children: (
 		<>
 			<Field label="Field Label" name="name" />
-			<button type="submit">Submit</button>
+			<button className="btn btn-success btn-sm" type="submit">
+				Submit
+			</button>
 		</>
 	),
 	defaultValues: {

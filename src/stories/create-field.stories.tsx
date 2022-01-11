@@ -79,7 +79,9 @@ export const InsideFormTypedField: ComponentStory<typeof FieldNumber> = ({
 			<FieldBoolean<T2> name="boolean" label="Boolean" defaultValue={true} />
 			<FieldRadio<T2> label="Radio" name="radio" defaultValue="email" />
 			<FieldSelect<T2> label="Select" name="select" defaultValue="one" />
-			<button type="submit">Отправить</button>
+			<button className="btn btn-success" type="submit">
+				Отправить
+			</button>
 		</Form>
 	);
 };

@@ -13,10 +13,10 @@ export const Field = createField<IField>((props) => {
 		props,
 	});
 	return (
-		<div>
-			<span>{label}</span>
-			<input defaultValue={defaultValue} name={name} />
-			<span>{errors[0]}</span>
+		<div className="mb-3">
+			<span className="input-group-text">{label}</span>
+			<input className="form-control" defaultValue={defaultValue} name={name} />
+			<span className="input-group-text">{errors[0]}</span>
 		</div>
 	);
 });

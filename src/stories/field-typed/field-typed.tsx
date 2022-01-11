@@ -15,15 +15,16 @@ export const FieldNumber = createField<IField>(FieldType.NUMBER, (props) => {
 	});
 	return (
 		<div>
-			<span>{label}</span>
-			<span>{name}</span>
+			<span className="input-group-text">{label}</span>
+			<span className="input-group-text">{name}</span>
 			<input
+				className="form-control"
 				type="number"
 				defaultValue={defaultValue}
 				name={name}
 				ref={inputRef}
 			/>
-			<span>{errors[0]}</span>
+			<span className="input-group-text">{errors[0]}</span>
 		</div>
 	);
 });
@@ -36,15 +37,16 @@ export const FieldBoolean = createField<IField>(FieldType.BOOLEAN, (props) => {
 	});
 	return (
 		<div>
-			<span>{label}</span>
-			<span>{name}</span>
+			<span className="input-group-text">{label}</span>
+			<span className="input-group-text">{name}</span>
 			<input
+				className="form-check-input"
 				type="checkbox"
 				defaultChecked={defaultValue}
 				name={name}
 				ref={inputRef}
 			/>
-			<span>{errors[0]}</span>
+			<span className="input-group-text">{errors[0]}</span>
 		</div>
 	);
 });
