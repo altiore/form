@@ -11,8 +11,8 @@ export const TagsArray = createFieldArray<FieldArrayProps>(({list}) => {
 			<div className="mb-3" key={key}>
 				<Field label={'Tag'} name="tag" />
 				<FieldNumber label="Amount" name="amount" />
-				<button className="btn btn-outline-secondary" onClick={remove}>
-					remove tag
+				<button className="btn btn-outline-danger" onClick={remove}>
+					Удалить Тэг
 				</button>
 			</div>
 		);
@@ -22,7 +22,7 @@ export const TagsArray = createFieldArray<FieldArrayProps>(({list}) => {
 		<div>
 			{list.map(cb)}
 			<button
-				className="btn btn-outline-secondary"
+				className="btn btn-outline-success"
 				onClick={list.add}
 				type="button">
 				Добавить Тэг
@@ -47,19 +47,19 @@ export const FieldArray = createFieldArray<IFieldArray>(({list, errors}) => {
 					/>
 					<TagsArray name="tags" />
 					<button
-						className="btn btn-outline-secondary"
+						className="btn btn-outline-danger"
 						onClick={remove}
 						type="button">
 						-
 					</button>
 					<button
-						className="btn btn-outline-secondary"
+						className="btn btn-outline-success"
 						onClick={append}
 						type="button">
 						after
 					</button>
 					<button
-						className="btn btn-outline-secondary"
+						className="btn btn-outline-success"
 						onClick={prepend}
 						type="button">
 						before
@@ -74,7 +74,7 @@ export const FieldArray = createFieldArray<IFieldArray>(({list, errors}) => {
 			<div>{errors[0]}</div>
 			{list.map(cb)}
 			<button
-				className="btn btn-outline-secondary"
+				className="btn btn-outline-success"
 				onClick={list.add}
 				type="button">
 				Добавить ингредиент
@@ -95,7 +95,7 @@ export const FieldArraySimplest = createFieldArray<IFieldArray>(({list}) => {
 						validators={[minLength(null, 3)]}
 					/>
 					<button
-						className="btn btn-outline-secondary"
+						className="btn btn-outline-danger"
 						onClick={remove}
 						type="button">
 						-
@@ -109,7 +109,7 @@ export const FieldArraySimplest = createFieldArray<IFieldArray>(({list}) => {
 		<>
 			{list.map(cb)}
 			<button
-				className="btn btn-outline-secondary"
+				className="btn btn-outline-success"
 				onClick={list.add}
 				type="button">
 				Добавить ингредиент 1
@@ -135,7 +135,8 @@ export const FieldArrayWithAddingDefValue = createFieldArray<IFieldArray>(
 							validators={[minLength(null, 3)]}
 						/>
 						<button
-							className="btn btn-outline-secondary"
+							style={{margin: '16px'}}
+							className="btn btn-outline-success"
 							onClick={remove}
 							type="button">
 							-
@@ -151,22 +152,27 @@ export const FieldArrayWithAddingDefValue = createFieldArray<IFieldArray>(
 				title: 'Добавленные заголовок',
 			});
 		}, [list.add]);
-
 		return (
 			<>
-				{list.map(cb)}
-				<button
-					className="btn btn-outline-secondary"
-					onClick={handleAdd}
-					type="button">
-					Добавить конкретный ингредиент
-				</button>
-				<button
-					className="btn btn-outline-secondary"
-					onClick={list.add}
-					type="button">
-					Добавить пустой ингредиент
-				</button>
+				<div className="row g-3 mb-3">
+					{list.map(cb)}
+					<div className="col-auto">
+						<button
+							className="btn btn-outline-success"
+							onClick={handleAdd}
+							type="button">
+							Добавить конкретный ингредиент
+						</button>
+					</div>
+					<div className="col-auto">
+						<button
+							className="btn btn-outline-success"
+							onClick={list.add}
+							type="button">
+							Добавить пустой ингредиент
+						</button>
+					</div>
+				</div>
 			</>
 		);
 	},
