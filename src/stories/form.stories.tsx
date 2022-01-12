@@ -17,20 +17,17 @@ const Template: ComponentStory<typeof Form> = ({children, ...args}) => (
 export const SimplestForm = Template.bind({});
 SimplestForm.args = {
 	children: (
-		<>
-			<form className="shadow border border-secondary rounded-3 w-75">
-				<div className="p-3 ">
-					<legend>Simplest form</legend>
-					<div className="mb-3">
-						<input className="form-control mb-3 w-75" name="name" />
-						<button className="btn btn-success btn-sm " type="submit">
-							Submit
-						</button>
-					</div>
-				</div>
-			</form>
-		</>
+		<div className="p-3 ">
+			<legend>Simplest form</legend>
+			<div className="mb-3">
+				<input className="form-control mb-3 w-75" name="name" />
+				<button className="btn btn-success btn-sm " type="submit">
+					Submit
+				</button>
+			</div>
+		</div>
 	),
+	className: 'shadow border border-secondary rounded-3 w-75',
 	defaultValues: {
 		field: 'initial field',
 	},
@@ -64,20 +61,17 @@ const MyForm = () => {
 export const FormWithCustomField = Template.bind({});
 FormWithCustomField.args = {
 	children: (
-		<>
-			<form className="shadow border border-secondary rounded-3 w-75 ">
-				<div className="p-3">
-					<legend> Form with custom field</legend>
-					<div className="mb-3">
-						<Field label="Field Label" name="name" />
-						<button className="btn btn-success btn-sm" type="submit">
-							Submit
-						</button>
-					</div>
-				</div>
-			</form>
-		</>
+		<div className="p-3">
+			<legend> Form with custom field</legend>
+			<div className="mb-3 w-75">
+				<Field label="Field Label" name="name" />
+				<button className="btn btn-success btn-sm" type="submit">
+					Submit
+				</button>
+			</div>
+		</div>
 	),
+	className: 'shadow border border-secondary rounded-3 w-75 ',
 	defaultValues: {
 		field: 'initial field',
 	},
@@ -91,14 +85,14 @@ import React, {useCallback} from 'react';
 
 import {createField, Form} from '@altiore/form';
 
-export const Field = createField(({errors, inputRef, name, /* you can add any extra fields here: */ label}) => {
+export const Field = createField(({error, inputRef, name, /* you can add any extra fields here: */ label}) => {
 	return (
 		<div>
 			<label htmlFor="input-id">
 				{label}
 				<input id="input-id" name={name} ref={inputRef} />
 			</label>
-			<span>{errors[0]}</span>
+			<span>{error}</span>
 		</div>
 	);
 });
