@@ -18,10 +18,17 @@ export const SimplestForm = Template.bind({});
 SimplestForm.args = {
 	children: (
 		<>
-			<input name="name" />
-			<button className="btn btn-success btn-sm" type="submit">
-				Submit
-			</button>
+			<form className="shadow border border-secondary rounded-3 w-75">
+				<div className="p-3 ">
+					<legend>Simplest form</legend>
+					<div className="mb-3">
+						<input className="form-control mb-3 w-75" name="name" />
+						<button className="btn btn-success btn-sm " type="submit">
+							Submit
+						</button>
+					</div>
+				</div>
+			</form>
 		</>
 	),
 	defaultValues: {
@@ -58,10 +65,17 @@ export const FormWithCustomField = Template.bind({});
 FormWithCustomField.args = {
 	children: (
 		<>
-			<Field label="Field Label" name="name" />
-			<button className="btn btn-success btn-sm" type="submit">
-				Submit
-			</button>
+			<form className="shadow border border-secondary rounded-3 w-75 ">
+				<div className="p-3">
+					<legend> Form with custom field</legend>
+					<div className="mb-3">
+						<Field label="Field Label" name="name" />
+						<button className="btn btn-success btn-sm" type="submit">
+							Submit
+						</button>
+					</div>
+				</div>
+			</form>
 		</>
 	),
 	defaultValues: {

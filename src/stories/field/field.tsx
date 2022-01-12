@@ -14,9 +14,9 @@ export const Field = createField<IField>((props) => {
 	});
 	return (
 		<div className="mb-3">
-			<span className="input-group-text">{label}</span>
+			<span className="form-label">{label}</span>
 			<input className="form-control" defaultValue={defaultValue} name={name} />
-			<span className="input-group-text">{errors[0]}</span>
+			<span className="form-text">{errors[0]}</span>
 		</div>
 	);
 });

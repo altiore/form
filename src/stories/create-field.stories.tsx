@@ -17,20 +17,26 @@ export default {
 } as ComponentMeta<typeof Field>;
 
 export const SimplestField: ComponentStory<typeof Field> = () => (
-	<form>
-		<Field
-			name="first"
-			defaultValue="Default"
-			label="First"
-			validators={[minLength(null, 3)]}
-		/>
-		<Field
-			name="second"
-			label="Second"
-			defaultValue=""
-			validators={[minLength(null, 3)]}
-		/>
-	</form>
+	<>
+		<legend>Field with default value</legend>
+		<div className="w-75 ">
+			<Field
+				name="first"
+				defaultValue="Default"
+				label="First"
+				validators={[minLength(null, 3)]}
+			/>
+		</div>
+		<legend>Field with empty default value</legend>
+		<div className="w-75">
+			<Field
+				name="second"
+				label="Second"
+				defaultValue=""
+				validators={[minLength(null, 3)]}
+			/>
+		</div>
+	</>
 );
 
 type T = {
@@ -42,15 +48,25 @@ export const InsideFormField: ComponentStory<typeof Field> = ({
 	onSubmit,
 }: any) => {
 	return (
-		<Form<T> onSubmit={onSubmit} defaultValues={{first: 'NOT DEFAULT'}}>
-			<Field<T> name="first" label="First" defaultValue={'DEFAULT'} />
-			<Field<T>
-				name="second"
-				label="Second"
-				defaultValue={'test'}
-				validators={[minLength(null, 3)]}
-			/>
-		</Form>
+		<>
+			<legend>
+				Inside form fields with default values (first,second) and validators
+				(second)
+			</legend>
+			<div className="shadow border border-secondary rounded-3 w-75">
+				<Form<T> onSubmit={onSubmit} defaultValues={{first: 'NOT DEFAULT'}}>
+					<div className="p-3 ">
+						<Field<T> name="first" label="First" defaultValue={'DEFAULT'} />
+						<Field<T>
+							name="second"
+							label="Second"
+							defaultValue={'test'}
+							validators={[minLength(null, 3)]}
+						/>
+					</div>
+				</Form>
+			</div>
+		</>
 	);
 };
 
