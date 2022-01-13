@@ -5,11 +5,15 @@ import {NamedFieldProps} from '~/@common/types';
 
 import ValidatedField, {ValidatedFieldProps} from './validated-field';
 
-export const NamedField = <T, Input extends HTMLElement = HTMLInputElement>({
+export const NamedField = <
+	T extends {defaultValue?: any},
+	Input extends HTMLElement = HTMLInputElement,
+>({
 	fieldArrayState,
 	formState,
 	providedName,
 	type,
+	componentProps,
 	...rest
 }: NamedFieldProps<
 	ValidatedFieldProps<T, Input>,
@@ -20,6 +24,8 @@ export const NamedField = <T, Input extends HTMLElement = HTMLInputElement>({
 		formState,
 		providedName,
 		type,
+		false,
+		componentProps.defaultValue,
 	);
 
 	if (isInsideForm && !field) {
@@ -29,6 +35,7 @@ export const NamedField = <T, Input extends HTMLElement = HTMLInputElement>({
 	return (
 		<ValidatedField
 			{...rest}
+			componentProps={componentProps}
 			formRef={formState?.formRef}
 			field={field}
 			name={name}

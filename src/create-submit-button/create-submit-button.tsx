@@ -7,6 +7,7 @@ export interface InternalSubmitButtonProps<T = HTMLButtonElement>
 	extends ButtonHTMLAttributes<T> {
 	isInvalid: boolean;
 	isSubmitting: boolean;
+	isUntouched: boolean;
 }
 
 interface SubmitButtonProps {
@@ -25,11 +26,15 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
 		return fields ? Object.values(fields).some((el) => el.isInvalid) : false;
 	}, [fields]);
 	const isSubmitting = useMemo(() => formState?.isSubmitting, [formState]);
+	const isUntouched = useMemo(() => {
+		return fields ? Object.values(fields).some((el) => el.isUntouched) : false;
+	}, [fields]);
 
 	return React.createElement(component, {
 		...componentProps,
 		isInvalid,
 		isSubmitting,
+		isUntouched,
 		type: 'submit',
 	});
 };

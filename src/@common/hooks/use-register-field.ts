@@ -19,6 +19,7 @@ export const useRegisterField = (
 	providedName: string,
 	fieldType?: FieldType,
 	isArray?: boolean,
+	defaultValue?: unknown,
 ): ResType => {
 	const fieldName = useMemo(() => {
 		return fieldArrayState?.name &&
@@ -39,6 +40,7 @@ export const useRegisterField = (
 			return registerField(
 				fieldName,
 				fieldType ?? (isArray ? FieldType.ARRAY : undefined),
+				defaultValue,
 			);
 		} else {
 			if (fieldType) {
@@ -48,7 +50,14 @@ export const useRegisterField = (
 				);
 			}
 		}
-	}, [fieldName, fieldType, isArray, isInsideForm, registerField]);
+	}, [
+		defaultValue,
+		fieldName,
+		fieldType,
+		isArray,
+		isInsideForm,
+		registerField,
+	]);
 
 	const fields = useMemo(() => formState?.fields, [formState?.fields]);
 
