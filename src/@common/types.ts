@@ -63,6 +63,7 @@ export type FieldMeta<ValueType = any> = {
 export type FormContextState = {
 	fields: Record<string, FieldMeta>;
 	formRef: MutableRefObject<HTMLFormElement>;
+	isSubmitting: boolean;
 	registerField: RegisterField;
 	setItems: (fieldName: string, setItems: (i: number[]) => number[]) => void;
 };
