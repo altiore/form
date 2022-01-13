@@ -41,7 +41,11 @@ export type ListInterface<
 	remove: (index: number) => void;
 };
 
-export type RegisterField = (fieldName: string, fieldType?: FieldType) => void;
+export type RegisterField = (
+	fieldName: string,
+	fieldType?: FieldType,
+	defaultValue?: any,
+) => void;
 
 export type SetErrors = (name: string, errors: string[] | undefined) => void;
 
@@ -54,6 +58,7 @@ export type FieldMeta<ValueType = any> = {
 	items?: number[];
 	setErrors: (errors: string[]) => void;
 	type?: FieldType;
+	isUntouched?: boolean;
 
 	// избыточные поля, которые нужны ТОЛЬКО для удобства
 	isInvalid: boolean;

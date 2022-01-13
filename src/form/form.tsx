@@ -66,6 +66,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 						error: errors?.[0],
 						errors,
 						isInvalid: Boolean(errors?.length),
+						isUntouched: false,
 					},
 				};
 			});
@@ -99,7 +100,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	);
 
 	const registerField = useCallback(
-		(fieldName: string, fieldType: FieldType) => {
+		(fieldName: string, fieldType: FieldType, fieldDefaultValue?: any) => {
 			setFields((s): FormContextState['fields'] => {
 				const fieldNameArr = fieldName.split('.');
 
@@ -110,7 +111,10 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 						s?.[fieldNameArr.slice(0, fieldNameArrLength - 2).join('.')]
 							?.defaultValue?.[fieldNameArr[fieldNameArrLength - 1]];
 				}
-				const defaultValue = dynamicDefault ?? get(defaultValues, fieldNameArr);
+				const defaultValue =
+					dynamicDefault ??
+					get(defaultValues, fieldNameArr) ??
+					fieldDefaultValue;
 
 				return {
 					...s,
@@ -119,6 +123,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 						error: undefined,
 						errors: [],
 						isInvalid: false,
+						isUntouched: defaultValue === undefined || defaultValue === null,
 						items: fieldType === FieldType.ARRAY ? [] : undefined,
 						name: fieldName,
 						setErrors: setErrors.bind({}, fieldName),

@@ -32,6 +32,7 @@ const Template: ComponentStory<typeof Submit> = (args) => (
 					</div>
 					<div className="col-6">
 						<Field
+							defaultValue="Test"
 							name="first"
 							label="First"
 							validators={[minLength(null, 3)]}
