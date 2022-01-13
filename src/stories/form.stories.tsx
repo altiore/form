@@ -21,7 +21,7 @@ SimplestForm.args = {
 			<legend>Simplest form</legend>
 			<div className="mb-3">
 				<input className="form-control mb-3 w-75" name="name" />
-				<button className="btn btn-success btn-sm " type="submit">
+				<button className="btn btn-success" type="submit">
 					Submit
 				</button>
 			</div>
@@ -65,7 +65,7 @@ FormWithCustomField.args = {
 			<legend> Form with custom field</legend>
 			<div className="mb-3 w-75">
 				<Field label="Field Label" name="name" />
-				<button className="btn btn-success btn-sm" type="submit">
+				<button className="btn btn-success" type="submit">
 					Submit
 				</button>
 			</div>
