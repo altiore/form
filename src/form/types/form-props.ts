@@ -7,5 +7,5 @@ export interface FormProps<Values extends Record<string, any>>
 	onSubmit: (
 		values: Partial<Values>,
 		setErrors: (errors: Record<string, any>) => void,
-	) => any;
+	) => Promise<any> | any;
 }

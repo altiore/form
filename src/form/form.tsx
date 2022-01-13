@@ -51,6 +51,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 }: FormProps<Values>): JSX.Element => {
 	const formRef = useRef<HTMLFormElement>(null);
 	const [fields, setFields] = useState<FormContextState['fields']>({});
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const setErrors = useCallback(
 		(fieldName: string, errors: string[]) => {
@@ -172,9 +173,14 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 					}
 				});
 
-			onSubmit(resValues as Values, setNestedErrors);
+			setIsSubmitting(true);
+			Promise.resolve(onSubmit(resValues as Values, setNestedErrors)).then(
+				function () {
+					setIsSubmitting(false);
+				},
+			);
 		},
-		[fields, onSubmit, setNestedErrors],
+		[fields, onSubmit, setIsSubmitting, setNestedErrors],
 	);
 
 	return (
@@ -183,6 +189,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				value={{
 					fields,
 					formRef,
+					isSubmitting,
 					registerField,
 					setItems,
 				}}>
