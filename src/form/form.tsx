@@ -63,7 +63,9 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 					...s,
 					[fieldName]: {
 						...s[fieldName],
+						error: errors?.[0],
 						errors,
+						isInvalid: Boolean(errors?.length),
 					},
 				};
 			});

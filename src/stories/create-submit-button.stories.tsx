@@ -3,7 +3,9 @@ import React from 'react';
 import {ComponentMeta, ComponentStory} from '@storybook/react';
 
 import {Form} from '~/form';
+import Field from '~/stories/field';
 import Submit from '~/stories/submit-button';
+import {minLength} from '~/validators';
 
 export default {
 	argTypes: {onSubmit: {action: 'submit'}},
@@ -29,7 +31,11 @@ const Template: ComponentStory<typeof Submit> = (args) => (
 						<legend>Пример работы кнопки отправки формы</legend>
 					</div>
 					<div className="col-6">
-						<input className="form-control" name="test" />
+						<Field
+							name="first"
+							label="First"
+							validators={[minLength(null, 3)]}
+						/>
 					</div>
 					<div className="col-6" />
 					<div className="col-6">
