@@ -22,11 +22,23 @@ const submitFunc = (onSubmit: any) => async (values: any) => {
 
 const Template: ComponentStory<typeof Submit> = (args) => (
 	<div className="shadow border border-secondary rounded-3 w-75">
-		<Form className="p-4" onSubmit={submitFunc((args as any).onSubmit)}>
-			<input className="form-control" name="test" />
-			<Submit className="btn btn-primary" {...args}>
-				Отправить
-			</Submit>
+		<Form onSubmit={submitFunc((args as any).onSubmit)}>
+			<div className="container overflow-hidden">
+				<div className="row gy-3 p-3">
+					<div className="col-12">
+						<legend>Пример работы кнопки отправки формы</legend>
+					</div>
+					<div className="col-6">
+						<input className="form-control" name="test" />
+					</div>
+					<div className="col-6" />
+					<div className="col-6">
+						<Submit className="btn btn-primary" {...args}>
+							Отправить
+						</Submit>
+					</div>
+				</div>
+			</div>
 		</Form>
 	</div>
 );
