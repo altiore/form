@@ -15,9 +15,12 @@ export const FieldSelect = createField<IField>((props) => {
 	return (
 		<div>
 			<div>{label}</div>
-			<select className="form-select" name={name} defaultValue={defaultValue}>
-				<option value="one">One</option>
-				<option value="two">Two</option>
+			<select
+				className="form-select w-75"
+				name={name}
+				defaultValue={defaultValue}>
+				<option value="one">Один</option>
+				<option value="two">Два</option>
 			</select>
 		</div>
 	);

@@ -18,11 +18,11 @@ export const SimplestForm = Template.bind({});
 SimplestForm.args = {
 	children: (
 		<div className="p-3 ">
-			<legend>Simplest form</legend>
+			<legend>Простейшая форма</legend>
 			<div className="mb-3">
 				<input className="form-control mb-3 w-75" name="name" />
-				<button className="btn btn-success" type="submit">
-					Submit
+				<button className="btn btn-success btn-sm " type="submit">
+					Отправить
 				</button>
 			</div>
 		</div>
@@ -62,11 +62,11 @@ export const FormWithCustomField = Template.bind({});
 FormWithCustomField.args = {
 	children: (
 		<div className="p-3">
-			<legend> Form with custom field</legend>
+			<legend> Форма с настраиваемым полем</legend>
 			<div className="mb-3 w-75">
-				<Field label="Field Label" name="name" />
-				<button className="btn btn-success" type="submit">
-					Submit
+				<Field label="Ярлык поля" name="name" />
+				<button className="btn btn-success btn-sm" type="submit">
+					Отправить
 				</button>
 			</div>
 		</div>

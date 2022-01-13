@@ -18,20 +18,20 @@ export default {
 
 export const SimplestField: ComponentStory<typeof Field> = () => (
 	<>
-		<legend>Field with default value</legend>
+		<legend>Поле со значением по умолчанию</legend>
 		<div className="w-75 ">
 			<Field
 				name="first"
-				defaultValue="Default"
-				label="First"
+				defaultValue="Значение по умолчанию"
+				label="Первое поле"
 				validators={[minLength(null, 3)]}
 			/>
 		</div>
-		<legend>Field with empty default value</legend>
+		<legend>Поле с пустым значением по умолчанию</legend>
 		<div className="w-75">
 			<Field
 				name="second"
-				label="Second"
+				label="Второе поле"
 				defaultValue=""
 				validators={[minLength(null, 3)]}
 			/>
@@ -50,19 +50,33 @@ export const InsideFormField: ComponentStory<typeof Field> = ({
 	return (
 		<>
 			<legend>
-				Inside form fields with default values (first,second) and validators
-				(second)
+				Внутреннее поле формы со значением по умолчанию (Первое поле, Второе
+				поле) и валидаторами (Второе поле)
 			</legend>
 			<div className="shadow border border-secondary rounded-3 w-75">
-				<Form<T> onSubmit={onSubmit} defaultValues={{first: 'NOT DEFAULT'}}>
-					<div className="p-3 ">
-						<Field<T> name="first" label="First" defaultValue={'DEFAULT'} />
+				<Form<T>
+					onSubmit={onSubmit}
+					defaultValues={{first: 'ЗНАЧЕНИЕ ПО УМОЛЧАНИЮ ИЗ ФОРМЫ'}}>
+					<div className="p-3 w-75">
+						<Field<T>
+							name="first"
+							label="Первое поле"
+							defaultValue={'ЗНАЧЕНИЕ ПО УМОЛЧАНИЮ'}
+						/>
+						<button className="btn btn-success" type="submit">
+							Отправить
+						</button>
+					</div>
+					<div className="p-3 w-75">
 						<Field<T>
 							name="second"
-							label="Second"
-							defaultValue={'test'}
+							label="Второе поле"
+							defaultValue={'тест'}
 							validators={[minLength(null, 3)]}
 						/>
+						<button className="btn btn-success" type="submit">
+							Отправить
+						</button>
 					</div>
 				</Form>
 			</div>
@@ -90,11 +104,15 @@ export const InsideFormTypedField: ComponentStory<typeof FieldNumber> = ({
 	);
 	return (
 		<Form<T2> onSubmit={handleSubmit} defaultValues={{number: 12}}>
-			<Field<T2> name="string" label="String" defaultValue={'string'} />
-			<FieldNumber<T2> name="number" label="Number" defaultValue={4} />
-			<FieldBoolean<T2> name="boolean" label="Boolean" defaultValue={true} />
-			<FieldRadio<T2> label="Radio" name="radio" defaultValue="email" />
-			<FieldSelect<T2> label="Select" name="select" defaultValue="one" />
+			<Field<T2> name="string" label="Строка" defaultValue={'строка'} />
+			<FieldNumber<T2> name="number" label="Число" defaultValue={4} />
+			<FieldBoolean<T2>
+				name="boolean"
+				label="Логический оператор"
+				defaultValue={true}
+			/>
+			<FieldRadio<T2> name="radio" label="Радио" defaultValue="email" />
+			<FieldSelect<T2> name="select" label="Выбор" defaultValue="один" />
 			<button className="btn btn-success" type="submit">
 				Отправить
 			</button>
