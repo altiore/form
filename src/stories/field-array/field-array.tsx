@@ -129,7 +129,7 @@ export const FieldArraySimplest = createFieldArray<IFieldArray>(({list}) => {
 				className="btn btn-outline-success"
 				onClick={list.add}
 				type="button">
-				Добавить массив
+				Добавить ингредиент 1
 			</button>
 		</>
 	);
