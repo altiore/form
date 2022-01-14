@@ -119,7 +119,6 @@ export const FieldArraySimplest = createFieldArray<IFieldArray>(({list}) => {
 					</div>
 				</div>
 			</div>
-			// </div>
 		);
 	}, []);
 
