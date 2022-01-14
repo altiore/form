@@ -18,44 +18,62 @@ export default {
 } as ComponentMeta<typeof FieldArray>;
 
 export const SimplestFieldArray: ComponentStory<typeof FieldArray> = () => (
-	<FieldArray name="ingredients" />
+	<>
+		<legend>Массив полей</legend>
+		<FieldArray name="ingredients" />
+	</>
 );
 
 export const InsideFormFieldArraySimplest: ComponentStory<typeof FieldArray> =
 	({onSubmit}: any) => (
-		<div>
-			<Form onSubmit={onSubmit}>
-				<Field label="Title" name="title" />
+		<>
+			<legend>Простейший массив полей внутри формы</legend>
+			<Form
+				className="shadow border border-secondary rounded-3 p-3 w-75"
+				onSubmit={onSubmit}>
+				<Field label="Название" name="title" />
 				<FieldArraySimplest name="ingredients" />
-				<button className="btn btn-success" type="submit">
-					submit
-				</button>
+				<div className="mt-3">
+					<button className="btn btn-success" type="submit">
+						Отправить
+					</button>
+				</div>
 			</Form>
-		</div>
+		</>
 	);
 
 export const InsideFormFieldArrayWithValidators: ComponentStory<
 	typeof FieldArray
 > = ({onSubmit}: any) => (
-	<Form onSubmit={onSubmit}>
-		<Field label="Title" name="title" />
-		<FieldArray name="ingredients" validators={[minLength(null, 2)]} />
-		<button className="btn btn-success" type="submit">
-			Submit
-		</button>
-	</Form>
+	<>
+		<legend>Массив полей внутри формы с валидаторами</legend>
+		<Form
+			className="shadow border border-secondary rounded-3 p-3 w-75"
+			onSubmit={onSubmit}>
+			<Field label="Название" name="title" />
+			<FieldArray name="ingredients" validators={[minLength(null, 2)]} />
+			<button className="btn btn-success mt-3" type="submit">
+				Отправить
+			</button>
+		</Form>
+	</>
 );
 
 export const InsideFormFieldArrayWithAddingDefValue: ComponentStory<
 	typeof FieldArray
 > = ({onSubmit}: any) => (
-	<Form onSubmit={onSubmit}>
-		<Field label="Title" name="title" />
-		<FieldArrayWithAddingDefValue name="ingredients" />
-		<button className="btn btn-success" type="submit">
-			Submit
-		</button>
-	</Form>
+	<>
+		<legend>Массив полей внутри формы со значениями по умолчанию</legend>
+		<Form
+			className="shadow border border-secondary rounded-3 p-3 w-75"
+			onSubmit={onSubmit}>
+			<Field label="Название" name="title" />
+			<FieldArrayWithAddingDefValue name="ingredients" />
+			<button className="btn btn-success " type="submit">
+				Отправить
+			</button>
+		</Form>
+	</>
 );
 
 export const InsideFormFieldArrayWithSettingErrors: ComponentStory<
@@ -72,12 +90,17 @@ export const InsideFormFieldArrayWithSettingErrors: ComponentStory<
 		});
 	}, []);
 	return (
-		<Form onSubmit={handleSubmit}>
-			<Field label="Title" name="title" />
-			<FieldArray name="ingredients" />
-			<button className="btn btn-success" type="submit">
-				Submit
-			</button>
-		</Form>
+		<>
+			<legend>Массив полей внутри формы с настройкой ошибок</legend>
+			<Form
+				className="shadow border border-secondary rounded-3 p-3 w-75"
+				onSubmit={handleSubmit}>
+				<Field label="Название" name="title" />
+				<FieldArray name="ingredients" />
+				<button className="btn btn-success mt-3" type="submit">
+					Отправить
+				</button>
+			</Form>
+		</>
 	);
 };

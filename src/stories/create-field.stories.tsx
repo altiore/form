@@ -53,11 +53,11 @@ export const InsideFormField: ComponentStory<typeof Field> = ({
 				Внутреннее поле формы со значением по умолчанию (Первое поле, Второе
 				поле) и валидаторами (Второе поле)
 			</legend>
-			<div className="shadow border border-secondary rounded-3 w-75">
+			<div className="shadow border border-secondary rounded-3 p-3 w-75">
 				<Form<T>
 					onSubmit={onSubmit}
 					defaultValues={{first: 'ЗНАЧЕНИЕ ПО УМОЛЧАНИЮ ИЗ ФОРМЫ'}}>
-					<div className="p-3 w-75">
+					<div className=" w-75">
 						<Field<T>
 							name="first"
 							label="Первое поле"
@@ -67,7 +67,7 @@ export const InsideFormField: ComponentStory<typeof Field> = ({
 							Отправить
 						</button>
 					</div>
-					<div className="p-3 w-75">
+					<div className=" w-75">
 						<Field<T>
 							name="second"
 							label="Второе поле"
@@ -92,7 +92,7 @@ type T2 = {
 	select: string;
 };
 
-export const InsideFormTypedField: ComponentStory<typeof FieldNumber> = ({
+export const InsideFormTypedField: ComponentStory<typeof Field> = ({
 	onSubmit,
 }: any) => {
 	const handleSubmit = useCallback(
@@ -103,19 +103,41 @@ export const InsideFormTypedField: ComponentStory<typeof FieldNumber> = ({
 		[onSubmit],
 	);
 	return (
-		<Form<T2> onSubmit={handleSubmit} defaultValues={{number: 12}}>
-			<Field<T2> name="string" label="Строка" defaultValue={'строка'} />
-			<FieldNumber<T2> name="number" label="Число" defaultValue={4} />
-			<FieldBoolean<T2>
-				name="boolean"
-				label="Логический оператор"
-				defaultValue={true}
-			/>
-			<FieldRadio<T2> name="radio" label="Радио" defaultValue="email" />
-			<FieldSelect<T2> name="select" label="Выбор" defaultValue="один" />
-			<button className="btn btn-success" type="submit">
-				Отправить
-			</button>
-		</Form>
+		<>
+			<legend>
+				Типизированные внутренние поля формы со значениями по умолчанию
+			</legend>
+			<div className="shadow border border-secondary rounded-3 p-3 w-75">
+				<Form<T2> onSubmit={handleSubmit} defaultValues={{number: 12}}>
+					<div>
+						<Field<T2> name="string" label="Строка" defaultValue={'строка'} />
+					</div>
+
+					<div className="mb-3">
+						<FieldNumber<T2> name="number" label="Число" defaultValue={4} />
+					</div>
+
+					<div>
+						<FieldBoolean<T2>
+							name="boolean"
+							label="Логический оператор"
+							defaultValue={true}
+						/>
+					</div>
+
+					<div className="w-75 mb-3">
+						<FieldRadio<T2> name="radio" label="Радио" defaultValue="email" />
+					</div>
+
+					<div className="mb-3">
+						<FieldSelect<T2> name="select" label="Выбор" defaultValue="один" />
+					</div>
+
+					<button className="btn btn-success" type="submit">
+						Отправить
+					</button>
+				</Form>
+			</div>
+		</>
 	);
 };

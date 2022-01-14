@@ -63,7 +63,7 @@ FormWithCustomField.args = {
 	children: (
 		<div className="p-3">
 			<legend> Форма с настраиваемым полем</legend>
-			<div className="mb-3 w-75">
+			<div className="mb-3">
 				<Field label="Ярлык поля" name="name" />
 				<button className="btn btn-success btn-sm" type="submit">
 					Отправить

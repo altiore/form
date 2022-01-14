@@ -8,12 +8,16 @@ import {minLength} from '~/validators';
 export const TagsArray = createFieldArray<FieldArrayProps>(({list}) => {
 	const cb = useCallback(({key, remove}) => {
 		return (
-			<div className="mb-3" key={key}>
-				<Field label={'Tag'} name="tag" />
-				<FieldNumber label="Amount" name="amount" />
-				<button className="btn btn-outline-danger" onClick={remove}>
-					Удалить Тэг
-				</button>
+			<div className="w-75 mb-3" key={key}>
+				<div className="shadow border border-secondary rounded-3 mb-3 p-3">
+					<div className="d-flex justify-content-end">
+						<button className="btn btn-outline-danger" onClick={remove}>
+							<img src="dash.svg" />
+						</button>
+					</div>
+					<Field label={'Метка'} name="tag" />
+					<FieldNumber label="Количество" name="amount" />
+				</div>
 			</div>
 		);
 	}, []);
@@ -25,7 +29,8 @@ export const TagsArray = createFieldArray<FieldArrayProps>(({list}) => {
 				className="btn btn-outline-success"
 				onClick={list.add}
 				type="button">
-				Добавить Тэг
+				<img src="plus.svg" />
+				ДОБАВИТЬ
 			</button>
 		</div>
 	);
@@ -38,33 +43,36 @@ export interface IFieldArray extends FieldArrayProps {
 export const FieldArray = createFieldArray<IFieldArray>(({list, errors}) => {
 	const cb = useCallback(({key, remove, append, prepend}) => {
 		return (
-			<div key={key}>
-				<div style={{display: 'flex'}}>
-					<Field
-						label={''}
-						name="ingredient"
-						validators={[minLength(null, 3)]}
-					/>
-					<TagsArray name="tags" />
-					<button
-						className="btn btn-outline-danger"
-						onClick={remove}
-						type="button">
-						-
-					</button>
-					<button
-						className="btn btn-outline-success"
-						onClick={append}
-						type="button">
-						after
-					</button>
-					<button
-						className="btn btn-outline-success"
-						onClick={prepend}
-						type="button">
-						before
-					</button>
+			<div className="w-75 mt-3" key={key}>
+				<button
+					className="btn btn-outline-success mb-3"
+					onClick={prepend}
+					type="button">
+					Добавить до
+				</button>
+				<div className="shadow border border-secondary rounded-3 mb-3 p-3">
+					<div>
+						<div className="d-flex justify-content-end">
+							<button className="btn btn-outline-danger" onClick={remove}>
+								<img src="dash.svg" />
+							</button>
+						</div>
+
+						<Field
+							label={'Название'}
+							name="ingredient"
+							validators={[minLength(null, 3)]}
+						/>
+
+						<TagsArray name="tags" />
+					</div>
 				</div>
+				<button
+					className="btn btn-outline-success mb-3"
+					onClick={append}
+					type="button">
+					Добавить после
+				</button>
 			</div>
 		);
 	}, []);
@@ -77,7 +85,7 @@ export const FieldArray = createFieldArray<IFieldArray>(({list, errors}) => {
 				className="btn btn-outline-success"
 				onClick={list.add}
 				type="button">
-				Добавить ингредиент
+				Добавить массив полей
 			</button>
 		</div>
 	);
@@ -86,22 +94,32 @@ export const FieldArray = createFieldArray<IFieldArray>(({list, errors}) => {
 export const FieldArraySimplest = createFieldArray<IFieldArray>(({list}) => {
 	const cb = useCallback(({key, remove}) => {
 		return (
-			<div key={key}>
-				<div style={{display: 'flex'}}>
-					<Field label="Title" name="title" validators={[minLength(null, 3)]} />
-					<Field
-						label="Description"
-						name="desc"
-						validators={[minLength(null, 3)]}
-					/>
-					<button
-						className="btn btn-outline-danger"
-						onClick={remove}
-						type="button">
-						-
-					</button>
+			<div className=" w-75 mt-3" key={key}>
+				<div className="shadow border border-secondary rounded-3 mb-3 p-3">
+					<div className="d-flex justify-content-end">
+						<button
+							className="btn btn-outline-danger h-50 "
+							onClick={remove}
+							type="button">
+							<img src="/dash.svg" />
+						</button>
+					</div>
+					<div>
+						<Field
+							label="Название"
+							name="title"
+							validators={[minLength(null, 3)]}
+						/>
+
+						<Field
+							label="Описание"
+							name="desc"
+							validators={[minLength(null, 3)]}
+						/>
+					</div>
 				</div>
 			</div>
+			// </div>
 		);
 	}, []);
 
@@ -112,7 +130,7 @@ export const FieldArraySimplest = createFieldArray<IFieldArray>(({list}) => {
 				className="btn btn-outline-success"
 				onClick={list.add}
 				type="button">
-				Добавить ингредиент 1
+				Добавить массив
 			</button>
 		</>
 	);
@@ -123,24 +141,25 @@ export const FieldArrayWithAddingDefValue = createFieldArray<IFieldArray>(
 		const cb = useCallback(({key, remove}) => {
 			return (
 				<div key={key}>
-					<div style={{display: 'flex'}}>
+					<div className="shadow border border-secondary rounded-3 mb-3 p-3 w-75">
+						<div className="d-flex justify-content-end">
+							<button
+								className="btn btn-outline-danger h-50 "
+								onClick={remove}
+								type="button">
+								<img src="/dash.svg" />
+							</button>
+						</div>
 						<Field
-							label="Title"
+							label="Название"
 							name="title"
 							validators={[minLength(null, 3)]}
 						/>
 						<Field
-							label="Description"
+							label="Описание"
 							name="desc"
 							validators={[minLength(null, 3)]}
 						/>
-						<button
-							style={{margin: '16px'}}
-							className="btn btn-outline-success"
-							onClick={remove}
-							type="button">
-							-
-						</button>
 					</div>
 				</div>
 			);
@@ -148,8 +167,8 @@ export const FieldArrayWithAddingDefValue = createFieldArray<IFieldArray>(
 
 		const handleAdd = useCallback(() => {
 			list.add({
-				desc: 'добавленное описание',
-				title: 'Добавленные заголовок',
+				desc: 'Добавленное описание',
+				title: 'Добавленный заголовок',
 			});
 		}, [list.add]);
 		return (
@@ -161,7 +180,7 @@ export const FieldArrayWithAddingDefValue = createFieldArray<IFieldArray>(
 							className="btn btn-outline-success"
 							onClick={handleAdd}
 							type="button">
-							Добавить конкретный ингредиент
+							Добавить конкретный массив
 						</button>
 					</div>
 					<div className="col-auto">
@@ -169,7 +188,7 @@ export const FieldArrayWithAddingDefValue = createFieldArray<IFieldArray>(
 							className="btn btn-outline-success"
 							onClick={list.add}
 							type="button">
-							Добавить пустой ингредиент
+							Добавить пустой массив
 						</button>
 					</div>
 				</div>
