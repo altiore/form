@@ -42,7 +42,10 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
 export function createSubmitButton<T extends any = HTMLButtonElement>(
 	component: (props: InternalSubmitButtonProps<T>) => JSX.Element,
 ): (
-	props: Omit<InternalSubmitButtonProps, 'isInvalid' | 'isSubmitting' | 'type'>,
+	props: Omit<
+		InternalSubmitButtonProps,
+		'isInvalid' | 'isSubmitting' | 'isUntouched' | 'type'
+	>,
 ) => JSX.Element {
 	return React.memo((props): JSX.Element => {
 		return (
