@@ -26,6 +26,7 @@ export const NamedField = <
 		type,
 		false,
 		componentProps.defaultValue,
+		Boolean(rest.validators?.length),
 	);
 
 	if (isInsideForm && !field) {

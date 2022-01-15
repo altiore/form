@@ -36,6 +36,14 @@ const Template: ComponentStory<typeof Submit> = (args) => (
 					<div className="col-6" />
 					<div className="col-6">
 						<Field
+							name="email"
+							label="Email"
+							validators={[minLength(null, 3)]}
+						/>
+					</div>
+					<div className="col-6" />
+					<div className="col-6">
+						<Field
 							defaultValue="Test"
 							name="first"
 							label="First"

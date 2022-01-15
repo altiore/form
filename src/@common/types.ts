@@ -45,6 +45,7 @@ export type RegisterField = (
 	fieldName: string,
 	fieldType?: FieldType,
 	defaultValue?: any,
+	hasValidators?: boolean,
 ) => void;
 
 export type SetErrors = (name: string, errors: string[] | undefined) => void;
