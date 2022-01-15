@@ -107,7 +107,12 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	);
 
 	const registerField = useCallback(
-		(fieldName: string, fieldType: FieldType, fieldDefaultValue?: any) => {
+		(
+			fieldName: string,
+			fieldType: FieldType,
+			fieldDefaultValue?: any,
+			hasValidators?: boolean,
+		) => {
 			setFields((s): FormContextState['fields'] => {
 				const fieldNameArr = fieldName.split('.');
 
@@ -130,7 +135,10 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 						error: undefined,
 						errors: [],
 						isInvalid: false,
-						isUntouched: defaultValue === undefined || defaultValue === null,
+						// Этот флаг работает только для полей у которых есть валидаторы
+						isUntouched:
+							hasValidators &&
+							(defaultValue === undefined || defaultValue === null),
 						items: fieldType === FieldType.ARRAY ? [] : undefined,
 						name: fieldName,
 						setErrors: setErrors.bind({}, fieldName),
