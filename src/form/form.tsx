@@ -56,18 +56,25 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	const setErrors = useCallback(
 		(fieldName: string, errors: string[]) => {
 			setFields((s) => {
-				if (!s[fieldName] || isEqual(s[fieldName]?.errors, errors)) {
+				if (!s[fieldName]) {
+					// этот код, похоже, никогда не выполняется и здесь лишь для совместимости
+					return s;
+				}
+
+				const fieldData = {
+					...s[fieldName],
+					error: errors?.[0],
+					errors,
+					isInvalid: Boolean(errors?.length),
+					isUntouched: false,
+				};
+				// улучает производительность, избегая рендера, если ошибки не изменились
+				if (isEqual(s[fieldName], fieldData)) {
 					return s;
 				}
 				return {
 					...s,
-					[fieldName]: {
-						...s[fieldName],
-						error: errors?.[0],
-						errors,
-						isInvalid: Boolean(errors?.length),
-						isUntouched: false,
-					},
+					[fieldName]: fieldData,
 				};
 			});
 		},

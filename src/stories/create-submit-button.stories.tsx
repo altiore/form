@@ -31,6 +31,10 @@ const Template: ComponentStory<typeof Submit> = (args) => (
 						<legend>Пример работы кнопки отправки формы</legend>
 					</div>
 					<div className="col-6">
+						<Field name="email" label="Email" />
+					</div>
+					<div className="col-6" />
+					<div className="col-6">
 						<Field
 							defaultValue="Test"
 							name="first"
