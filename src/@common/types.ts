@@ -11,6 +11,8 @@ export enum FieldType {
 	NUMBER = 'number',
 	PASSWORD = 'password',
 	TEXT = 'text',
+	EMAIL = 'email',
+	SELECT = 'select',
 }
 
 export type NamedFieldProps<T, R extends string> = Omit<T, R> & {
