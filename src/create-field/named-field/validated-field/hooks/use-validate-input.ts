@@ -159,27 +159,18 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 		const input = inputRef.current;
 		const hasEventHandler = Boolean(input);
 		if (hasEventHandler) {
-			if (type === FieldType.SELECT) {
-				// TODO: нужно обработать случай, когда селект является селектом
-				input.addEventListener('change', handleFieldChanged);
-			} else {
-				input.addEventListener('blur', handleFieldChanged);
-				input.addEventListener('focus', handleFocus);
-			}
+			// TODO: нужно обработать случай, когда input является селектом
+			input.addEventListener('blur', handleFieldChanged);
+			input.addEventListener('focus', handleFocus);
 		}
 
 		return () => {
 			if (hasEventHandler) {
-				if (type === FieldType.SELECT) {
-					// TODO: нужно обработать случай, когда селект является селектом
-					input.removeEventListener('change', handleFieldChanged);
-				} else {
-					input.removeEventListener('blur', handleFieldChanged);
-					input.removeEventListener('focus', handleFocus);
-				}
+				input.removeEventListener('blur', handleFieldChanged);
+				input.removeEventListener('focus', handleFocus);
 			}
 		};
-	}, [inputRef, type]);
+	}, [inputRef]);
 
 	return {
 		errors: field?.errors ?? errors,
