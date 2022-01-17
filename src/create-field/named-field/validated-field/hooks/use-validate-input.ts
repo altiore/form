@@ -97,7 +97,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 
 	const [errors, setErrors] = useState<string[]>([]);
 
-	const handleBlur = useCallback(
+	const handleFieldChanged = useCallback(
 		(e: Event) => {
 			e.preventDefault();
 
@@ -159,17 +159,27 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 		const input = inputRef.current;
 		const hasEventHandler = Boolean(input);
 		if (hasEventHandler) {
-			input.addEventListener('blur', handleBlur);
-			input.addEventListener('focus', handleFocus);
+			if (type === FieldType.SELECT) {
+				// TODO: нужно обработать случай, когда селект является селектом
+				input.addEventListener('change', handleFieldChanged);
+			} else {
+				input.addEventListener('blur', handleFieldChanged);
+				input.addEventListener('focus', handleFocus);
+			}
 		}
 
 		return () => {
 			if (hasEventHandler) {
-				input.removeEventListener('blur', handleBlur);
-				input.removeEventListener('focus', handleFocus);
+				if (type === FieldType.SELECT) {
+					// TODO: нужно обработать случай, когда селект является селектом
+					input.removeEventListener('change', handleFieldChanged);
+				} else {
+					input.removeEventListener('blur', handleFieldChanged);
+					input.removeEventListener('focus', handleFocus);
+				}
 			}
 		};
-	}, [inputRef]);
+	}, [inputRef, type]);
 
 	return {
 		errors: field?.errors ?? errors,
