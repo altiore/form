@@ -13,6 +13,7 @@ import {FormProps} from './types';
 
 const parseBoolean = (value: string | undefined): any => value === 'on';
 const parseNumber = (value: string): any => parseInt(value, 10);
+const parseDefault = (value: string): any => (value === '' ? null : value);
 
 const getValueByType = new Map([
 	[FieldType.BOOLEAN, parseBoolean],
@@ -185,7 +186,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 						unset(resValues, fieldKey);
 						set(resValues, fieldKey, value);
 					} else {
-						const prepareValue = getValueByType.get(fieldType);
+						const prepareValue = getValueByType.get(fieldType) || parseDefault;
 
 						if (prepareValue) {
 							const typedValue = prepareValue(get(resValues, fieldKey) as any);
