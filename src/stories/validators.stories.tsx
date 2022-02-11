@@ -6,7 +6,7 @@ import {Form} from '~/form';
 import Field from '~/stories/field';
 import {minLength} from '~/validators';
 import {comparePassword} from '~/validators';
-import {checkEmail} from '~/validators';
+import {isEmail} from '~/validators';
 
 export default {
 	argTypes: {onSubmit: {action: 'submit'}},
@@ -58,9 +58,7 @@ type T2 = {
 	email: string;
 };
 
-export const CheckEmailField: ComponentStory<typeof Field> = ({
-	onSubmit,
-}: any) => {
+export const IsEmailField: ComponentStory<typeof Field> = ({onSubmit}: any) => {
 	return (
 		<>
 			<legend>Проверка корректности Email</legend>
@@ -71,7 +69,7 @@ export const CheckEmailField: ComponentStory<typeof Field> = ({
 							name="email"
 							label="Введите Email"
 							defaultValue=""
-							validators={[minLength(null, 4), checkEmail(null)]}
+							validators={[minLength(null, 4), isEmail(null)]}
 						/>
 					</div>
 				</Form>
