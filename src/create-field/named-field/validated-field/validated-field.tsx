@@ -23,6 +23,7 @@ const ValidatedFieldComponent = <
 		formRef,
 		fieldMeta,
 		type,
+		name,
 	);
 
 	return React.createElement(component, {

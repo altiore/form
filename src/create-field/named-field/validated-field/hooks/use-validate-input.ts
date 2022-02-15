@@ -53,6 +53,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	formRef?: MutableRefObject<HTMLFormElement>,
 	field?: FieldMeta,
 	type?: FieldType,
+	name?: string,
 ): ValidateInputRes => {
 	const [mounted, setMounted] = useState(false);
 	useEffect(() => {
@@ -60,6 +61,10 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	}, [setMounted]);
 
 	const inputRef = useMemo<MutableRefObject<T>>(() => {
+		const ERROR_MESSAGE =
+			'Не удалось найти ссылку на инпут. Добавьте корректное имя вашему полю' +
+			' input, или используйте inputRef';
+
 		if (customRef.current) {
 			return customRef;
 		}
@@ -69,10 +74,16 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 			if (ref) {
 				return ref;
 			} else {
-				throw new Error(
-					'Не удалось найти ссылку на инпут. Добавьте корректное имя вашему полю' +
-						' input, или используйте inputRef',
-				);
+				throw new Error(ERROR_MESSAGE);
+			}
+		}
+
+		if (mounted && name) {
+			const ref = getNodeByName<T>(name);
+			if (ref) {
+				return ref;
+			} else {
+				throw new Error(ERROR_MESSAGE);
 			}
 		}
 
