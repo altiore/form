@@ -185,6 +185,17 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 
 						unset(resValues, fieldKey);
 						set(resValues, fieldKey, value);
+
+						// Условие только для селекта
+						if (formRef.current.querySelector('select') !== null) {
+							const selectInput: HTMLSelectElement =
+								formRef.current.querySelector(`select[name=${fieldKey}]`);
+							const value: string[] | number[] = Array.from(selectInput.options)
+								.filter((option) => option.selected)
+								.map((option) => option.value);
+
+							set(resValues, fieldKey, value);
+						}
 					} else {
 						const prepareValue = getValueByType.get(fieldType) || parseDefault;
 
