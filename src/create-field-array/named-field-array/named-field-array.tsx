@@ -17,7 +17,7 @@ export const NamedFieldArray = <T,>({
 	ValidatedFieldArrayProps<T>,
 	'field' | 'name' | 'setItems'
 >) => {
-	const {field, isInsideForm, name} = useRegisterField(
+	const {field, isInsideForm, isRegistered, name} = useRegisterField(
 		fieldArrayState,
 		formState,
 		providedName,
@@ -30,7 +30,7 @@ export const NamedFieldArray = <T,>({
 
 	const setItems = useMemo(() => formState?.setItems, [formState?.setItems]);
 
-	if (isInsideForm && !field) {
+	if ((isInsideForm && !field) || !isRegistered) {
 		return null;
 	}
 

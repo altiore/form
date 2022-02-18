@@ -88,7 +88,7 @@ export function createField<
 			props: Omit<T, 'validators'> & InternalFieldProps<Input> & FieldMeta,
 		) => JSX.Element);
 
-	return React.memo(({name, validators, ...props}): JSX.Element => {
+	return ({name, validators, ...props}): JSX.Element => {
 		return (
 			<FormContext.Consumer>
 				{(formState) => (
@@ -110,5 +110,5 @@ export function createField<
 				)}
 			</FormContext.Consumer>
 		);
-	});
+	};
 }

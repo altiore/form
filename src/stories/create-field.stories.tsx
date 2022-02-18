@@ -44,6 +44,26 @@ type T = {
 	second: string;
 };
 
+export const InsideFormOneField: ComponentStory<typeof Field> = ({
+	onSubmit,
+}: any) => {
+	return (
+		<>
+			<legend>Только одно поле для проверки рендера</legend>
+			<div className="shadow border border-secondary rounded-3 p-3 w-75">
+				<Form<T> onSubmit={onSubmit}>
+					<div className=" w-75">
+						<Field<T> name="first" label="Первое поле" />
+						<button className="btn btn-success" type="submit">
+							Отправить
+						</button>
+					</div>
+				</Form>
+			</div>
+		</>
+	);
+};
+
 export const InsideFormField: ComponentStory<typeof Field> = ({
 	onSubmit,
 }: any) => {

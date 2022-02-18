@@ -1,10 +1,10 @@
-import React, {useRef} from 'react';
+import React, {useMemo, useRef} from 'react';
 
 import {useValidateInput} from './hooks/use-validate-input';
 import {ValidatedFieldProps} from './types/validated-field-props';
 import {mergeMetaPropsToField} from './utils/merge-meta-props-to-field';
 
-const ValidatedFieldComponent = <
+export const ValidatedField = <
 	T,
 	Input extends HTMLElement = HTMLInputElement,
 >({
@@ -26,17 +26,17 @@ const ValidatedFieldComponent = <
 		name,
 	);
 
-	return React.createElement(component, {
-		...mergeMetaPropsToField(componentProps, fieldMeta),
-		error: errors?.[0],
-		errors,
-		inputRef,
-		isInvalid: Boolean(errors.length),
-		name,
-		setErrors,
-	});
+	return useMemo(
+		() =>
+			React.createElement(component, {
+				...mergeMetaPropsToField(componentProps, fieldMeta),
+				error: errors?.[0],
+				errors,
+				inputRef,
+				isInvalid: Boolean(errors.length),
+				name,
+				setErrors,
+			}),
+		[componentProps, fieldMeta, errors, inputRef, name, setErrors],
+	);
 };
-
-export const ValidatedField = React.memo(
-	ValidatedFieldComponent,
-) as typeof ValidatedFieldComponent;

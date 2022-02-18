@@ -19,7 +19,7 @@ export const NamedField = <
 	ValidatedFieldProps<T, Input>,
 	'field' | 'name'
 >): JSX.Element => {
-	const {field, isInsideForm, name} = useRegisterField(
+	const {field, isInsideForm, isRegistered, name} = useRegisterField(
 		fieldArrayState,
 		formState,
 		providedName,
@@ -29,7 +29,7 @@ export const NamedField = <
 		Boolean(rest.validators?.length),
 	);
 
-	if (isInsideForm && !field) {
+	if ((isInsideForm && !field) || !isRegistered) {
 		return null;
 	}
 

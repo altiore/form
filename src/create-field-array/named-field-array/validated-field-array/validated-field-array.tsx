@@ -1,10 +1,10 @@
-import React, {useRef} from 'react';
+import React, {useMemo, useRef} from 'react';
 
 import {useList} from './hooks/use-list';
 import {useValidateList} from './hooks/use-validate-list';
 import {ValidatedFieldArrayProps} from './types/validated-field-array-props';
 
-const ValidatedFieldArrayComponent = <T,>({
+export const ValidatedFieldArray = <T,>({
 	component,
 	componentProps,
 	field: fieldMeta,
@@ -16,17 +16,17 @@ const ValidatedFieldArrayComponent = <T,>({
 	const [list, items] = useList(name, fieldMeta, setItems);
 	const errors = useValidateList(listRef, validators, items, fieldMeta?.name);
 
-	return React.createElement(component, {
-		...componentProps,
-		error: errors?.[0],
-		errors,
-		isInvalid: Boolean(errors.length),
-		list,
-		listRef,
-		name,
-	});
+	return useMemo(
+		() =>
+			React.createElement(component, {
+				...componentProps,
+				error: errors?.[0],
+				errors,
+				isInvalid: Boolean(errors.length),
+				list,
+				listRef,
+				name,
+			}),
+		[componentProps, errors, list, listRef, name],
+	);
 };
-
-export const ValidatedFieldArray = React.memo(
-	ValidatedFieldArrayComponent,
-) as typeof ValidatedFieldArrayComponent;

@@ -58,7 +58,7 @@ export const createFieldArray = <T extends FieldArrayProps>(
 ): (<Values extends Record<string, any> = Record<string, any>>(
 	props: T & {name: keyof Values},
 ) => JSX.Element) => {
-	return React.memo(({name, validators, ...props}) => {
+	return ({name, validators, ...props}) => {
 		return (
 			<FormContext.Consumer>
 				{(formState) => (
@@ -79,5 +79,5 @@ export const createFieldArray = <T extends FieldArrayProps>(
 				)}
 			</FormContext.Consumer>
 		);
-	});
+	};
 };
