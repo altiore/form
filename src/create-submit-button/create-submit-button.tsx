@@ -27,7 +27,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
 	}, [fields]);
 	const isSubmitting = useMemo(() => formState?.isSubmitting, [formState]);
 	const isUntouched = useMemo(() => {
-		return fields ? Object.values(fields).some((el) => el.isUntouched) : false;
+		return fields ? Object.values(fields).every((el) => el.isUntouched) : false;
 	}, [fields]);
 
 	return React.createElement(component, {
