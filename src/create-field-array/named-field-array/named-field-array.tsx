@@ -25,7 +25,6 @@ export const NamedFieldArray = <T,>({
 		// (для массива мы не поддерживаем пользовательские типы полей)
 		undefined,
 		true,
-		Boolean(rest.validators?.length),
 	);
 
 	const setItems = useMemo(() => formState?.setItems, [formState?.setItems]);
