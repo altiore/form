@@ -170,7 +170,6 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 		const input = inputRef.current;
 		const hasEventHandler = Boolean(input);
 		if (hasEventHandler) {
-			// TODO: нужно обработать случай, когда input является селектом
 			input.addEventListener('blur', handleFieldChanged);
 			input.addEventListener('focus', handleFocus);
 		}

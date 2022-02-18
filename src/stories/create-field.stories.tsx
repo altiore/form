@@ -6,6 +6,7 @@ import {Form} from '~/form';
 import {minLength} from '~/validators/min-length';
 
 import Field from './field';
+import FieldMultiSelect from './field-multi-select';
 import FieldRadio from './field-radio';
 import FieldSelect from './field-select';
 import {FieldBoolean, FieldNumber} from './field-typed';
@@ -153,6 +154,39 @@ export const InsideFormTypedField: ComponentStory<typeof Field> = ({
 						<FieldSelect<T2> name="select" label="Выбор" defaultValue="один" />
 					</div>
 
+					<button className="btn btn-success" type="submit">
+						Отправить
+					</button>
+				</Form>
+			</div>
+		</>
+	);
+};
+
+type T3 = {
+	first: string;
+	variants: string;
+};
+
+export const InsideFormFieldMultiSelect: ComponentStory<typeof Field> = ({
+	onSubmit,
+}: any) => {
+	return (
+		<>
+			<legend>Выбор с помощью селекта несколько вариантов (+ crtl)</legend>
+			<div className="shadow border border-secondary rounded-3 p-3 w-75">
+				<Form<T3> onSubmit={onSubmit}>
+					<div className=" w-75">
+						<Field<T>
+							name="first"
+							label="Заголовок"
+							defaultValue={''}
+							validators={[minLength(null, 3)]}
+						/>
+					</div>
+					<div className=" w-75">
+						<FieldMultiSelect<T3> name="variants" label="Выбор" />
+					</div>
 					<button className="btn btn-success" type="submit">
 						Отправить
 					</button>
