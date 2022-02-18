@@ -1,4 +1,10 @@
-import React, {ButtonHTMLAttributes, useMemo} from 'react';
+import React, {
+	ButtonHTMLAttributes,
+	useCallback,
+	useEffect,
+	useMemo,
+	useState,
+} from 'react';
 
 import {FormContext} from '~/@common/form-context';
 import {FormContextState} from '~/@common/types';
@@ -16,6 +22,19 @@ interface SubmitButtonProps {
 	formState?: FormContextState;
 }
 
+const getIsInvalid = (fields: FormContextState['fields']) =>
+	fields ? Object.values(fields).some((el) => el.isInvalid) : false;
+
+const dispatchEvent = (element: HTMLElement) => {
+	if (element.dispatchEvent && window.MouseEvent) {
+		element.dispatchEvent(
+			new window.MouseEvent('blur', {bubbles: true, cancelable: true}),
+		);
+	} else {
+		(element as any).fireEvent(`onblur`);
+	}
+};
+
 const SubmitButton: React.FC<SubmitButtonProps> = ({
 	component,
 	componentProps,
@@ -23,20 +42,56 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
 }) => {
 	const fields = useMemo(() => formState?.fields, [formState]);
 	const isInvalid = useMemo(() => {
-		return fields ? Object.values(fields).some((el) => el.isInvalid) : false;
+		return getIsInvalid(fields);
 	}, [fields]);
 	const isSubmitting = useMemo(() => formState?.isSubmitting, [formState]);
 	const isUntouched = useMemo(() => {
 		return fields ? Object.values(fields).every((el) => el.isUntouched) : false;
 	}, [fields]);
 
-	return React.createElement(component, {
-		...componentProps,
-		isInvalid,
-		isSubmitting,
-		isUntouched,
-		type: 'submit',
-	});
+	const [submitting, setSubmitting] = useState(false);
+	const onClick = useCallback(
+		(evt) => {
+			evt.preventDefault();
+			evt.stopPropagation();
+			if (formState?.formRef?.current) {
+				const inputs = formState.formRef.current.getElementsByTagName('input');
+				const selects =
+					formState.formRef.current.getElementsByTagName('select');
+				const inputsLength = inputs.length;
+				for (let i = 0; i < inputsLength; i++) {
+					dispatchEvent(inputs[i]);
+				}
+				const selectsLength = selects.length;
+				for (let i = 0; i < selectsLength; i++) {
+					dispatchEvent(selects[i]);
+				}
+			}
+			setSubmitting(true);
+		},
+		[formState, setSubmitting],
+	);
+	useEffect(() => {
+		if (submitting) {
+			if (!getIsInvalid(formState.fields) && formState?.formRef?.current) {
+				formState.formRef.current.requestSubmit();
+			}
+			setSubmitting(false);
+		}
+	}, [formState, setSubmitting, submitting]);
+
+	return useMemo(
+		() =>
+			React.createElement(component, {
+				...componentProps,
+				isInvalid,
+				isSubmitting,
+				isUntouched,
+				onClick,
+				type: 'submit',
+			}),
+		[componentProps, isInvalid, isSubmitting, isUntouched],
+	);
 };
 
 export function createSubmitButton<T extends any = HTMLButtonElement>(
@@ -47,7 +102,7 @@ export function createSubmitButton<T extends any = HTMLButtonElement>(
 		'isInvalid' | 'isSubmitting' | 'isUntouched' | 'type'
 	>,
 ) => JSX.Element {
-	return React.memo((props): JSX.Element => {
+	return (props): JSX.Element => {
 		return (
 			<FormContext.Consumer>
 				{(formState) => (
@@ -59,5 +114,5 @@ export function createSubmitButton<T extends any = HTMLButtonElement>(
 				)}
 			</FormContext.Consumer>
 		);
-	});
+	};
 }
