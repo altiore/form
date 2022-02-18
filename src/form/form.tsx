@@ -137,9 +137,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 						errors: [],
 						isInvalid: false,
 						// Этот флаг работает только для полей у которых есть валидаторы
-						isUntouched:
-							hasValidators &&
-							(defaultValue === undefined || defaultValue === null),
+						isUntouched: Boolean(hasValidators),
 						items: fieldType === FieldType.ARRAY ? [] : undefined,
 						name: fieldName,
 						setErrors: setErrors.bind({}, fieldName),
