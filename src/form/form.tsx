@@ -167,8 +167,20 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 			evt.preventDefault();
 			const formData = new FormData(formRef.current ?? undefined);
 			const values: Record<string, unknown> = {};
+			const fewValues: any[] = [];
+
 			formData.forEach((value: unknown, name: string) => {
-				set(values, name, value);
+				const prevValue = get(values, name);
+				if (prevValue) {
+					if (fewValues.length === 0) {
+						fewValues.push(prevValue);
+					}
+					fewValues.push(value);
+
+					set(values, name, fewValues);
+				} else {
+					set(values, name, value);
+				}
 			});
 			const resValues: Record<string, unknown> = cloneDeep(values);
 
