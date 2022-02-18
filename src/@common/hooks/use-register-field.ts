@@ -21,7 +21,6 @@ export const useRegisterField = (
 	fieldType?: FieldType,
 	isArray?: boolean,
 	defaultValue?: unknown,
-	hasValidators?: boolean,
 ): ResType => {
 	const fieldName = useMemo(() => {
 		return fieldArrayState?.name &&
@@ -44,7 +43,6 @@ export const useRegisterField = (
 				fieldName,
 				fieldType ?? (isArray ? FieldType.ARRAY : undefined),
 				defaultValue,
-				hasValidators,
 			);
 			setIsRegistered(true);
 			return unmountFunc;
@@ -64,7 +62,6 @@ export const useRegisterField = (
 		fieldType,
 		isArray,
 		isInsideForm,
-		hasValidators,
 		registerField,
 		setIsRegistered,
 	]);
