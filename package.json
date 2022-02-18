@@ -1,6 +1,6 @@
 {
 	"name": "@altiore/form",
-	"version": "1.1.20",
+	"version": "1.2.0",
 	"description": "Form helper for building powerful forms",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -85,6 +85,7 @@
 		"@types/jsdom": "16.2.13",
 		"@types/lodash": "^4.14.173",
 		"@types/node": "16.4.9",
+		"@types/react-dom": "17.0.11",
 		"@types/sinon": "10.0.6",
 		"@typescript-eslint/eslint-plugin": "4.28.5",
 		"@typescript-eslint/parser": "4.28.5",

@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 
 import {
 	FieldArrayState,
@@ -9,6 +9,7 @@ import {
 
 type ResType = {
 	isInsideForm: boolean;
+	isRegistered: boolean;
 	name: string;
 	field?: FieldMeta;
 };
@@ -36,20 +37,25 @@ export const useRegisterField = (
 
 	const isInsideForm = useMemo(() => Boolean(registerField), [registerField]);
 
+	const [isRegistered, setIsRegistered] = useState(false);
 	useEffect(() => {
 		if (isInsideForm) {
-			return registerField(
+			const unmountFunc = registerField(
 				fieldName,
 				fieldType ?? (isArray ? FieldType.ARRAY : undefined),
 				defaultValue,
 				hasValidators,
 			);
+			setIsRegistered(true);
+			return unmountFunc;
 		} else {
 			if (fieldType) {
 				console.warn(
 					'Указанный fieldType будет проигнорирован вне контекста формы. Разместите' +
 						' ваш инпут внутри компонента формы, чтоб это заработало',
 				);
+			} else {
+				setIsRegistered(true);
 			}
 		}
 	}, [
@@ -60,11 +66,12 @@ export const useRegisterField = (
 		isInsideForm,
 		hasValidators,
 		registerField,
+		setIsRegistered,
 	]);
 
 	const fields = useMemo(() => formState?.fields, [formState?.fields]);
 
 	const field = useMemo(() => fields?.[fieldName], [fields, fieldName]);
 
-	return {field, isInsideForm, name: fieldName};
+	return {field, isInsideForm, isRegistered, name: fieldName};
 };
