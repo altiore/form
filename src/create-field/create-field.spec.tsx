@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM, {unmountComponentAtNode} from 'react-dom';
 import {act} from 'react-dom/test-utils';
 
 import {mount} from 'enzyme';
@@ -21,6 +21,18 @@ const Field = createField(({error, name}) => {
 	);
 });
 
+const FieldMultiSelect = createField(({name}) => {
+	return (
+		<div>
+			<select multiple name={name}>
+				<option value="one">Один</option>
+				<option value="two">Два</option>
+				<option value="three">Три</option>
+			</select>
+		</div>
+	);
+});
+
 const parentRenderEvent = sinon.spy();
 const Parent = ({name}: any) => {
 	parentRenderEvent();
@@ -28,14 +40,27 @@ const Parent = ({name}: any) => {
 		<Form onSubmit={console.log}>
 			<span>{name}</span>
 			<Field name="test" validators={[isEmail(null)]} />
+			<FieldMultiSelect name="variants" />
 		</Form>
 	);
 };
 
-let container: any;
-
 describe('~/create-field', () => {
-	describe('не перерендеривать, если рендерится родитель, но пропсы не меняются', () => {
+	let container: any = null;
+	beforeEach(() => {
+		container = document.createElement('div');
+		document.body.appendChild(container);
+	});
+
+	afterEach(() => {
+		unmountComponentAtNode(container);
+		container.remove();
+		container = null;
+		memoizedRenderEvent.resetHistory();
+		parentRenderEvent.resetHistory();
+	});
+
+	describe('Не перерендеривать, если рендерится родитель, но пропсы не меняются', () => {
 		it('Field должен отрендерится только 1 раз не смотря на то, что родитель рендерится дважды', () => {
 			act(() => {
 				const wrapper = mount(<Parent name="foo" />);
@@ -46,10 +71,8 @@ describe('~/create-field', () => {
 		});
 	});
 
-	describe('проверить, что валидация работает внутри отрендерренного Field', () => {
+	describe('Проверить, что валидация работает внутри отрендерренного Field', () => {
 		it('найти ошибку валидации', () => {
-			container = document.createElement('div');
-			document.body.appendChild(container);
 			act(() => {
 				ReactDOM.render(<Parent name="foo" />, container);
 			});
@@ -69,6 +92,47 @@ describe('~/create-field', () => {
 			});
 
 			expect(errorSpan.textContent).toBe('');
+		});
+	});
+
+	describe('Проверяем рендер родителя при валидации', () => {
+		it('Field РЕрендерится при валидации, родитель не перерендеривается', () => {
+			act(() => {
+				ReactDOM.render(<Parent name="foo" />, container);
+			});
+
+			const input = container?.querySelector('input');
+			act(() => {
+				input.value = 'Some text';
+				input.dispatchEvent(new window.MouseEvent('blur', {bubbles: true}));
+			});
+
+			expect(parentRenderEvent.callCount).toEqual(1);
+			expect(memoizedRenderEvent.callCount).toEqual(2);
+		});
+	});
+
+	describe('Проверяем Multi Select Field', () => {
+		it('Выбираем одно и несколько значений в мульти селекте', () => {
+			act(() => {
+				ReactDOM.render(<Parent name="foo" />, container);
+			});
+
+			const select = container?.querySelector('select');
+
+			act(() => {
+				select.value = 'one';
+				select.dispatchEvent(new window.Event('change', {bubbles: true}));
+			});
+
+			expect(select.value).toEqual('one');
+
+			act(() => {
+				select.values = ['one', 'three'];
+				select.dispatchEvent(new window.Event('change', {bubbles: true}));
+			});
+
+			expect(select.values).toEqual(['one', 'three']);
 		});
 	});
 });
