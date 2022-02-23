@@ -6,7 +6,7 @@ export interface IField extends FieldProps {
 	label: string;
 }
 
-export const Field = createField<IField>((props) => {
+export const Field = createField<IField>({hideErrorInXSec: false}, (props) => {
 	const {defaultValue, errors, label, name} = props;
 
 	console.log('Field.render', {

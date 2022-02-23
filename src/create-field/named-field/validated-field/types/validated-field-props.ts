@@ -14,4 +14,5 @@ export interface ValidatedFieldProps<T, Input> {
 	name: string;
 	type?: FieldType;
 	validators: Array<ValidateFuncType>;
+	hideErrorInXSec?: false | number;
 }

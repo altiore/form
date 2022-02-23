@@ -72,7 +72,7 @@ describe('~/create-field', () => {
 	});
 
 	describe('Проверить, что валидация работает внутри отрендерренного Field', () => {
-		it('найти ошибку валидации', () => {
+		it('Есть ошибка валидации', () => {
 			act(() => {
 				ReactDOM.render(<Parent name="foo" />, container);
 			});
@@ -85,10 +85,19 @@ describe('~/create-field', () => {
 
 			const errorSpan = input.nextElementSibling;
 			expect(errorSpan.textContent).toBe('Введите корректный email');
+		});
+		it('Нет ошибки валидации', () => {
+			act(() => {
+				ReactDOM.render(<Parent name="foo" />, container);
+			});
+
+			const input = container?.querySelector('input');
+
+			const errorSpan = input.nextElementSibling;
 
 			act(() => {
 				input.value = 'test@mail.com';
-				input.dispatchEvent(new window.MouseEvent('blur', {bubbles: true}));
+				input.dispatchEvent(new window.MouseEvent('blur'));
 			});
 
 			expect(errorSpan.textContent).toBe('');
