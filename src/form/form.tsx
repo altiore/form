@@ -158,7 +158,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	const handleSubmit = useCallback(
 		(evt: FormEvent) => {
 			evt.preventDefault();
-			const formData = new FormData(formRef.current ?? undefined);
+			const formData = new window.FormData(formRef.current ?? undefined);
 			const values: Record<string, unknown> = {};
 			const fewValues: any[] = [];
 
