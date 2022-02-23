@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM, {unmountComponentAtNode} from 'react-dom';
 import {act} from 'react-dom/test-utils';
 
 import {mount} from 'enzyme';
@@ -11,10 +11,12 @@ import {Form} from '~/form';
 import {isEmail} from '~/validators/is-email';
 
 const memoizedRenderEvent = sinon.spy();
-const Button = createSubmitButton(({isInvalid, isSubmitting, isUntouched}) => {
-	memoizedRenderEvent();
-	return <button disabled={isInvalid || isSubmitting || isUntouched} />;
-});
+const SubmitButton = createSubmitButton(
+	({isInvalid, isSubmitting, isUntouched}) => {
+		memoizedRenderEvent();
+		return <button disabled={isInvalid || isSubmitting || isUntouched} />;
+	},
+);
 
 const Field = createField(({error, name}) => {
 	return (
@@ -33,7 +35,7 @@ const Parent = ({name}: any) => {
 		<Form onSubmit={console.log}>
 			<span>{name}</span>
 			<Field name="test" validators={[isEmail(null)]} />
-			<Button name="testButton" />
+			<SubmitButton>Отправить</SubmitButton>
 		</Form>
 	);
 };
@@ -54,28 +56,45 @@ describe('~/create-submit-button', () => {
 	});
 
 	describe('Доступность кнопки реагирует на валидацию поля', () => {
-		it('Кнопка имеет атрибут disabled, пока поле не пройдет валидацию', () => {
+		beforeEach(() => {
 			container = document.createElement('div');
 			document.body.appendChild(container);
+		});
+		afterEach(() => {
+			unmountComponentAtNode(container);
+			container.remove();
+			container = null;
+		});
+		it('Кнопка имеет атрибут disabled, когда поле не валидно', () => {
 			act(() => {
 				ReactDOM.render(<Parent name="foo" />, container);
 			});
 
 			const button = container?.querySelector('button');
 
-			expect(button.hasAttribute('disabled')).toBe(true);
+			act(() => {
+				expect(button.hasAttribute('disabled')).toBe(true);
+			});
 
 			const input = container?.querySelector('input');
 
 			act(() => {
-				input.dispatchEvent(new window.MouseEvent('blur', {bubbles: true}));
+				input.dispatchEvent(new window.MouseEvent('blur'));
 			});
 
 			expect(button.hasAttribute('disabled')).toBe(true);
+		});
 
+		it('Кнопка НЕ имеет атрибут disabled, когда поле валидно', () => {
+			act(() => {
+				ReactDOM.render(<Parent name="foo" />, container);
+			});
+
+			const button = container?.querySelector('button');
+			const input = container?.querySelector('input');
 			act(() => {
 				input.value = 'test@mail.com';
-				input.dispatchEvent(new window.MouseEvent('blur', {bubbles: true}));
+				input.dispatchEvent(new window.MouseEvent('blur'));
 			});
 
 			expect(button.hasAttribute('disabled')).toBe(false);

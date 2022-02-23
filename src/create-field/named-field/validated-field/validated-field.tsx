@@ -15,6 +15,7 @@ export const ValidatedField = <
 	name,
 	type,
 	validators,
+	hideErrorInXSec,
 }: ValidatedFieldProps<T, Input>): JSX.Element => {
 	const inputRef = useRef<Input>();
 	const {errors, setErrors} = useValidateInput<Input>(
@@ -24,6 +25,7 @@ export const ValidatedField = <
 		fieldMeta,
 		type,
 		name,
+		hideErrorInXSec,
 	);
 
 	return useMemo(
