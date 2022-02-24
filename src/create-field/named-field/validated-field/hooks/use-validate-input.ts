@@ -3,12 +3,16 @@ import {
 	useCallback,
 	useEffect,
 	useMemo,
+	useRef,
 	useState,
 } from 'react';
 
 import isEqual from 'lodash/isEqual';
 
+import {useIsMounted} from '~/@common/hooks/use-is-mounted';
 import {FieldMeta, FieldType, ValidateFuncType} from '~/@common/types';
+
+import {getNodeByName} from './utils';
 
 const getValue = (evt: Event) => (evt.target as any).value;
 const getChecked = (evt: Event) => (evt.target as any).checked;
@@ -19,33 +23,12 @@ const getValueByType = new Map<FieldType, (evt: Event) => any>([
 	[FieldType.TEXT, getValue],
 ]);
 
-const getNodeByName = <T>(
-	name: string,
-	formRef?: MutableRefObject<HTMLFormElement>,
-): null | MutableRefObject<T> => {
-	if (formRef?.current) {
-		const input = formRef.current.querySelector(`[name="${name}"]`) as any;
-		if (input) {
-			return {
-				current: input,
-			} as MutableRefObject<T>;
-		}
-	} else {
-		const input = document.querySelector(`[name="${name}"]`) as any;
-		if (input) {
-			return {
-				current: input,
-			} as MutableRefObject<T>;
-		}
-	}
-
-	return null;
-};
-
 type ValidateInputRes = {
 	errors: string[];
 	setErrors: (errors: string[]) => void;
 };
+
+const DEF_ERRORS: string[] = [];
 
 export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	customRef: MutableRefObject<T>,
@@ -54,11 +37,14 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	field?: FieldMeta,
 	type?: FieldType,
 	name?: string,
+	hideErrorInXSec?: false | number,
 ): ValidateInputRes => {
 	const [mounted, setMounted] = useState(false);
 	useEffect(() => {
 		setMounted(true);
 	}, [setMounted]);
+
+	const getMounted = useIsMounted();
 
 	const inputRef = useMemo<MutableRefObject<T>>(() => {
 		const ERROR_MESSAGE =
@@ -106,8 +92,31 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 		[formRef],
 	);
 
-	const [errors, setErrors] = useState<string[]>([]);
+	const [errors, setErrors] = useState<string[]>(DEF_ERRORS);
 
+	const handleSetErrors = useCallback(
+		(errors: string[]) => {
+			if (field?.setErrors) {
+				field.setErrors(errors);
+			} else {
+				setErrors((s) => {
+					if (isEqual(s, errors)) {
+						return s;
+					}
+					return errors;
+				});
+			}
+		},
+		[field?.setErrors, setErrors],
+	);
+
+	const setEmptyErrors = useCallback(() => {
+		if (getMounted()) {
+			handleSetErrors(DEF_ERRORS);
+		}
+	}, [getMounted, handleSetErrors]);
+
+	const timeout = useRef<any>();
 	const handleFieldChanged = useCallback(
 		(e: Event) => {
 			e.preventDefault();
@@ -127,24 +136,20 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 				});
 			}
 
-			if (field?.setErrors) {
-				field.setErrors(errors);
-			} else {
-				setErrors((s) => {
-					if (isEqual(s, errors)) {
-						return s;
-					}
-					return errors;
-				});
+			handleSetErrors(errors);
+			if (hideErrorInXSec) {
+				timeout.current = setTimeout(setEmptyErrors, hideErrorInXSec);
 			}
 		},
 		[
+			handleSetErrors,
+			setEmptyErrors,
 			getFormValueByName,
-			field?.setErrors,
+			getMounted,
 			field?.name,
-			setErrors,
 			type,
 			validators,
+			hideErrorInXSec,
 		],
 	);
 
@@ -152,18 +157,9 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 		(e: Event) => {
 			e.preventDefault();
 
-			if (field?.setErrors) {
-				field.setErrors([]);
-			} else {
-				setErrors((s) => {
-					if (isEqual(s, [])) {
-						return s;
-					}
-					return [];
-				});
-			}
+			setEmptyErrors();
 		},
-		[field?.setErrors, setErrors],
+		[setEmptyErrors],
 	);
 
 	useEffect(() => {
@@ -181,6 +177,14 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 			}
 		};
 	}, [inputRef]);
+
+	useEffect(() => {
+		return () => {
+			if (timeout.current) {
+				clearTimeout(timeout.current);
+			}
+		};
+	}, [timeout]);
 
 	return {
 		errors: field?.errors ?? errors,

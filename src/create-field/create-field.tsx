@@ -39,11 +39,19 @@ export type FieldProps = {
  * });
  */
 
+type Options = {
+	fieldType?: FieldType;
+	hideErrorInXSec?: false | number;
+};
+
+// измеряется в миллисекундах
+const DEF_HIDE_ERROR_IN_X_SEC = 6000;
+
 export function createField<
 	T extends FieldProps,
 	Input extends HTMLElement = HTMLInputElement,
 >(
-	fieldType: FieldType,
+	options: Options | FieldType,
 	component: (
 		props: Omit<T, 'validators'> & InternalFieldProps<Input> & FieldMeta,
 	) => JSX.Element,
@@ -66,8 +74,9 @@ export function createField<
 	T extends FieldProps,
 	Input extends HTMLElement = HTMLInputElement,
 >(
-	fieldTypeOrComponent:
+	optionsOrComponent:
 		| FieldType
+		| Options
 		| ((
 				props: Omit<T, 'validators'> & InternalFieldProps<Input> & FieldMeta,
 		  ) => JSX.Element),
@@ -77,14 +86,22 @@ export function createField<
 ): <Values extends Record<string, any> = Record<string, any>>(
 	props: T & {name: keyof Values},
 ) => JSX.Element {
-	const fieldType = componentInSecondParam
-		? (fieldTypeOrComponent as FieldType)
+	const options = componentInSecondParam
+		? typeof optionsOrComponent === 'object'
+			? (optionsOrComponent as Options)
+			: {fieldType: optionsOrComponent as FieldType}
 		: undefined;
+	const fieldType = options ? options.fieldType ?? undefined : undefined;
+	const hideErrorInXSec = options
+		? typeof options.hideErrorInXSec !== 'undefined'
+			? options.hideErrorInXSec
+			: DEF_HIDE_ERROR_IN_X_SEC
+		: DEF_HIDE_ERROR_IN_X_SEC;
 	const component: (
 		props: Omit<T, 'validators'> & InternalFieldProps<Input> & FieldMeta,
 	) => JSX.Element =
 		componentInSecondParam ??
-		(fieldTypeOrComponent as (
+		(optionsOrComponent as (
 			props: Omit<T, 'validators'> & InternalFieldProps<Input> & FieldMeta,
 		) => JSX.Element);
 
@@ -103,6 +120,7 @@ export function createField<
 									providedName={name}
 									type={fieldType}
 									validators={validators}
+									hideErrorInXSec={hideErrorInXSec}
 								/>
 							);
 						}}

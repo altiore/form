@@ -9,6 +9,7 @@ import unset from 'lodash/unset';
 import {FormContext} from '~/@common/form-context';
 import {FieldType, FormContextState} from '~/@common/types';
 
+import {toFlatErrors} from './form.utils';
 import {FormProps} from './types';
 
 const parseBoolean = (value: string | undefined): any => value === 'on';
@@ -19,24 +20,6 @@ const getValueByType = new Map([
 	[FieldType.BOOLEAN, parseBoolean],
 	[FieldType.NUMBER, parseNumber],
 ]);
-
-const toFlatErrors = (errors: any, setErrors: any) => {
-	Object.keys(errors).forEach((namePart) => {
-		const v = errors[namePart];
-		if (Array.isArray(v) && typeof v[0] === 'string') {
-			setErrors(namePart, v);
-		} else {
-			const newObj = Object.entries(v).reduce<Record<string, any>>(
-				(r, [name, value]) => {
-					r[`${namePart}.${name}`] = value;
-					return r;
-				},
-				{},
-			);
-			toFlatErrors(newObj, setErrors);
-		}
-	});
-};
 
 /**
  * Форма - элемент взаимодействия пользователя с сайтом или приложением
