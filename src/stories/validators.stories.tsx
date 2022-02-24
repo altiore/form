@@ -7,6 +7,7 @@ import Field from '~/stories/field';
 import {minLength} from '~/validators';
 import {comparePassword} from '~/validators';
 import {isEmail} from '~/validators';
+import {isRequired} from '~/validators';
 
 export default {
 	argTypes: {onSubmit: {action: 'submit'}},
@@ -70,6 +71,32 @@ export const IsEmailField: ComponentStory<typeof Field> = ({onSubmit}: any) => {
 							label="Введите Email"
 							defaultValue=""
 							validators={[minLength(null, 4), isEmail(null)]}
+						/>
+					</div>
+				</Form>
+			</div>
+		</>
+	);
+};
+
+type T3 = {
+	text: string;
+};
+
+export const IsRequiredField: ComponentStory<typeof Field> = ({
+	onSubmit,
+}: any) => {
+	return (
+		<>
+			<legend>Проверка ввода обязательного текста</legend>
+			<div className="shadow border border-secondary rounded-3 p-3 w-75">
+				<Form<T> onSubmit={onSubmit}>
+					<div className=" w-75">
+						<Field<T3>
+							name="text"
+							label="Введите текст"
+							defaultValue=""
+							validators={[isRequired(null)]}
 						/>
 					</div>
 				</Form>
