@@ -26,6 +26,7 @@ const getValueByType = new Map<FieldType, (evt: Event) => any>([
 type ValidateInputRes = {
 	errors: string[];
 	setErrors: (errors: string[]) => void;
+	isUntouched: boolean;
 };
 
 const DEF_ERRORS: string[] = [];
@@ -93,6 +94,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	);
 
 	const [errors, setErrors] = useState<string[]>(DEF_ERRORS);
+	const [isUntouched, setIsUntouched] = useState<boolean>(true);
 
 	const handleSetErrors = useCallback(
 		(errors: string[]) => {
@@ -124,6 +126,8 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 			const errors: string[] = [];
 
 			const hasValidation = Boolean(validators?.length && e.target);
+			setIsUntouched(false);
+
 			if (hasValidation) {
 				const getCurrentValue = getValueByType.get(type) ?? getValue;
 				const value = getCurrentValue(e);
@@ -138,12 +142,16 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 
 			handleSetErrors(errors);
 			if (hideErrorInXSec) {
-				timeout.current = setTimeout(setEmptyErrors, hideErrorInXSec);
+				timeout.current = setTimeout(() => {
+					setIsUntouched(true);
+					setEmptyErrors();
+				}, hideErrorInXSec);
 			}
 		},
 		[
 			handleSetErrors,
 			setEmptyErrors,
+			setIsUntouched,
 			getFormValueByName,
 			getMounted,
 			field?.name,
@@ -157,9 +165,10 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 		(e: Event) => {
 			e.preventDefault();
 
+			setIsUntouched(false);
 			setEmptyErrors();
 		},
-		[setEmptyErrors],
+		[setIsUntouched, setEmptyErrors],
 	);
 
 	useEffect(() => {
@@ -188,6 +197,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 
 	return {
 		errors: field?.errors ?? errors,
+		isUntouched: isUntouched,
 		setErrors: field?.setErrors ?? setErrors,
 	};
 };

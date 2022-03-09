@@ -18,7 +18,7 @@ export const ValidatedField = <
 	hideErrorInXSec,
 }: ValidatedFieldProps<T, Input>): JSX.Element => {
 	const inputRef = useRef<Input>();
-	const {errors, setErrors} = useValidateInput<Input>(
+	const {errors, isUntouched, setErrors} = useValidateInput<Input>(
 		inputRef as any,
 		validators,
 		formRef,
@@ -36,6 +36,7 @@ export const ValidatedField = <
 				errors,
 				inputRef,
 				isInvalid: Boolean(errors.length),
+				isUntouched: isUntouched,
 				name,
 				setErrors,
 			}),
