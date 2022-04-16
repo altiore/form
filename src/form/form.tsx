@@ -20,7 +20,11 @@ const toArray = (value: any): string[] => {
 		return [value];
 	}
 
-	return value;
+	if (Array.isArray(value)) {
+		return value;
+	}
+
+	return [];
 };
 
 const getValueByType = new Map([
