@@ -172,12 +172,14 @@ const validate: any = (): any => {
 	return undefined;
 };
 
-export const InsideFormFieldMultiSelect: ComponentStory<typeof Field> = () => {
+export const InsideFormFieldMultiSelect: ComponentStory<typeof Field> = ({
+	onSubmit,
+}: any) => {
 	return (
 		<>
 			<legend>Выбор с помощью селекта несколько вариантов (+ crtl)</legend>
 			<div className="shadow border border-secondary rounded-3 p-3 w-75">
-				<Form<T3> onSubmit={console.log}>
+				<Form<T3> onSubmit={onSubmit}>
 					<div className=" w-75">
 						<Field<T>
 							name="first"
