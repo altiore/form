@@ -168,14 +168,16 @@ type T3 = {
 	variants: string;
 };
 
-export const InsideFormFieldMultiSelect: ComponentStory<typeof Field> = ({
-	onSubmit,
-}: any) => {
+const validate: any = (): any => {
+	return undefined;
+};
+
+export const InsideFormFieldMultiSelect: ComponentStory<typeof Field> = () => {
 	return (
 		<>
 			<legend>Выбор с помощью селекта несколько вариантов (+ crtl)</legend>
 			<div className="shadow border border-secondary rounded-3 p-3 w-75">
-				<Form<T3> onSubmit={onSubmit}>
+				<Form<T3> onSubmit={console.log}>
 					<div className=" w-75">
 						<Field<T>
 							name="first"
@@ -185,7 +187,11 @@ export const InsideFormFieldMultiSelect: ComponentStory<typeof Field> = ({
 						/>
 					</div>
 					<div className=" w-75">
-						<FieldMultiSelect<T3> name="variants" label="Выбор" />
+						<FieldMultiSelect<T3>
+							name="variants"
+							label="Выбор"
+							validators={[validate]}
+						/>
 					</div>
 					<button className="btn btn-success" type="submit">
 						Отправить

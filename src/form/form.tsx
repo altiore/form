@@ -15,10 +15,18 @@ import {FormProps} from './types';
 const parseBoolean = (value: string | undefined): any => value === 'on';
 const parseNumber = (value: string): any => parseInt(value, 10);
 const parseDefault = (value: string): any => (value === '' ? null : value);
+const toArray = (value: any): string[] => {
+	if (typeof value === 'string') {
+		return [value];
+	}
+
+	return value;
+};
 
 const getValueByType = new Map([
 	[FieldType.BOOLEAN, parseBoolean],
 	[FieldType.NUMBER, parseNumber],
+	[FieldType.SELECT_MULTIPLE, toArray],
 ]);
 
 /**

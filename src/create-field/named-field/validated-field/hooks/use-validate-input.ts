@@ -16,11 +16,16 @@ import {getNodeByName} from './utils';
 
 const getValue = (evt: Event) => (evt.target as any).value;
 const getChecked = (evt: Event) => (evt.target as any).checked;
+const getMultipleSelect = (evt: Event) =>
+	[...(evt.target as any).options]
+		.filter((el) => el.selected)
+		.map((el) => el.value);
 
 const getValueByType = new Map<FieldType, (evt: Event) => any>([
 	[FieldType.BOOLEAN, getChecked],
 	[FieldType.NUMBER, getValue],
 	[FieldType.TEXT, getValue],
+	[FieldType.SELECT_MULTIPLE, getMultipleSelect],
 ]);
 
 type ValidateInputRes = {
@@ -36,13 +41,18 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	formRef?: MutableRefObject<HTMLFormElement>,
 	field?: FieldMeta,
 	type?: FieldType,
-	name?: string,
+	nameFromProp?: string,
 	hideErrorInXSec?: false | number,
 ): ValidateInputRes => {
 	const [mounted, setMounted] = useState(false);
 	useEffect(() => {
 		setMounted(true);
 	}, [setMounted]);
+
+	const name = useMemo(
+		() => field?.name || nameFromProp,
+		[field?.name, nameFromProp],
+	);
 
 	const getMounted = useIsMounted();
 
@@ -55,17 +65,8 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 			return customRef;
 		}
 
-		if (mounted && field?.name) {
-			const ref = getNodeByName<T>(field?.name, formRef);
-			if (ref) {
-				return ref;
-			} else {
-				throw new Error(ERROR_MESSAGE);
-			}
-		}
-
 		if (mounted && name) {
-			const ref = getNodeByName<T>(name);
+			const ref = getNodeByName<T>(name, formRef);
 			if (ref) {
 				return ref;
 			} else {
@@ -76,15 +77,15 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 		return {
 			current: null,
 		} as MutableRefObject<T>;
-	}, [customRef, formRef, mounted, field?.name]);
+	}, [customRef, formRef, mounted, name]);
 
 	const getFormValueByName = useCallback(
 		(name: string) => {
-			const fountInputRef = getNodeByName<any>(name, formRef);
-			if (fountInputRef) {
-				return fountInputRef.current.type === 'checkbox'
-					? fountInputRef.current.checked
-					: fountInputRef.current.value;
+			const foundInputRef = getNodeByName<any>(name, formRef);
+			if (foundInputRef) {
+				return foundInputRef.current.type === 'checkbox'
+					? foundInputRef.current.checked
+					: foundInputRef.current.value;
 			}
 
 			return null;
@@ -123,13 +124,23 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 
 			const errors: string[] = [];
 
+			const isMultiSelect =
+				(e.target as any)?.tagName === 'SELECT' &&
+				Boolean((e.target as any)?.multiple);
+			if (isMultiSelect && type !== FieldType.SELECT_MULTIPLE) {
+				throw new Error(
+					'Вы используете select со сойством multiple. Укажите' +
+						' FieldType.SELECT_MULTIPLE явно для корректной работы элемента',
+				);
+			}
+
 			const hasValidation = Boolean(validators?.length && e.target);
 			if (hasValidation) {
 				const getCurrentValue = getValueByType.get(type) ?? getValue;
 				const value = getCurrentValue(e);
 
 				validators.forEach((validate) => {
-					const result = validate(value, field?.name, getFormValueByName);
+					const result = validate(value, name, getFormValueByName);
 					if (result) {
 						errors.push(result);
 					}
@@ -146,7 +157,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 			setEmptyErrors,
 			getFormValueByName,
 			getMounted,
-			field?.name,
+			name,
 			type,
 			validators,
 			hideErrorInXSec,
@@ -166,12 +177,18 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 		const input = inputRef.current;
 		const hasEventHandler = Boolean(input);
 		if (hasEventHandler) {
+			if (input.tagName.toUpperCase() === 'SELECT') {
+				input.addEventListener('change', handleFieldChanged);
+			}
 			input.addEventListener('blur', handleFieldChanged);
 			input.addEventListener('focus', handleFocus);
 		}
 
 		return () => {
 			if (hasEventHandler) {
+				if (input.tagName.toUpperCase() === 'SELECT') {
+					input.removeEventListener('change', handleFieldChanged);
+				}
 				input.removeEventListener('blur', handleFieldChanged);
 				input.removeEventListener('focus', handleFocus);
 			}
