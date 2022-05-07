@@ -53,7 +53,7 @@ export const useList = (
 		) => {
 			// проверяем, не является ли defaultFieldStateOrEvent синтетическим объектом события
 			if (typeof defaultFieldStateOrEvent.persist === 'function') {
-				setItems((s) => add(s, fieldName, index, offset));
+				setItems((s) => add(s, fieldName, index, offset), {});
 			} else {
 				// в случае, если defaultFieldStateOrEvent не синтетическое событие, -
 				//   это дефолтное значение и остальные 2 параметра тоже имеют смысл

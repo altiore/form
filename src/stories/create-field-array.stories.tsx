@@ -66,7 +66,11 @@ export const InsideFormFieldArrayWithAddingDefValue: ComponentStory<
 		<legend>Массив полей внутри формы со значениями по умолчанию</legend>
 		<Form
 			className="shadow border border-secondary rounded-3 p-3 w-75"
-			onSubmit={onSubmit}>
+			onSubmit={onSubmit}
+			defaultValues={{
+				ingredients: [{desc: 'first desc', title: 'first'}],
+				title: 'Test title',
+			}}>
 			<Field label="Название" name="title" />
 			<FieldArrayWithAddingDefValue name="ingredients" />
 			<button className="btn btn-success " type="submit">

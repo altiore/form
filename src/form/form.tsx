@@ -33,6 +33,8 @@ const getValueByType = new Map([
 	[FieldType.SELECT_MULTIPLE, toArray],
 ]);
 
+const getItemsFromDefVal = (_: any, i: number) => i;
+
 /**
  * Форма - элемент взаимодействия пользователя с сайтом или приложением
  *
@@ -110,9 +112,14 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				let dynamicDefault: any = undefined;
 				const fieldNameArrLength = fieldNameArr.length;
 				if (fieldNameArrLength > 2) {
-					dynamicDefault =
+					const defValueFromPar =
 						s?.[fieldNameArr.slice(0, fieldNameArrLength - 2).join('.')]
-							?.defaultValue?.[fieldNameArr[fieldNameArrLength - 1]];
+							?.defaultValue;
+					dynamicDefault = Array.isArray(defValueFromPar)
+						? undefined
+						: defValueFromPar
+						? defValueFromPar?.[fieldNameArr[fieldNameArrLength - 1]] || ' '
+						: undefined;
 				}
 				const defaultValue =
 					dynamicDefault ??
@@ -128,7 +135,10 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 						isInvalid: false,
 						// Этот флаг работает только для полей у которых есть валидаторы
 						isUntouched: true,
-						items: fieldType === FieldType.ARRAY ? [] : undefined,
+						items:
+							fieldType === FieldType.ARRAY
+								? defaultValue.map(getItemsFromDefVal)
+								: undefined,
 						name: fieldName,
 						setErrors: setErrors.bind({}, fieldName),
 						type: fieldType,
