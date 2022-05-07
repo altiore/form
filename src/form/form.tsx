@@ -137,7 +137,9 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 						isUntouched: true,
 						items:
 							fieldType === FieldType.ARRAY
-								? defaultValue.map(getItemsFromDefVal)
+								? defaultValue
+									? defaultValue.map(getItemsFromDefVal)
+									: []
 								: undefined,
 						name: fieldName,
 						setErrors: setErrors.bind({}, fieldName),
