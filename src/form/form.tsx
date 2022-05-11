@@ -90,6 +90,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 		(
 			fieldName: string,
 			setItemsArg: (i: number[]) => number[],
+			errors,
 			defaultValue?: any,
 		) => {
 			setFields((s) => ({
@@ -97,6 +98,10 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				[fieldName]: {
 					...s[fieldName],
 					defaultValue,
+					error: errors?.[0],
+					errors,
+					isInvalid: Boolean(errors?.length),
+					isUntouched: false,
 					items: setItemsArg(s[fieldName].items),
 				},
 			}));

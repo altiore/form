@@ -9,6 +9,11 @@ export interface ValidatedFieldArrayProps<T> {
 	componentProps: T;
 	field: FieldMeta;
 	name: string;
-	setItems: (fieldName: string, setItems: (i: number[]) => number[]) => void;
+	setItems: (
+		fieldName: string,
+		setItems: (i: number[]) => number[],
+		errors: [],
+		defValue?: any,
+	) => void;
 	validators: Array<ValidateFuncType>;
 }

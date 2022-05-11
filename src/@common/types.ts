@@ -74,7 +74,12 @@ export type FormContextState = {
 	formRef: MutableRefObject<HTMLFormElement>;
 	isSubmitting: boolean;
 	registerField: RegisterField;
-	setItems: (fieldName: string, setItems: (i: number[]) => number[]) => void;
+	setItems: (
+		fieldName: string,
+		setItems: (i: number[]) => number[],
+		errors: string[],
+		defValue?: any,
+	) => void;
 };
 
 export interface FieldArrayState {

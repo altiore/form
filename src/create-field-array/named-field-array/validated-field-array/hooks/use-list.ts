@@ -6,25 +6,33 @@ import {
 	useState,
 } from 'react';
 
+import isEqual from 'lodash/isEqual';
+
 import {
 	FieldMeta,
 	InsertPosition,
 	ListInterface,
 	ListItem,
+	ValidateFuncType,
 } from '~/@common/types';
 
 import {add, map, remove} from './utils';
 
+const DEF_GET_VALUE = () =>
+	console.info('Получение переменной внутри валидации массива не реализовано');
+
 export const useList = (
 	name: string,
+	validators: Array<ValidateFuncType>,
 	fieldMeta?: FieldMeta,
 	setFormContextItems?: (
 		fieldName: string,
 		setItems: (i: number[]) => number[],
+		errors: string[],
 		defaultValue?: any,
 	) => void,
 	setDefValue?: (fieldName: string, defValue: any) => void,
-): [ListInterface, number[]] => {
+): [ListInterface, string[]] => {
 	const fieldName = useMemo(() => {
 		return fieldMeta?.name ?? name;
 	}, [name, fieldMeta?.name]);
@@ -35,16 +43,43 @@ export const useList = (
 		}
 		return localItems;
 	}, [fieldMeta, localItems]);
+	const [errors, setErrors] = useState<string[]>();
+
+	const handleChange = useCallback(() => {
+		const hasValidation = Boolean(validators?.length);
+		const errorList: string[] = [];
+		if (hasValidation) {
+			validators.forEach((validate) => {
+				// TODO: вместо того, чтоб передавать в эту функцию для валидации items,
+				//   возможно, целесообразнее найти все значения массива
+				const result = validate(items, name, DEF_GET_VALUE);
+				if (result) {
+					errorList.push(result);
+				}
+			});
+		}
+
+		return errorList;
+	}, [validators, items, name]);
+
 	const setItems = useCallback(
 		(set: (i: number[]) => number[], defaultValue?: any) => {
+			const errors = handleChange();
 			if (setFormContextItems) {
-				setFormContextItems(fieldName, set, defaultValue);
+				setFormContextItems(fieldName, set, errors, defaultValue);
 			} else {
 				setLocalItems(set);
+				setErrors((s) => {
+					if (isEqual(s, errors)) {
+						return s;
+					}
+					return errors;
+				});
 			}
 		},
 		[fieldName, setFormContextItems, setLocalItems],
 	);
+
 	const addHandler = useCallback(
 		(
 			defaultFieldStateOrEvent: Record<string, any> | MouseEvent,
@@ -88,7 +123,7 @@ export const useList = (
 		[addHandler],
 	);
 
-	return useMemo<[ListInterface, number[]]>(() => {
+	return useMemo<[ListInterface, string[]]>(() => {
 		return [
 			{
 				add: simplifiedAddHandler,
@@ -98,7 +133,15 @@ export const useList = (
 				//  сейчас в качестве индекса мы принимаем номерное значение элемента в массиве
 				remove: removeHandler,
 			},
-			items,
+			fieldMeta?.errors || errors,
 		];
-	}, [addHandler, fieldName, items, mapHandler, removeHandler]);
+	}, [
+		addHandler,
+		errors,
+		fieldMeta?.errors,
+		fieldName,
+		items,
+		mapHandler,
+		removeHandler,
+	]);
 };
