@@ -214,7 +214,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				});
 
 			setIsSubmitting(true);
-			Promise.resolve(onSubmit(resValues as Values, setNestedErrors)).then(
+			Promise.resolve(onSubmit(resValues as Values, setNestedErrors, evt)).then(
 				function () {
 					setIsSubmitting(false);
 				},

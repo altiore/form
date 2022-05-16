@@ -1,4 +1,4 @@
-import {FormHTMLAttributes, ReactNode} from 'react';
+import {FormEvent, FormHTMLAttributes, ReactNode} from 'react';
 
 export interface FormProps<Values extends Record<string, any>>
 	extends Omit<FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
@@ -7,5 +7,6 @@ export interface FormProps<Values extends Record<string, any>>
 	onSubmit: (
 		values: Partial<Values>,
 		setErrors: (errors: Record<string, any>) => void,
+		evt: FormEvent,
 	) => Promise<any> | any;
 }
