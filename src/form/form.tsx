@@ -168,8 +168,11 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	);
 
 	const handleSubmit = useCallback(
-		(evt: FormEvent) => {
-			evt.preventDefault();
+		(evt?: FormEvent) => {
+			const localSubmitFunc = typeof evt === 'function' ? evt : onSubmit;
+			if (evt?.preventDefault) {
+				evt.preventDefault();
+			}
 			const formData = new window.FormData(formRef.current ?? undefined);
 			const values: Record<string, unknown> = {};
 			const fewValues: any[] = [];
@@ -214,11 +217,13 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				});
 
 			setIsSubmitting(true);
-			Promise.resolve(onSubmit(resValues as Values, setNestedErrors, evt)).then(
-				function () {
+			Promise.resolve(
+				localSubmitFunc(resValues as Values, setNestedErrors, evt),
+			)
+				.then(function () {
 					setIsSubmitting(false);
-				},
-			);
+				})
+				.catch(console.error);
 		},
 		[fields, onSubmit, setIsSubmitting, setNestedErrors],
 	);
@@ -230,6 +235,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 					fields,
 					formRef,
 					isSubmitting,
+					onSubmit: handleSubmit,
 					registerField,
 					setItems,
 				}}>

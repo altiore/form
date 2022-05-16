@@ -100,6 +100,7 @@ describe('~/form', () => {
 			expect(onSubmitFn).toHaveBeenCalledWith(
 				expect.objectContaining({string: '5'}),
 				expect.any(Function),
+				expect.any(Object),
 			);
 		});
 
@@ -121,6 +122,7 @@ describe('~/form', () => {
 			expect(onSubmitFn).toHaveBeenCalledWith(
 				expect.objectContaining({number: 5}),
 				expect.any(Function),
+				expect.any(Object),
 			);
 		});
 	});

@@ -1,10 +1,6 @@
-import React, {
-	ButtonHTMLAttributes,
-	useCallback,
-	useEffect,
-	useMemo,
-	useState,
-} from 'react';
+import React, {ButtonHTMLAttributes, useCallback, useMemo} from 'react';
+
+import omit from 'lodash/omit';
 
 import {FormContext} from '~/@common/form-context';
 import {FormContextState} from '~/@common/types';
@@ -14,6 +10,7 @@ export interface InternalSubmitButtonProps<T = HTMLButtonElement>
 	isInvalid: boolean;
 	isSubmitting: boolean;
 	isUntouched: boolean;
+	onSubmit?: (values: any) => Promise<any>;
 }
 
 interface SubmitButtonProps {
@@ -49,7 +46,6 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
 		return fields ? Object.values(fields).every((el) => el.isUntouched) : false;
 	}, [fields]);
 
-	const [submitting, setSubmitting] = useState(false);
 	const onClick = useCallback(
 		(evt) => {
 			evt.preventDefault();
@@ -67,28 +63,26 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
 					dispatchEvent(selects[i]);
 				}
 			}
-			setSubmitting(true);
-		},
-		[formState, setSubmitting],
-	);
-	useEffect(() => {
-		if (submitting) {
-			if (!getIsInvalid(formState.fields) && formState?.formRef?.current) {
+
+			// Если есть кастомное свойство onSubmit у кнопки, то будет использована функция из него
+			if (componentProps.onSubmit) {
+				formState.onSubmit(componentProps.onSubmit);
+			} else {
 				formState.formRef.current.requestSubmit();
 			}
-			setSubmitting(false);
-		}
-	}, [formState, setSubmitting, submitting]);
+		},
+		[componentProps.onSubmit, formState],
+	);
 
 	return useMemo(
 		() =>
 			React.createElement(component, {
-				...componentProps,
+				...omit(componentProps, ['onSubmit']),
 				isInvalid,
 				isSubmitting,
 				isUntouched,
 				onClick,
-				type: 'submit',
+				type: componentProps.onSubmit ? 'button' : 'submit',
 			}),
 		[componentProps, isInvalid, isSubmitting, isUntouched],
 	);

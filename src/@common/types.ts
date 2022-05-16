@@ -80,6 +80,7 @@ export type FormContextState = {
 		errors: string[],
 		defValue?: any,
 	) => void;
+	onSubmit: (evt?: any) => void;
 };
 
 export interface FieldArrayState {
