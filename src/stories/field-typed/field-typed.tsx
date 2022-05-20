@@ -8,22 +8,22 @@ export interface IField extends FieldProps {
 }
 
 export const FieldNumber = createField<IField>(FieldType.NUMBER, (props) => {
-	const {defaultValue, errors, inputRef, label, name} = props;
+	const {defaultValue, error, inputRef, label, name, type} = props;
 
 	console.log('FieldNumber.render', {
 		props,
 	});
 	return (
-		<div>
-			<span className="form-label">{label}</span>
+		<div className="mb-3">
+			<label className="form-label">{label}</label>
 			<input
-				className="form-control w-75"
-				type="number"
+				className="form-control"
+				type={type}
 				defaultValue={defaultValue}
 				name={name}
 				ref={inputRef}
 			/>
-			<span>{errors[0]}</span>
+			<span>{error}</span>
 		</div>
 	);
 });
@@ -35,7 +35,7 @@ export const FieldBoolean = createField<IField>(FieldType.BOOLEAN, (props) => {
 		props,
 	});
 	return (
-		<div className="w-75 mb-3 d-flex-column">
+		<div className="mb-3 d-flex-column">
 			<div>
 				<label className="form-label d-inline-flex">{label}</label>
 			</div>

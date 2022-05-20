@@ -1,10 +1,10 @@
-import {FieldMeta, ValidateFuncType} from '~/@common/types';
+import {FieldMeta, ValidateFunc} from '~/@common/types';
 
 import {InternalFieldArrayProps} from './internal-field-array-props';
 
 export interface ValidatedFieldArrayProps<T> {
 	component: (
-		props: Omit<T, 'validators'> & InternalFieldArrayProps,
+		props: Omit<T, 'validate'> & InternalFieldArrayProps,
 	) => JSX.Element;
 	componentProps: T;
 	field: FieldMeta;
@@ -12,8 +12,8 @@ export interface ValidatedFieldArrayProps<T> {
 	setItems: (
 		fieldName: string,
 		setItems: (i: number[]) => number[],
-		errors: [],
+		setErrors: (i: number[]) => string[],
 		defValue?: any,
 	) => void;
-	validators: Array<ValidateFuncType>;
+	validators: Array<ValidateFunc>;
 }

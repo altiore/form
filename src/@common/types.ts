@@ -48,7 +48,7 @@ export type RegisterField = (
 	fieldName: string,
 	fieldType?: FieldType,
 	defaultValue?: any,
-	hasValidators?: boolean,
+	validators?: Array<ValidateFunc>,
 ) => void;
 
 export type SetErrors = (name: string, errors: string[] | undefined) => void;
@@ -67,6 +67,7 @@ export type FieldMeta<ValueType = any> = {
 	// избыточные поля, которые нужны ТОЛЬКО для удобства
 	isInvalid: boolean;
 	error?: string;
+	validators: Array<ValidateFunc>;
 };
 
 export type FormContextState = {
@@ -77,7 +78,7 @@ export type FormContextState = {
 	setItems: (
 		fieldName: string,
 		setItems: (i: number[]) => number[],
-		errors: string[],
+		getErrors: (i: number[]) => string[],
 		defValue?: any,
 	) => void;
 	onSubmit: (evt?: any) => void;
@@ -88,7 +89,7 @@ export interface FieldArrayState {
 }
 
 // Если возвращает строку - это означает, что есть ошибка. undefined означает, что ошибки нет
-export type ValidateFuncType = (
+export type ValidateFunc = (
 	value: any,
 	fieldName?: string,
 	getFieldValueByName?: (name: string) => any,
@@ -97,4 +98,4 @@ export type ValidateFuncType = (
 export type ReusableValidator<T> = (
 	getMessage: null | undefined | string | ((value: any, forCheck: T) => string),
 	forCheck?: T,
-) => ValidateFuncType;
+) => ValidateFunc;

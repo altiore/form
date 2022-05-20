@@ -40,7 +40,7 @@ const Parent = ({name}: any) => {
 	return (
 		<Form onSubmit={console.log}>
 			<span>{name}</span>
-			<Field name="test" validators={[isEmail(null)]} />
+			<Field name="test" validate={[isEmail(null)]} />
 			<FieldMultiSelect name="variants" />
 		</Form>
 	);

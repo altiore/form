@@ -35,11 +35,7 @@ const Template: ComponentStory<typeof Submit> = (args) => (
 					</div>
 					<div className="col-6" />
 					<div className="col-6">
-						<Field
-							name="email"
-							label="Email"
-							validators={[minLength(null, 3)]}
-						/>
+						<Field name="email" label="Email" validate={[minLength(null, 3)]} />
 					</div>
 					<div className="col-6" />
 					<div className="col-6">
@@ -47,7 +43,7 @@ const Template: ComponentStory<typeof Submit> = (args) => (
 							defaultValue="Test"
 							name="first"
 							label="First"
-							validators={[minLength(null, 3)]}
+							validate={[minLength(null, 3)]}
 						/>
 					</div>
 					<div className="col-6" />
@@ -80,7 +76,7 @@ export const CustomSubmitHandler = (args: any) => {
 							<Field
 								name="email"
 								label="Email"
-								validators={[minLength(null, 3)]}
+								validate={[minLength(null, 3)]}
 							/>
 						</div>
 						<div className="col-6" />
@@ -89,7 +85,7 @@ export const CustomSubmitHandler = (args: any) => {
 								defaultValue="Test"
 								name="first"
 								label="First"
-								validators={[minLength(null, 3)]}
+								validate={[minLength(null, 3)]}
 							/>
 						</div>
 						<div className="col-6" />

@@ -13,7 +13,11 @@ Productive, flexible and extensible forms with easy-to-use validation and the mo
 
 ## Why?
 
-To simplify and speed up work with forms. If you are tired of the terribly slow forms of React and tired to write the same things again and again
+Let's face it, forms are really verbose in React.
+This package will help you to simplify and speed up work with forms
+
+1. Validation and error messages
+2. Handling form submission
 
 ## Installation:
 

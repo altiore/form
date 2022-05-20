@@ -16,5 +16,11 @@ export const getErrorMessage = <ForCheck>(
 			error = getMessage as string;
 		}
 	}
+	if (forCheck !== undefined) {
+		error = error.replace('$COMPARATOR', String(forCheck));
+	}
+	if (value !== undefined) {
+		error = error.replace('$VALUE', String(value));
+	}
 	return error;
 };

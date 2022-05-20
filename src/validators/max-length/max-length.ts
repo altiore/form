@@ -1,8 +1,8 @@
-import {ReusableValidator, ValidateFuncType} from '~/@common/types';
+import {ReusableValidator, ValidateFunc} from '~/@common/types';
 import {getErrorMessage} from '~/validators/@common/get-error-message';
 
 export const maxLength: ReusableValidator<number> =
-	(getMessage, length: number): ValidateFuncType =>
+	(getMessage, length: number): ValidateFunc =>
 	(value) => {
 		if (typeof value?.length !== 'number') {
 			throw new Error(

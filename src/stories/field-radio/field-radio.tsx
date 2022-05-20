@@ -11,12 +11,10 @@ export const FieldRadio = createField<IField>(FieldType.ENUM, (props) => {
 	const {defaultValue, label, name} = props;
 
 	return (
-		<div>
+		<div className="mb-3">
 			<p>{label}</p>
 
-			<div
-				className="btn-group d-flex justify-content-evenly w-50"
-				role="group">
+			<div className="btn-group d-flex justify-content-evenly" role="group">
 				<div>
 					<input
 						className="form-check-input"

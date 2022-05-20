@@ -2,18 +2,18 @@ import React from 'react';
 
 import {FieldArrayContext} from '~/@common/field-array-context';
 import {FormContext} from '~/@common/form-context';
-import {FieldMeta, FieldType, ValidateFuncType} from '~/@common/types';
+import {FieldMeta, FieldType, ValidateFunc} from '~/@common/types';
 
 import NamedField, {InternalFieldProps} from './named-field';
 
 export type FieldProps = {
 	name: string;
 	defaultValue?: any;
-	validators?: Array<ValidateFuncType>;
+	validate?: ValidateFunc | Array<ValidateFunc>;
 };
 
 /**
- * createField принимает пользовательский компонент и возвращает {name, validators, ...props}
+ * createField принимает пользовательский компонент и возвращает {name, validate, ...props}
  *
  * @see https://@altiore/form'.github.io/...
  * @category Components
@@ -53,7 +53,7 @@ export function createField<
 >(
 	options: Options | FieldType,
 	component: (
-		props: Omit<T, 'validators'> & InternalFieldProps<Input> & FieldMeta,
+		props: Omit<T, 'validate'> & InternalFieldProps<Input> & FieldMeta,
 	) => JSX.Element,
 ): <Values extends Record<string, any> = Record<string, any>>(
 	props: T & {name: keyof Values},
@@ -64,7 +64,7 @@ export function createField<
 	Input extends HTMLElement = HTMLInputElement,
 >(
 	component: (
-		props: Omit<T, 'validators'> & InternalFieldProps<Input> & FieldMeta,
+		props: Omit<T, 'validate'> & InternalFieldProps<Input> & FieldMeta,
 	) => JSX.Element,
 ): <Values extends Record<string, any> = Record<string, any>>(
 	props: T & {name: keyof Values},
@@ -78,10 +78,10 @@ export function createField<
 		| FieldType
 		| Options
 		| ((
-				props: Omit<T, 'validators'> & InternalFieldProps<Input> & FieldMeta,
+				props: Omit<T, 'validate'> & InternalFieldProps<Input> & FieldMeta,
 		  ) => JSX.Element),
 	componentInSecondParam?: (
-		props: Omit<T, 'validators'> & InternalFieldProps<Input> & FieldMeta,
+		props: Omit<T, 'validate'> & InternalFieldProps<Input> & FieldMeta,
 	) => JSX.Element,
 ): <Values extends Record<string, any> = Record<string, any>>(
 	props: T & {name: keyof Values},
@@ -98,28 +98,28 @@ export function createField<
 			: DEF_HIDE_ERROR_IN_X_SEC
 		: DEF_HIDE_ERROR_IN_X_SEC;
 	const component: (
-		props: Omit<T, 'validators'> & InternalFieldProps<Input> & FieldMeta,
+		props: Omit<T, 'validate'> & InternalFieldProps<Input> & FieldMeta,
 	) => JSX.Element =
 		componentInSecondParam ??
 		(optionsOrComponent as (
-			props: Omit<T, 'validators'> & InternalFieldProps<Input> & FieldMeta,
+			props: Omit<T, 'validate'> & InternalFieldProps<Input> & FieldMeta,
 		) => JSX.Element);
 
-	return ({name, validators, ...props}): JSX.Element => {
+	return ({name, validate, ...props}): JSX.Element => {
 		return (
 			<FormContext.Consumer>
 				{(formState) => (
 					<FieldArrayContext.Consumer>
 						{(fieldArrayState) => {
 							return (
-								<NamedField<Omit<T, 'name' | 'validators'>, Input>
+								<NamedField<Omit<T, 'name' | 'validate'>, Input>
 									fieldArrayState={fieldArrayState}
 									formState={formState}
 									component={component}
 									componentProps={props}
 									providedName={name}
 									type={fieldType}
-									validators={validators}
+									validate={validate}
 									hideErrorInXSec={hideErrorInXSec}
 								/>
 							);

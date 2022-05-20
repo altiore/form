@@ -2,6 +2,7 @@ import React from 'react';
 
 import {FieldArrayContext} from '~/@common/field-array-context';
 import {FormContext} from '~/@common/form-context';
+import {FieldMeta} from '~/@common/types';
 
 import NamedFieldArray, {InternalFieldArrayProps} from './named-field-array';
 import {FieldArrayProps} from './types/field-array-props';
@@ -29,7 +30,7 @@ import {FieldArrayProps} from './types/field-array-props';
  *				return (
  *					<div key={key}>
  *						<div style={{display: 'flex'}}>
- * 							<Field label={''} name="ingredient" validators={[minLength(3)]} />
+ * 							<Field label={''} name="ingredient" validate={[minLength(3)]} />
  *							<ArrayTags name="tags" />
  *							<button onClick={remove} type="button">
  *								-
@@ -53,25 +54,25 @@ import {FieldArrayProps} from './types/field-array-props';
  */
 export const createFieldArray = <T extends FieldArrayProps>(
 	component: (
-		props: Omit<T, 'validators'> & InternalFieldArrayProps,
+		props: Omit<T, 'validate'> & InternalFieldArrayProps & FieldMeta,
 	) => JSX.Element,
 ): (<Values extends Record<string, any> = Record<string, any>>(
 	props: T & {name: keyof Values},
 ) => JSX.Element) => {
-	return ({name, validators, ...props}) => {
+	return ({name, validate, ...props}) => {
 		return (
 			<FormContext.Consumer>
 				{(formState) => (
 					<FieldArrayContext.Consumer>
 						{(fieldArrayState) => {
 							return (
-								<NamedFieldArray<Omit<T, 'name' | 'validators'>>
+								<NamedFieldArray<Omit<T, 'name' | 'validate'>>
 									fieldArrayState={fieldArrayState}
 									formState={formState}
 									component={component}
 									componentProps={props}
 									providedName={name}
-									validators={validators}
+									validate={validate}
 								/>
 							);
 						}}

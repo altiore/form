@@ -19,10 +19,10 @@ export default {
 } as ComponentMeta<typeof FieldArray>;
 
 export const SimplestFieldArray: ComponentStory<typeof FieldArray> = () => (
-	<>
+	<div>
 		<legend>Массив полей</legend>
 		<FieldArray name="ingredients" />
-	</>
+	</div>
 );
 
 export const InsideFormFieldArraySimplest: ComponentStory<typeof FieldArray> =
@@ -49,9 +49,14 @@ export const InsideFormFieldArrayWithValidators: ComponentStory<
 		<Form
 			className="shadow border border-secondary rounded-3 p-3 w-75"
 			onSubmit={onSubmit}>
-			<Field label="Название" name="title" />
-			<FieldArray name="ingredients" validators={[minLength(null, 2)]} />
-			<SubmitBtn className="btn btn-success mt-3">Отправить</SubmitBtn>
+			<Field label="Название" name="title" validate={[minLength(null, 3)]} />
+			<FieldArray
+				name="ingredients"
+				validate={[minLength('Минимум 2 ингредиента', 2)]}
+			/>
+			<SubmitBtn skipUntouched className="btn btn-success mt-3">
+				Отправить
+			</SubmitBtn>
 		</Form>
 	</>
 );

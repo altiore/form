@@ -6,13 +6,13 @@ import {FieldNumber} from '~/stories/field-typed';
 import {minLength} from '~/validators';
 
 export const TagsArray = createFieldArray<FieldArrayProps>(({list}) => {
-	const cb = useCallback(({key, remove}) => {
+	const renderItem = useCallback(({key, remove}) => {
 		return (
 			<div className="w-75 mb-3" key={key}>
-				<div className="shadow border border-secondary rounded-3 mb-3 p-3">
+				<div className="shadow border border-secondary p-3">
 					<div className="d-flex justify-content-end">
 						<button className="btn btn-outline-danger" onClick={remove}>
-							<img src="dash.svg" />
+							<img src="/dash.svg" />
 						</button>
 					</div>
 					<Field label={'Метка'} name="tag" />
@@ -24,12 +24,12 @@ export const TagsArray = createFieldArray<FieldArrayProps>(({list}) => {
 
 	return (
 		<div>
-			{list.map(cb)}
+			{list.map(renderItem)}
 			<button
 				className="btn btn-outline-success"
 				onClick={list.add}
 				type="button">
-				<img src="plus.svg" />
+				<img src="/plus.svg" />
 				ДОБАВИТЬ
 			</button>
 		</div>
@@ -40,8 +40,8 @@ export interface IFieldArray extends FieldArrayProps {
 	label?: string;
 }
 
-export const FieldArray = createFieldArray<IFieldArray>(({list, errors}) => {
-	const cb = useCallback(({key, remove, append, prepend}) => {
+export const FieldArray = createFieldArray<IFieldArray>(({list, error}) => {
+	const renderIngredient = useCallback(({key, remove, append, prepend}) => {
 		return (
 			<div className="w-75 mt-3" key={key}>
 				<button
@@ -54,14 +54,14 @@ export const FieldArray = createFieldArray<IFieldArray>(({list, errors}) => {
 					<div>
 						<div className="d-flex justify-content-end">
 							<button className="btn btn-outline-danger" onClick={remove}>
-								<img src="dash.svg" />
+								<img src="/dash.svg" />
 							</button>
 						</div>
 
 						<Field
 							label={'Название'}
 							name="ingredient"
-							validators={[minLength(null, 3)]}
+							validate={[minLength(null, 3)]}
 						/>
 
 						<TagsArray name="tags" />
@@ -79,20 +79,20 @@ export const FieldArray = createFieldArray<IFieldArray>(({list, errors}) => {
 
 	return (
 		<div>
-			<div>{errors[0]}</div>
-			{list.map(cb)}
+			{list.map(renderIngredient)}
 			<button
 				className="btn btn-outline-success"
 				onClick={list.add}
 				type="button">
-				Добавить массив полей
+				Добавить ингредиент
 			</button>
+			<span className="invalid-feedback d-block">{error}</span>
 		</div>
 	);
 });
 
 export const FieldArraySimplest = createFieldArray<IFieldArray>(({list}) => {
-	const cb = useCallback(({key, remove}) => {
+	const renderIng = useCallback(({key, remove}) => {
 		return (
 			<div className=" w-75 mt-3" key={key}>
 				<div className="shadow border border-secondary rounded-3 mb-3 p-3">
@@ -108,13 +108,13 @@ export const FieldArraySimplest = createFieldArray<IFieldArray>(({list}) => {
 						<Field
 							label="Название"
 							name="title"
-							validators={[minLength(null, 3)]}
+							validate={[minLength(null, 3)]}
 						/>
 
 						<Field
 							label="Описание"
 							name="desc"
-							validators={[minLength(null, 3)]}
+							validate={[minLength(null, 3)]}
 						/>
 					</div>
 				</div>
@@ -124,12 +124,12 @@ export const FieldArraySimplest = createFieldArray<IFieldArray>(({list}) => {
 
 	return (
 		<>
-			{list.map(cb)}
+			{list.map(renderIng)}
 			<button
 				className="btn btn-outline-success"
 				onClick={list.add}
 				type="button">
-				Добавить ингредиент 1
+				Добавить ингредиент
 			</button>
 		</>
 	);
@@ -152,12 +152,12 @@ export const FieldArrayWithAddingDefValue = createFieldArray<IFieldArray>(
 						<Field
 							label="Название"
 							name="title"
-							validators={[minLength(null, 3)]}
+							validate={[minLength(null, 3)]}
 						/>
 						<Field
 							label="Описание"
 							name="desc"
-							validators={[minLength(null, 3)]}
+							validate={[minLength(null, 3)]}
 						/>
 					</div>
 				</div>

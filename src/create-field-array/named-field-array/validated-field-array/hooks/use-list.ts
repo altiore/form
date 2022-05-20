@@ -13,7 +13,7 @@ import {
 	InsertPosition,
 	ListInterface,
 	ListItem,
-	ValidateFuncType,
+	ValidateFunc,
 } from '~/@common/types';
 
 import {add, map, remove} from './utils';
@@ -23,12 +23,12 @@ const DEF_GET_VALUE = () =>
 
 export const useList = (
 	name: string,
-	validators: Array<ValidateFuncType>,
+	validators: Array<ValidateFunc>,
 	fieldMeta?: FieldMeta,
 	setFormContextItems?: (
 		fieldName: string,
 		setItems: (i: number[]) => number[],
-		errors: string[],
+		getErrors: (i: number[]) => string[],
 		defaultValue?: any,
 	) => void,
 	setDefValue?: (fieldName: string, defValue: any) => void,
@@ -42,42 +42,49 @@ export const useList = (
 			return fieldMeta.items;
 		}
 		return localItems;
-	}, [fieldMeta, localItems]);
+	}, [fieldMeta?.items, localItems, name]);
+
 	const [errors, setErrors] = useState<string[]>();
 
-	const handleChange = useCallback(() => {
-		const hasValidation = Boolean(validators?.length);
-		const errorList: string[] = [];
-		if (hasValidation) {
-			validators.forEach((validate) => {
-				// TODO: вместо того, чтоб передавать в эту функцию для валидации items,
-				//   возможно, целесообразнее найти все значения массива
-				const result = validate(items, name, DEF_GET_VALUE);
-				if (result) {
-					errorList.push(result);
-				}
-			});
-		}
+	const getErrors = useCallback(
+		(curItems: number[]) => {
+			const hasValidation = Boolean(validators?.length);
+			const errorList: string[] = [];
+			if (hasValidation) {
+				validators.forEach((validateOne) => {
+					// TODO: вместо того, чтоб передавать в эту функцию для валидации items,
+					//   возможно, целесообразнее найти все значения массива
+					const result = validateOne(curItems, name, DEF_GET_VALUE);
+					if (result) {
+						errorList.push(result);
+					}
+				});
+			}
 
-		return errorList;
-	}, [validators, items, name]);
+			return errorList;
+		},
+		[validators, name],
+	);
 
 	const setItems = useCallback(
 		(set: (i: number[]) => number[], defaultValue?: any) => {
-			const errors = handleChange();
 			if (setFormContextItems) {
-				setFormContextItems(fieldName, set, errors, defaultValue);
+				setFormContextItems(fieldName, set, getErrors, defaultValue);
 			} else {
-				setLocalItems(set);
-				setErrors((s) => {
-					if (isEqual(s, errors)) {
-						return s;
-					}
-					return errors;
+				setLocalItems((curItems) => {
+					const newItems = set(curItems);
+					setErrors((s) => {
+						const errors = getErrors(newItems);
+						if (isEqual(s, errors)) {
+							return s;
+						}
+						return errors;
+					});
+					return newItems;
 				});
 			}
 		},
-		[fieldName, setFormContextItems, setLocalItems],
+		[fieldName, getErrors, setFormContextItems, setLocalItems],
 	);
 
 	const addHandler = useCallback(

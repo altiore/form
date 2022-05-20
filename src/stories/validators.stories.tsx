@@ -35,7 +35,7 @@ export const ComparePasswordField: ComponentStory<typeof Field> = ({
 							name={PASSWORD_NAME}
 							label="Пароль"
 							defaultValue=""
-							validators={[minLength(null, 3)]}
+							validate={[minLength(null, 3)]}
 						/>
 					</div>
 					<div className=" w-75">
@@ -43,7 +43,7 @@ export const ComparePasswordField: ComponentStory<typeof Field> = ({
 							name="repeatPassword"
 							label="Повторите пароль"
 							defaultValue=""
-							validators={[
+							validate={[
 								minLength(null, 3),
 								comparePassword(null, PASSWORD_NAME),
 							]}
@@ -70,7 +70,7 @@ export const IsEmailField: ComponentStory<typeof Field> = ({onSubmit}: any) => {
 							name="email"
 							label="Введите Email"
 							defaultValue=""
-							validators={[minLength(null, 4), isEmail(null)]}
+							validate={[minLength(null, 4), isEmail(null)]}
 						/>
 					</div>
 				</Form>
@@ -96,7 +96,7 @@ export const IsRequiredField: ComponentStory<typeof Field> = ({
 							name="text"
 							label="Введите текст"
 							defaultValue=""
-							validators={[isRequired(null)]}
+							validate={[isRequired(null)]}
 						/>
 					</div>
 				</Form>

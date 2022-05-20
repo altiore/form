@@ -10,7 +10,6 @@ export interface InternalSubmitButtonProps<T = HTMLButtonElement>
 	isInvalid: boolean;
 	isSubmitting: boolean;
 	isUntouched: boolean;
-	onSubmit?: (values: any) => Promise<any>;
 }
 
 interface SubmitButtonProps {
@@ -19,25 +18,19 @@ interface SubmitButtonProps {
 	formState?: FormContextState;
 }
 
+export interface SubmitProps {
+	onSubmit?: (values: any) => Promise<any>;
+}
+
 const getIsInvalid = (fields: FormContextState['fields']) =>
 	fields ? Object.values(fields).some((el) => el.isInvalid) : false;
-
-const dispatchEvent = (element: HTMLElement) => {
-	if (element.dispatchEvent && window.MouseEvent) {
-		element.dispatchEvent(
-			new window.MouseEvent('blur', {bubbles: true, cancelable: true}),
-		);
-	} else {
-		(element as any).fireEvent(`onblur`);
-	}
-};
 
 const SubmitButton: React.FC<SubmitButtonProps> = ({
 	component,
 	componentProps,
 	formState,
 }) => {
-	const fields = useMemo(() => formState?.fields, [formState]);
+	const fields = useMemo(() => formState?.fields, [formState?.fields]);
 	const isInvalid = useMemo(() => {
 		return getIsInvalid(fields);
 	}, [fields]);
@@ -50,19 +43,6 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
 		(evt) => {
 			evt.preventDefault();
 			evt.stopPropagation();
-			if (formState?.formRef?.current) {
-				const inputs = formState.formRef.current.getElementsByTagName('input');
-				const selects =
-					formState.formRef.current.getElementsByTagName('select');
-				const inputsLength = inputs.length;
-				for (let i = 0; i < inputsLength; i++) {
-					dispatchEvent(inputs[i]);
-				}
-				const selectsLength = selects.length;
-				for (let i = 0; i < selectsLength; i++) {
-					dispatchEvent(selects[i]);
-				}
-			}
 
 			// Если есть кастомное свойство onSubmit у кнопки, то будет использована функция из него
 			if (componentProps.onSubmit) {
@@ -71,7 +51,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
 				formState.formRef.current.requestSubmit();
 			}
 		},
-		[componentProps.onSubmit, formState],
+		[componentProps.onSubmit, fields, formState],
 	);
 
 	return useMemo(
@@ -84,17 +64,23 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
 				onClick,
 				type: componentProps.onSubmit ? 'button' : 'submit',
 			}),
-		[componentProps, isInvalid, isSubmitting, isUntouched],
+		[componentProps, fields, isInvalid, isSubmitting, isUntouched],
 	);
 };
 
-export function createSubmitButton<T extends any = HTMLButtonElement>(
-	component: (props: InternalSubmitButtonProps<T>) => JSX.Element,
+export function createSubmitButton<
+	T extends SubmitProps,
+	El extends any = HTMLButtonElement,
+>(
+	component: (
+		props: Omit<T, 'onSubmit'> & InternalSubmitButtonProps<El>,
+	) => JSX.Element,
 ): (
-	props: Omit<
-		InternalSubmitButtonProps,
-		'isInvalid' | 'isSubmitting' | 'isUntouched' | 'type'
-	>,
+	props: T &
+		Omit<
+			InternalSubmitButtonProps,
+			'isInvalid' | 'isSubmitting' | 'isUntouched' | 'type'
+		>,
 ) => JSX.Element {
 	return (props): JSX.Element => {
 		return (

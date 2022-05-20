@@ -1,8 +1,8 @@
-import {ReusableValidator, ValidateFuncType} from '~/@common/types';
+import {ReusableValidator, ValidateFunc} from '~/@common/types';
 import {getErrorMessage} from '~/validators/@common/get-error-message';
 
 export const minLength: ReusableValidator<number> =
-	(getMessage, length: number): ValidateFuncType =>
+	(getMessage, length: number): ValidateFunc =>
 	(value: string | any[] = '') => {
 		if (typeof value?.length !== 'number') {
 			throw new Error(
@@ -12,7 +12,7 @@ export const minLength: ReusableValidator<number> =
 		if (length < 0) {
 			throw new Error(`Заданная длина не может быть меньше нуля`);
 		}
-		if (value.length < length) {
+		if (value.length <= length) {
 			const defError = `Минимальная длина введенного значения - ${length}`;
 			return getErrorMessage(value, length, defError, getMessage);
 		}
