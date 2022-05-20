@@ -13,7 +13,21 @@
 
 ## Зачем?
 
-Чтобы облегчить и ускорить работу с формами. Если вы устали от страшно медленных форм React и устали постоянно писать одно и то же
+Давайте смотреть правде в глаза, формы в React многословны и неудобны
+Эта библиотека поможет облегчить и ускорить работу с формами.
+Она выполняет следующие основные задачи:
+
+1. Валидация форм
+2. Управление отправкой данных
+3. Удобная кастомизация переиспользуемых компонентов формы (инпутов, селектов,...)
+
+### Особенность:
+
+Эта библиотека, в отличие от большинства других подобных, не хранит состояние полей ввода.
+В рамках @altiore/form мы считаем, что данные, введенные в форму, хранятся на странице.
+Если вам нужно обеспечивать хранение данных из инпутов - у вас есть полная свобода реализовать это, используя ваш любимый менеджер состояний.
+Это особенность означает, что если вы скроете поля для ввода, данные не будут отправлены.
+Другими словами: скрытие данных должно быть эквивалентно отправке и в момент скрытия данных нужно их сохранять, используя ваш любимый менеджер состояний
 
 ## Установка:
 
@@ -61,15 +75,14 @@ import React, {useCallback} from 'react';
 import {createField, Form} from '@altiore/form';
 
 /**
- * error и name добавляются вспомогательной функцией createField
+ * error здесь добавляются вспомогательной функцией createField
+ * name и label приходят из свойств, указанных в месте использования
  */
 const FieldView = ({error, name, label}) => {
   return (
     <div>
-      <label htmlFor="input-id">
-        {label}
-        <input id="input-id" name={name} />
-      </label>
+      <label>{label}</label>
+      <input name={name} />
       <span>{error}</span>
     </div>
   );
@@ -85,13 +98,9 @@ const MyForm = () => {
   return (
     <Form onSubmit={handleSubmit}>
       <Field
-        label="Field Label"
+        label="Label"
         name="name"
-        validators={
-          [
-            /* здесь вы можете добавить функции для валидации */
-          ]
-        }
+        validate={/* здесь вы можете добавить функцию/массив функций для валидации */}
       />
       <button type="submit">Submit</button>
     </Form>
@@ -100,5 +109,70 @@ const MyForm = () => {
 ```
 
 ## Валидации форм
+
+> Мы предпочитаем валидацию полей на уровне поля. По аналогии с тем,
+> как это реализовано в браузере.
+> Но вы можете так же валидировать все данные в момент отправки
+
+```tsx
+import React, {useCallback} from 'react';
+
+import {Form, isEmail, isRequired} from '@altiore/form';
+
+const tooShort = (value) => {
+  if (value.length < 5) {
+    return 'Слишком коротко';
+  }
+};
+
+const MyForm = () => {
+  const handleSubmit = useCallback((values) => {
+    console.log('form.values is', values);
+  }, []);
+
+  return (
+    <Form onSubmit={handleSubmit}>
+      <Field label="Email" name="email" validate={[isRequired(), isEmail()]} />
+      <Field label="Long" name="long" validate={tooShort} />
+      <button type="submit">Submit</button>
+    </Form>
+  );
+};
+```
+
+#### Вы можете валидировать данные и глобально тоже:
+
+```tsx
+import React, {useCallback} from 'react';
+
+import {Form, isEmail, isRequired} from '@altiore/form';
+
+const validate = (values) => {
+  const errors = {};
+  if (values.long?.length < 5) {
+    errors.long = 'Слишком коротко';
+  }
+
+  return errors;
+};
+
+const MyForm = () => {
+  const handleSubmit = useCallback((values, setErrors) => {
+    const errors = validate(values);
+    if (Object.keys(errors)?.length) {
+      setErrors(errors);
+      return;
+    }
+    console.log('Верные данные для отправки', values);
+  }, []);
+
+  return (
+    <Form onSubmit={handleSubmit}>
+      <Field label="Long" name="long" />
+      <button type="submit">Submit</button>
+    </Form>
+  );
+};
+```
 
 [Детальный пример валидации](.docs/valid.md)

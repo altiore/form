@@ -27,7 +27,7 @@ const SimplestFieldWithValidator = () => (
       name="second"
       label="Second"
       defaultValue=""
-      validators={[customFieldLevelValidation]}
+      validate={customFieldLevelValidation}
     />
   </Form>
 );
