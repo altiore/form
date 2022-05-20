@@ -95,7 +95,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 
 	const setEmptyErrors = useCallback(() => {
 		if (getMounted()) {
-			handleSetErrors(DEF_ERRORS);
+			handleSetErrors([]);
 		}
 	}, [getMounted, handleSetErrors]);
 
