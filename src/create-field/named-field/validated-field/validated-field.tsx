@@ -1,5 +1,7 @@
 import React, {useMemo, useRef} from 'react';
 
+import {ValidateFunc} from '~/@common/types';
+
 import {useValidateInput} from './hooks/use-validate-input';
 import {ValidatedFieldProps} from './types/validated-field-props';
 import {mergeMetaPropsToField} from './utils/merge-meta-props-to-field';
@@ -16,7 +18,9 @@ export const ValidatedField = <
 	type,
 	validators,
 	hideErrorInXSec,
-}: ValidatedFieldProps<T, Input>): JSX.Element => {
+}: Omit<ValidatedFieldProps<T, Input>, 'validate'> & {
+	validators: Array<ValidateFunc>;
+}): JSX.Element => {
 	const inputRef = useRef<Input>();
 	const {errors, setErrors} = useValidateInput<Input>(
 		inputRef as any,

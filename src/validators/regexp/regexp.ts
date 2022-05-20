@@ -1,8 +1,8 @@
-import {ReusableValidator, ValidateFuncType} from '~/@common/types';
+import {ReusableValidator, ValidateFunc} from '~/@common/types';
 import {getErrorMessage} from '~/validators/@common/get-error-message';
 
 export const regexp: ReusableValidator<RegExp> =
-	(getMessage, regex: RegExp): ValidateFuncType =>
+	(getMessage, regex: RegExp): ValidateFunc =>
 	(value) => {
 		const stringedValue = value.toString();
 		if (!regex.test(stringedValue)) {

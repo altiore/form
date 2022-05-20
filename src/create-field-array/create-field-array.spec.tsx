@@ -13,7 +13,7 @@ const FieldArray = createFieldArray(({list}) => {
 	return (
 		<>
 			{list.map(({key}) => {
-				return <Field validators={[]} key={key} label="Title" name="title" />;
+				return <Field validate={[]} key={key} label="Title" name="title" />;
 			})}
 		</>
 	);

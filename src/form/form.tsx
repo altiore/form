@@ -7,7 +7,8 @@ import set from 'lodash/set';
 import unset from 'lodash/unset';
 
 import {FormContext} from '~/@common/form-context';
-import {FieldType, FormContextState} from '~/@common/types';
+import {FieldType, FormContextState, ValidateFunc} from '~/@common/types';
+import {getNodeByName, getValueByTypeAndTarget} from '~/@common/utils';
 
 import {toFlatErrors} from './form.utils';
 import {FormProps} from './types';
@@ -38,7 +39,9 @@ const getItemsFromDefVal = (_: any, i: number) => i;
 /**
  * Форма - элемент взаимодействия пользователя с сайтом или приложением
  *
- * Простейший вариант формы выглядит следующим образом: мы используем элементы <input name="name"/> и <button type="submit">Submit</button>, предварительно импортировав ее из библиотеки <a href ='https://github.com/altiore/form'>@altiore/form</a>.
+ * Простейший вариант формы выглядит следующим образом: мы используем элементы <input name="name"/>
+ * и <button type="submit">Submit</button>, предварительно импортировав ее из библиотеки <a href
+ * ='https://github.com/altiore/form'>@altiore/form</a>.
  */
 
 export const Form = <Values extends Record<string, any> = Record<string, any>>({
@@ -90,27 +93,36 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 		(
 			fieldName: string,
 			setItemsArg: (i: number[]) => number[],
-			errors,
+			getErrors,
 			defaultValue?: any,
 		) => {
-			setFields((s) => ({
-				...s,
-				[fieldName]: {
-					...s[fieldName],
-					defaultValue,
-					error: errors?.[0],
-					errors,
-					isInvalid: Boolean(errors?.length),
-					isUntouched: false,
-					items: setItemsArg(s[fieldName].items),
-				},
-			}));
+			setFields((s) => {
+				const items = setItemsArg(s[fieldName].items);
+				const errors = getErrors(items);
+				return {
+					...s,
+					[fieldName]: {
+						...s[fieldName],
+						defaultValue,
+						error: errors?.[0],
+						errors,
+						isInvalid: Boolean(errors?.length),
+						isUntouched: false,
+						items,
+					},
+				};
+			});
 		},
 		[setFields],
 	);
 
 	const registerField = useCallback(
-		(fieldName: string, fieldType: FieldType, fieldDefaultValue?: any) => {
+		(
+			fieldName: string,
+			fieldType: FieldType,
+			fieldDefaultValue?: any,
+			validators?: Array<ValidateFunc>,
+		) => {
 			setFields((s): FormContextState['fields'] => {
 				const fieldNameArr = fieldName.split('.');
 
@@ -142,13 +154,14 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 						isUntouched: true,
 						items:
 							fieldType === FieldType.ARRAY
-								? defaultValue
+								? Array.isArray(defaultValue)
 									? defaultValue.map(getItemsFromDefVal)
 									: []
 								: undefined,
 						name: fieldName,
 						setErrors: setErrors.bind({}, fieldName),
 						type: fieldType,
+						validators: validators ? validators : [],
 					},
 				};
 			});
@@ -173,6 +186,39 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 			if (evt?.preventDefault) {
 				evt.preventDefault();
 			}
+
+			// 1. Validate
+			let isFormInvalid = false;
+			Object.entries(fields).forEach(([fieldName, fieldMeta]: any) => {
+				if (fieldMeta.validators) {
+					const type: FieldType = fieldMeta.type || FieldType.TEXT;
+					let value: any;
+					if (type === FieldType.ARRAY) {
+						// TODO: для элемента массива получить все данные из вложеных инпутов
+						value = fieldMeta.items;
+					} else {
+						const target = getNodeByName(fieldMeta.name, formRef);
+						value = target?.current
+							? getValueByTypeAndTarget(type, target.current as any)
+							: null;
+					}
+					const errors: string[] = [];
+					fieldMeta.validators.forEach((validate: ValidateFunc) => {
+						const error = validate(value);
+						if (error) {
+							isFormInvalid = true;
+							errors.push(error);
+						}
+					});
+					setErrors(fieldName, errors);
+				}
+			});
+			if (isFormInvalid) {
+				setIsSubmitting(false);
+				return Promise.resolve();
+			}
+
+			// 2. Send data
 			const formData = new window.FormData(formRef.current ?? undefined);
 			const values: Record<string, unknown> = {};
 			const fewValues: any[] = [];
@@ -225,7 +271,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				})
 				.catch(console.error);
 		},
-		[fields, onSubmit, setIsSubmitting, setNestedErrors],
+		[fields, onSubmit, setIsSubmitting, setErrors, setNestedErrors],
 	);
 
 	return (

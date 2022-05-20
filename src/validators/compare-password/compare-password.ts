@@ -1,8 +1,8 @@
-import {ReusableValidator, ValidateFuncType} from '~/@common/types';
+import {ReusableValidator, ValidateFunc} from '~/@common/types';
 import {getErrorMessage} from '~/validators/@common/get-error-message';
 
 export const comparePassword: ReusableValidator<string> =
-	(getMessage, namePasswordField: string): ValidateFuncType =>
+	(getMessage, namePasswordField: string): ValidateFunc =>
 	(value, fieldName, getFieldValueByName) => {
 		if (typeof namePasswordField !== 'string') {
 			throw new Error(

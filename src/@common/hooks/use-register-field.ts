@@ -5,6 +5,7 @@ import {
 	FieldMeta,
 	FieldType,
 	FormContextState,
+	ValidateFunc,
 } from '~/@common/types';
 
 type ResType = {
@@ -18,6 +19,7 @@ export const useRegisterField = (
 	fieldArrayState: FieldArrayState,
 	formState: FormContextState,
 	providedName: string,
+	validators: Array<ValidateFunc>,
 	fieldType?: FieldType,
 	isArray?: boolean,
 	defaultValue?: unknown,
@@ -43,18 +45,19 @@ export const useRegisterField = (
 				fieldName,
 				fieldType ?? (isArray ? FieldType.ARRAY : undefined),
 				defaultValue,
+				validators,
 			);
 			setIsRegistered(true);
 			return unmountFunc;
 		} else {
 			if (fieldType) {
 				console.warn(
-					'Указанный fieldType будет проигнорирован вне контекста формы. Разместите' +
-						' ваш инпут внутри компонента формы, чтоб это заработало',
+					`Указанный fieldType=${fieldType} будет проигнорирован вне контекста формы. Разместите` +
+						` ваш инпут ${fieldName} внутри компонента формы, чтоб это заработало`,
 				);
-			} else {
-				setIsRegistered(true);
 			}
+
+			setIsRegistered(true);
 		}
 	}, [
 		defaultValue,
@@ -64,6 +67,7 @@ export const useRegisterField = (
 		isInsideForm,
 		registerField,
 		setIsRegistered,
+		validators,
 	]);
 
 	const fields = useMemo(() => formState?.fields, [formState?.fields]);

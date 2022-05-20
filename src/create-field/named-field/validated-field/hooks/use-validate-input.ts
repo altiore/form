@@ -10,23 +10,12 @@ import {
 import isEqual from 'lodash/isEqual';
 
 import {useIsMounted} from '~/@common/hooks/use-is-mounted';
-import {FieldMeta, FieldType, ValidateFuncType} from '~/@common/types';
-
-import {getNodeByName} from './utils';
-
-const getValue = (evt: Event) => (evt.target as any).value;
-const getChecked = (evt: Event) => (evt.target as any).checked;
-const getMultipleSelect = (evt: Event) =>
-	[...(evt.target as any).options]
-		.filter((el) => el.selected)
-		.map((el) => el.value);
-
-const getValueByType = new Map<FieldType, (evt: Event) => any>([
-	[FieldType.BOOLEAN, getChecked],
-	[FieldType.NUMBER, getValue],
-	[FieldType.TEXT, getValue],
-	[FieldType.SELECT_MULTIPLE, getMultipleSelect],
-]);
+import {FieldMeta, FieldType, ValidateFunc} from '~/@common/types';
+import {
+	getNodeByName,
+	getValueByNodeName,
+	getValueByTypeAndTarget,
+} from '~/@common/utils';
 
 type ValidateInputRes = {
 	errors: string[];
@@ -37,7 +26,7 @@ const DEF_ERRORS: string[] = [];
 
 export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	customRef: MutableRefObject<T>,
-	validators: Array<ValidateFuncType>,
+	validators: Array<ValidateFunc>,
 	formRef?: MutableRefObject<HTMLFormElement>,
 	field?: FieldMeta,
 	type?: FieldType,
@@ -81,14 +70,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 
 	const getFormValueByName = useCallback(
 		(name: string) => {
-			const foundInputRef = getNodeByName<any>(name, formRef);
-			if (foundInputRef) {
-				return foundInputRef.current.type === 'checkbox'
-					? foundInputRef.current.checked
-					: foundInputRef.current.value;
-			}
-
-			return null;
+			return getValueByNodeName(name, formRef);
 		},
 		[formRef],
 	);
@@ -136,8 +118,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 
 			const hasValidation = Boolean(validators?.length && e.target);
 			if (hasValidation) {
-				const getCurrentValue = getValueByType.get(type) ?? getValue;
-				const value = getCurrentValue(e);
+				const value = getValueByTypeAndTarget(type, e.target);
 
 				validators.forEach((validate) => {
 					const result = validate(value, name, getFormValueByName);

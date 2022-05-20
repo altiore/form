@@ -1,19 +1,18 @@
 import React from 'react';
 
-import {
-	InternalSubmitButtonProps,
-	createSubmitButton,
-} from '~/create-submit-button';
+import {SubmitProps, createSubmitButton} from '~/create-submit-button';
 
-const SubmitButtonView: React.FC<InternalSubmitButtonProps> = ({
-	isInvalid,
-	isSubmitting,
-	isUntouched,
-	...props
-}) => {
-	return (
-		<button {...props} disabled={isInvalid || isSubmitting || isUntouched} />
-	);
-};
+interface Props extends SubmitProps {
+	skipUntouched?: boolean;
+}
 
-export const SubmitButton = createSubmitButton(SubmitButtonView);
+export const SubmitButton = createSubmitButton<Props>(
+	({isInvalid, isSubmitting, isUntouched, skipUntouched, ...props}) => {
+		return (
+			<button
+				{...props}
+				disabled={isInvalid || isSubmitting || (!skipUntouched && isUntouched)}
+			/>
+		);
+	},
+);

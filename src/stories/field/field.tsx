@@ -3,24 +3,25 @@ import React from 'react';
 import {FieldProps, createField} from '~/create-field';
 
 export interface IField extends FieldProps {
+	className?: string;
 	label: string;
 }
 
 export const Field = createField<IField>({hideErrorInXSec: false}, (props) => {
-	const {defaultValue, errors, label, name} = props;
+	const {className, defaultValue, error, label, name} = props;
 
 	console.log('Field.render', {
 		props,
 	});
 	return (
-		<div className="mb-3">
-			<span className="form-label">{label}</span>
+		<div className={'mb-3 ' + className ? className : ''}>
+			<label className="form-label">{label}</label>
 			<input
-				className="form-control w-75"
+				className={'form-control' + (error ? ' is-invalid' : '')}
 				defaultValue={defaultValue}
 				name={name}
 			/>
-			<span className="form-text">{errors[0]}</span>
+			<span className="invalid-feedback d-block">{error}</span>
 		</div>
 	);
 });
