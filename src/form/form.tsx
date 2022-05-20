@@ -55,7 +55,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const setErrors = useCallback(
-		(fieldName: string, errors: string[]) => {
+		(fieldName: string, errors: string[], force?: boolean) => {
 			setFields((s) => {
 				if (!s[fieldName]) {
 					// этот код, похоже, никогда не выполняется и здесь лишь для совместимости
@@ -70,7 +70,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 					isUntouched: false,
 				};
 				// улучает производительность, избегая рендера, если ошибки не изменились
-				if (isEqual(s[fieldName], fieldData)) {
+				if (isEqual(s[fieldName], fieldData) && !force) {
 					return s;
 				}
 				return {

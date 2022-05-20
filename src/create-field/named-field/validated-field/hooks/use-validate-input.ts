@@ -78,12 +78,12 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	const [errors, setErrors] = useState<string[]>(DEF_ERRORS);
 
 	const handleSetErrors = useCallback(
-		(errors: string[]) => {
+		(errors: string[], force?: boolean) => {
 			if (field?.setErrors) {
-				field.setErrors(errors);
+				field.setErrors(errors, force);
 			} else {
 				setErrors((s) => {
-					if (isEqual(s, errors)) {
+					if (isEqual(s, errors) && !force) {
 						return s;
 					}
 					return errors;
@@ -93,11 +93,14 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 		[field?.setErrors, setErrors],
 	);
 
-	const setEmptyErrors = useCallback(() => {
-		if (getMounted()) {
-			handleSetErrors([]);
-		}
-	}, [getMounted, handleSetErrors]);
+	const setEmptyErrors = useCallback(
+		(force?: boolean) => {
+			if (getMounted()) {
+				handleSetErrors([], force);
+			}
+		},
+		[getMounted, handleSetErrors],
+	);
 
 	const timeout = useRef<any>();
 	const handleFieldChanged = useCallback(
@@ -149,7 +152,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 		(e: Event) => {
 			e.preventDefault();
 
-			setEmptyErrors();
+			setEmptyErrors(true);
 		},
 		[setEmptyErrors],
 	);

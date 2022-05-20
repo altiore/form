@@ -60,7 +60,7 @@ export type FieldMeta<ValueType = any> = {
 	// массив номеров в порядке, в котором элементы массива расположены на экране
 	// используюет только для fieldType === FieldType.ARRAY
 	items?: number[];
-	setErrors: (errors: string[]) => void;
+	setErrors: (errors: string[], force?: boolean) => void;
 	type?: FieldType;
 	isUntouched?: boolean;
 
