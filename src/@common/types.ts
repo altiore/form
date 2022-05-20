@@ -9,6 +9,7 @@ export enum FieldType {
 	CHECKBOX = 'checkbox',
 	ENUM = 'enum',
 	NUMBER = 'number',
+	FLOAT = 'float',
 	PASSWORD = 'password',
 	TEXT = 'text',
 	EMAIL = 'email',

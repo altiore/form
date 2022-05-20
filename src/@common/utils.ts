@@ -50,6 +50,7 @@ const getMultipleSelect = (target: HTMLElement) =>
 const getValueByType = new Map<FieldType, (evt: any) => any>([
 	[FieldType.BOOLEAN, getChecked],
 	[FieldType.NUMBER, getValue],
+	[FieldType.FLOAT, getValue],
 	[FieldType.TEXT, getValue],
 	[FieldType.SELECT_MULTIPLE, getMultipleSelect],
 ]);
@@ -61,3 +62,34 @@ export const getValueByTypeAndTarget = (
 	const getCurrentValue = getValueByType.get(type) ?? getValue;
 	return getCurrentValue(target);
 };
+
+const parseBoolean = (value: string | undefined): any => value === 'on';
+const parseNumber = (value: string): any => parseInt(value, 10);
+const parseDefault = (value: string): any => (value === '' ? null : value);
+const toArray = (value: any): string[] => {
+	if (typeof value === 'string') {
+		return [value];
+	}
+
+	if (Array.isArray(value)) {
+		return value;
+	}
+
+	return [];
+};
+
+export const parseValueByType = new Map([
+	[FieldType.TEXT, parseDefault],
+	[FieldType.BOOLEAN, parseBoolean],
+	[FieldType.NUMBER, parseNumber],
+	[FieldType.FLOAT, parseFloat],
+	[FieldType.SELECT_MULTIPLE, toArray],
+]);
+
+export const inputTypeByType = new Map([
+	[FieldType.TEXT, 'text'],
+	[FieldType.BOOLEAN, 'checkbox'],
+	[FieldType.NUMBER, 'number'],
+	[FieldType.FLOAT, 'number'],
+	[FieldType.SELECT_MULTIPLE, 'select-multiple'],
+]);

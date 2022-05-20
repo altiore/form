@@ -1,6 +1,7 @@
 import React, {useMemo, useRef} from 'react';
 
-import {ValidateFunc} from '~/@common/types';
+import {FieldType, ValidateFunc} from '~/@common/types';
+import {inputTypeByType} from '~/@common/utils';
 
 import {useValidateInput} from './hooks/use-validate-input';
 import {ValidatedFieldProps} from './types/validated-field-props';
@@ -46,6 +47,9 @@ export const ValidatedField = <
 				isInvalid: Boolean(errors.length),
 				name,
 				setErrors,
+				type: inputTypeByType.has(type)
+					? inputTypeByType.get(type)
+					: inputTypeByType.get(FieldType.TEXT),
 			}),
 		[componentProps, fieldMeta, errors, inputRef, name, setErrors],
 	);

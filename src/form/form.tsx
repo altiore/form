@@ -8,31 +8,14 @@ import unset from 'lodash/unset';
 
 import {FormContext} from '~/@common/form-context';
 import {FieldType, FormContextState, ValidateFunc} from '~/@common/types';
-import {getNodeByName, getValueByTypeAndTarget} from '~/@common/utils';
+import {
+	getNodeByName,
+	getValueByTypeAndTarget,
+	parseValueByType,
+} from '~/@common/utils';
 
 import {toFlatErrors} from './form.utils';
 import {FormProps} from './types';
-
-const parseBoolean = (value: string | undefined): any => value === 'on';
-const parseNumber = (value: string): any => parseInt(value, 10);
-const parseDefault = (value: string): any => (value === '' ? null : value);
-const toArray = (value: any): string[] => {
-	if (typeof value === 'string') {
-		return [value];
-	}
-
-	if (Array.isArray(value)) {
-		return value;
-	}
-
-	return [];
-};
-
-const getValueByType = new Map([
-	[FieldType.BOOLEAN, parseBoolean],
-	[FieldType.NUMBER, parseNumber],
-	[FieldType.SELECT_MULTIPLE, toArray],
-]);
 
 const getItemsFromDefVal = (_: any, i: number) => i;
 
@@ -252,7 +235,9 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 						unset(resValues, fieldKey);
 						set(resValues, fieldKey, value);
 					} else {
-						const prepareValue = getValueByType.get(fieldType) || parseDefault;
+						const prepareValue = parseValueByType.get(
+							fieldType || FieldType.TEXT,
+						);
 
 						if (prepareValue) {
 							const typedValue = prepareValue(get(resValues, fieldKey) as any);
