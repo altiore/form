@@ -15,7 +15,7 @@ Productive, flexible and extensible forms with easy-to-use validation and the mo
 
 Let's face it, forms in React are verbose and awkward.
 This library will help facilitate and speed up the work with forms.
-It performs the following main tasks:
+It solves the following main problems:
 
 1. Form validation
 2. Sending data management
@@ -24,10 +24,12 @@ It performs the following main tasks:
 ### Peculiarity:
 
 This library, unlike most others, does not store the state of input fields.
-Within the @altiore/form library, we consider that the data entered into the form is stored on the page.
+Within the [**@altiore/form**](https://www.npmjs.com/package/@altiore/form) library, we consider that the data entered into the form is stored on the page.
 If you need to provide data storage from inputs - you have complete freedom to implement this using your favorite state manager.
-This feature means that if you hide the input fields, the data will not be stored.
-In other words: hiding data should be equivalent to sending, and at the time of hiding data, you need to save them using your favorite state manager
+
+> This feature means that if you hide the input fields, the data will not be stored.
+
+> In other words: hiding data should be equivalent to sending, and at the time of hiding data, you need to save them using your favorite state manager
 
 ## Installation:
 
@@ -76,7 +78,7 @@ import {createField, Form} from '@altiore/form';
 
 /**
  * "error" here is added by createField
- * "name" and "label" comse from usage area
+ * "name" and "label" comes from usage area
  */
 const FieldView = ({error, name, label}) => {
   return (
@@ -140,7 +142,7 @@ const MyForm = () => {
 };
 ```
 
-#### You also can validate form values while sending them
+#### You can also validate form values while sending them
 
 ```tsx
 import React, {useCallback} from 'react';
