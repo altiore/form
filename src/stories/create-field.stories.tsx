@@ -192,3 +192,35 @@ export const InsideFormFieldMultiSelect: ComponentStory<typeof Field> = ({
 		</div>
 	);
 };
+
+type T4 = {
+	title: string;
+	sent: boolean;
+};
+
+export const InsideFormFieldCheckbox: ComponentStory<typeof Field> = ({
+	onSubmit,
+}: any) => {
+	return (
+		<div>
+			<legend>Выбор с помощью селекта несколько вариантов (+ crtl)</legend>
+			<Form<T4>
+				defaultValues={{sent: false}}
+				onSubmit={onSubmit}
+				className="shadow border border-secondary rounded-3 p-3 w-75">
+				<Field<T4>
+					name="title"
+					label="Заголовок"
+					defaultValue={''}
+					validate={[minLength(3)]}
+				/>
+
+				<FieldBoolean<T4> name="sent" label="Отправлено" defaultValue={true} />
+
+				<button className="btn btn-success" type="submit">
+					Отправить
+				</button>
+			</Form>
+		</div>
+	);
+};

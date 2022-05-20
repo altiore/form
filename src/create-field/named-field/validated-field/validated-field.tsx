@@ -35,8 +35,11 @@ export const ValidatedField = <
 		() =>
 			React.createElement(component, {
 				...componentProps,
-				...fieldMeta,
-				defaultValue: fieldMeta.defaultValue || componentProps.defaultValue,
+				...(fieldMeta || ({} as any)),
+				defaultValue:
+					typeof fieldMeta?.defaultValue === 'undefined'
+						? componentProps.defaultValue
+						: fieldMeta?.defaultValue,
 				error: errors?.[0],
 				errors,
 				inputRef,
