@@ -43,7 +43,7 @@ export const useRegisterField = (
 		if (isInsideForm) {
 			const unmountFunc = registerField(
 				fieldName,
-				fieldType ?? (isArray ? FieldType.ARRAY : undefined),
+				fieldType ?? (isArray ? FieldType.ARRAY : FieldType.TEXT),
 				defaultValue,
 				validators,
 			);

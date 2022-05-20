@@ -5,7 +5,7 @@ import {NamedFieldProps} from '~/@common/types';
 
 import ValidatedField, {ValidatedFieldProps} from './validated-field';
 
-type Props<T, Input> = NamedFieldProps<
+type Props<T extends {defaultValue?: any}, Input> = NamedFieldProps<
 	ValidatedFieldProps<T, Input>,
 	'field' | 'name'
 >;

@@ -3,6 +3,7 @@ import React, {useCallback} from 'react';
 import {ComponentMeta, ComponentStory} from '@storybook/react';
 
 import {Form} from '~/form';
+import SubmitButton from '~/stories/submit-button';
 import {minLength} from '~/stories/validators';
 
 import Field from './field';
@@ -18,26 +19,22 @@ export default {
 } as ComponentMeta<typeof Field>;
 
 export const SimplestFieldOutsideForm: ComponentStory<typeof Field> = () => (
-	<>
+	<div className="shadow border border-secondary rounded-3 p-3">
 		<legend>Поле со значением по умолчанию</legend>
-		<div className="w-75">
-			<Field
-				name="first"
-				defaultValue="Значение по умолчанию"
-				label="Минимум 3 символа"
-				validate={[minLength(3)]}
-			/>
-		</div>
+		<Field
+			name="first"
+			defaultValue="Значение по умолчанию"
+			label="Минимум 3 символа"
+			validate={[minLength(3)]}
+		/>
 		<legend>Поле с пустым значением по умолчанию</legend>
-		<div className="w-75">
-			<Field
-				name="second"
-				label="Тоже минимум 3"
-				defaultValue=""
-				validate={[minLength(3)]}
-			/>
-		</div>
-	</>
+		<Field
+			name="second"
+			label="Тоже минимум 3"
+			defaultValue=""
+			validate={[minLength(3)]}
+		/>
+	</div>
 );
 
 type T = {
@@ -52,13 +49,14 @@ export const InsideFormOneField: ComponentStory<typeof Field> = ({
 		<div>
 			<legend>Только одно поле для проверки рендера</legend>
 			<Form<T>
+				defaultValues={{first: 'test'}}
 				onSubmit={onSubmit}
 				className="shadow border border-secondary rounded-3 p-3 w-75">
 				<div className="w-75">
-					<Field<T> name="first" label="Первое поле" />
-					<button className="btn btn-success" type="submit">
+					<Field<T> name="first" label="Первое поле" className="mb-3" />
+					<SubmitButton className="btn btn-success mb-3">
 						Отправить
-					</button>
+					</SubmitButton>
 				</div>
 			</Form>
 		</div>
@@ -91,7 +89,7 @@ export const InsideFormField: ComponentStory<typeof Field> = ({
 					defaultValue={'тест'}
 					validate={[minLength(3)]}
 				/>
-				<button className="btn btn-success w-50" type="submit">
+				<button className="btn btn-success mb-3 w-50" type="submit">
 					Отправить
 				</button>
 			</Form>

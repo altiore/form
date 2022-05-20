@@ -46,7 +46,7 @@ export type ListInterface<
 
 export type RegisterField = (
 	fieldName: string,
-	fieldType?: FieldType,
+	fieldType: FieldType,
 	defaultValue?: any,
 	validators?: Array<ValidateFunc>,
 ) => void;

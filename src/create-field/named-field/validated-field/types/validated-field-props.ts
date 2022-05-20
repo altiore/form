@@ -4,7 +4,7 @@ import {FieldMeta, FieldType, ValidateFunc} from '~/@common/types';
 
 import {InternalFieldProps} from './internal-field-props';
 
-export interface ValidatedFieldProps<T, Input> {
+export interface ValidatedFieldProps<T extends {defaultValue?: any}, Input> {
 	component: (
 		props: Omit<T, 'validate'> & InternalFieldProps<Input> & FieldMeta,
 	) => JSX.Element;

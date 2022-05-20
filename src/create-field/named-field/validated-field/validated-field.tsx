@@ -4,10 +4,9 @@ import {ValidateFunc} from '~/@common/types';
 
 import {useValidateInput} from './hooks/use-validate-input';
 import {ValidatedFieldProps} from './types/validated-field-props';
-import {mergeMetaPropsToField} from './utils/merge-meta-props-to-field';
 
 export const ValidatedField = <
-	T,
+	T extends {defaultValue?: any},
 	Input extends HTMLElement = HTMLInputElement,
 >({
 	component,
@@ -35,7 +34,9 @@ export const ValidatedField = <
 	return useMemo(
 		() =>
 			React.createElement(component, {
-				...mergeMetaPropsToField(componentProps, fieldMeta),
+				...componentProps,
+				...fieldMeta,
+				defaultValue: fieldMeta.defaultValue || componentProps.defaultValue,
 				error: errors?.[0],
 				errors,
 				inputRef,
