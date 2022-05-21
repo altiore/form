@@ -5,10 +5,11 @@ import {createField} from '~/create-field';
 
 export interface IField {
 	label: string;
+	step?: number;
 }
 
 const FieldView = (props: FieldProps<IField>) => {
-	const {defaultValue, error, inputRef, label, name, type} = props;
+	const {defaultValue, error, inputRef, label, name, step, type} = props;
 
 	console.log('FieldNumber.render', {
 		props,
@@ -21,6 +22,7 @@ const FieldView = (props: FieldProps<IField>) => {
 				type={type}
 				defaultValue={defaultValue}
 				name={name}
+				step={step}
 				ref={inputRef}
 			/>
 			<span className="invalid-feedback d-block">{error}</span>

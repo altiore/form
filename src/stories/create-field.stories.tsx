@@ -226,7 +226,7 @@ export const InsideFormFloatNumber: ComponentStory<typeof Field> = ({
 			defaultValues={{sent: false}}
 			onSubmit={onSubmit}
 			className="shadow border border-secondary rounded-3 p-3 w-75">
-			<FieldFloat<T5> name="amount" label="Заголовок" />
+			<FieldFloat<T5> name="amount" label="Заголовок" step={0.5} />
 
 			<button className="btn btn-success" type="submit">
 				Отправить
