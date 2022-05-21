@@ -95,17 +95,23 @@ export type ValidateFunc<ValueType = any> = (
 	getFieldValueByName?: (name: string) => any,
 ) => string | undefined;
 
-export type ReusableValidator<T> = (
-	getMessage: null | undefined | string | ((value: any, forCheck: T) => string),
-	forCheck?: T,
-) => ValidateFunc;
+export type ReusableValidator<CheckType, ValueType = any> = (
+	getMessage:
+		| null
+		| undefined
+		| string
+		| ((value: ValueType, forCheck: CheckType) => string),
+	forCheck?: CheckType,
+) => ValidateFunc<ValueType>;
 
 export type FieldOuterProps<
 	FormState extends Record<string, any> = Record<string, any>,
 > = {
 	name: keyof FormState;
 	defaultValue?: any;
-	validate?: ValidateFunc | Array<ValidateFunc>;
+	validate?:
+		| ValidateFunc<FormState[keyof FormState]>
+		| Array<ValidateFunc<FormState[keyof FormState]>>;
 };
 
 export type FieldResProps<
