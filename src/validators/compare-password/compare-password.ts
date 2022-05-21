@@ -2,7 +2,7 @@ import {ReusableValidator, ValidateFunc} from '~/@common/types';
 import {getErrorMessage} from '~/validators/@common/get-error-message';
 
 export const comparePassword: ReusableValidator<string> =
-	(getMessage, namePasswordField: string): ValidateFunc =>
+	(getMessage = null, namePasswordField = 'password'): ValidateFunc<string> =>
 	(value, fieldName, getFieldValueByName) => {
 		if (typeof namePasswordField !== 'string') {
 			throw new Error(

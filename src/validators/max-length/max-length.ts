@@ -2,8 +2,8 @@ import {ReusableValidator, ValidateFunc} from '~/@common/types';
 import {getErrorMessage} from '~/validators/@common/get-error-message';
 
 export const maxLength: ReusableValidator<number> =
-	(getMessage, length: number): ValidateFunc =>
-	(value: any) => {
+	(getMessage = null, length: number): ValidateFunc<string | any[]> =>
+	(value) => {
 		if (typeof value?.length !== 'number') {
 			throw new Error(
 				`Неподдерживаемый тип значения для валидации "${typeof value}" передан функции для проверки данных "minLength"`,

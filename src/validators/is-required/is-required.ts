@@ -2,7 +2,7 @@ import {ReusableValidator, ValidateFunc} from '~/@common/types';
 import {getErrorMessage} from '~/validators/@common/get-error-message';
 
 export const isRequired: ReusableValidator<string> =
-	(getMessage): ValidateFunc =>
+	(getMessage = null): ValidateFunc =>
 	(value: any) => {
 		if (typeof value !== 'string') {
 			throw new Error(
