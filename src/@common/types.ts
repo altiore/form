@@ -96,7 +96,7 @@ export type ValidateFunc<ValueType = any> = (
 ) => string | undefined;
 
 export type ReusableValidator<CheckType, ValueType = any> = (
-	getMessage:
+	getMessage?:
 		| null
 		| undefined
 		| string
