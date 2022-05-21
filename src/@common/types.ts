@@ -1,4 +1,4 @@
-import {MouseEventHandler, MutableRefObject} from 'react';
+import {ButtonHTMLAttributes, MouseEventHandler, MutableRefObject} from 'react';
 
 /**
  * "button|checkbox|file|hidden|image|password|radio|reset|submit|text|password
@@ -49,25 +49,38 @@ export type RegisterField = (
 	fieldType: FieldType,
 	defaultValue?: any,
 	validators?: Array<ValidateFunc>,
-) => void;
+) => () => void;
 
 export type SetErrors = (name: string, errors: string[] | undefined) => void;
 
+export enum FieldMetaName {
+	NAME = 'name',
+	DEFAULT_VALUE = 'defaultValue',
+	ERRORS = 'errors',
+	ITEMS = 'items',
+	SET_ERRORS = 'setErrors',
+	FIELD_TYPE = 'type',
+	IS_UNTOUCHED = 'isUntouched',
+	IS_INVALID = 'isInvalid',
+	ERROR = 'error',
+	VALIDATORS = 'validators',
+}
+
 export type FieldMeta<ValueType = any> = {
-	name: string;
-	defaultValue?: ValueType;
-	errors: string[];
+	[FieldMetaName.NAME]: string;
+	[FieldMetaName.DEFAULT_VALUE]?: ValueType;
+	[FieldMetaName.ERRORS]: string[];
 	// массив номеров в порядке, в котором элементы массива расположены на экране
 	// используюет только для fieldType === FieldType.ARRAY
-	items?: number[];
-	setErrors: (errors: string[], force?: boolean) => void;
-	type?: FieldType;
-	isUntouched?: boolean;
+	[FieldMetaName.ITEMS]?: number[];
+	[FieldMetaName.SET_ERRORS]: (errors: string[], force?: boolean) => void;
+	[FieldMetaName.FIELD_TYPE]?: FieldType;
+	[FieldMetaName.IS_UNTOUCHED]?: boolean;
 
 	// избыточные поля, которые нужны ТОЛЬКО для удобства
-	isInvalid: boolean;
-	error?: string;
-	validators: Array<ValidateFunc>;
+	[FieldMetaName.IS_INVALID]: boolean;
+	[FieldMetaName.ERROR]?: string;
+	[FieldMetaName.VALIDATORS]: Array<ValidateFunc>;
 };
 
 export type FormContextState = {
@@ -154,3 +167,20 @@ export type FieldArrayProps<
 	FieldCustomProps extends Record<string, any> = Record<string, unknown>,
 	ArrayItemProps extends Record<string, any> = Record<string, any>,
 > = FieldCustomProps & FieldArrayInnerProps<ArrayItemProps>;
+
+export interface SubmitInnerProps<El = HTMLButtonElement>
+	extends ButtonHTMLAttributes<El> {
+	isInvalid: boolean;
+	isSubmitting: boolean;
+	isUntouched: boolean;
+}
+
+export interface SubmitOuterProps {
+	children?: any;
+	onSubmit?: (values: any) => Promise<any>;
+}
+
+export type SubmitProps<
+	CustomSubmitProps extends Record<string, any> = Record<string, any>,
+	El = HTMLButtonElement,
+> = SubmitInnerProps<El> & CustomSubmitProps;

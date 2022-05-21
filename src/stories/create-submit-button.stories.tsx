@@ -10,7 +10,7 @@ import {minLength} from '~/validators';
 export default {
 	argTypes: {onSubmit: {action: 'submit'}},
 	component: Submit,
-	title: '@altiore/create-submit-button',
+	title: '@altiore/create-submit',
 } as ComponentMeta<typeof Submit>;
 
 const submitFunc = (onSubmit: any) => async (values: any) => {

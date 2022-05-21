@@ -21,18 +21,17 @@ import NamedField from './named-field';
  * @prop {React.ReactNode} [component] [React.ReactNode] Компонент
  *
  * @example
- * import {createField} from '@altiore/form';
+ * import {FieldProps, createField} from '@altiore/form';
  *
- * interface CustomAdditionalFieldProps {
+ * interface IField {
  *  label: string;
  * }
- * const Field = createField<CustomAdditionalFieldProps>(({errors, label, name}) => {
+ * const Field = createField<CustomAdditionalFieldProps>(({error, label, name}: FieldProps<IField>) => {
  *   return (
  *     <div>
- *       <span>{label}</span>
- *       <span>{name}</span>
+ *       <label>{label}</label>
  *       <input name={name} />
- *       <span>{errors[0]}</span>
+ *       <span>{error}</span>
  *     </div>
  *   );
  * });
@@ -41,7 +40,7 @@ import NamedField from './named-field';
 export type FieldOpt = FieldOptions | FieldType;
 
 // измеряется в миллисекундах
-const DEF_HIDE_ERROR_IN_X_SEC = 6000;
+const DEF_HIDE_ERROR_IN_X_SEC = 7000;
 
 export function createField<
 	FieldCustomProps extends Record<string, any> = {name: string},
@@ -75,17 +74,26 @@ export function createField<
 ): <FormState extends Record<string, any> = Record<string, any>>(
 	props: FieldResProps<FormState, FieldCustomProps>,
 ) => JSX.Element {
+	// Подготавливаем переменные к работе с ними
+
+	// 1. options
 	const options: FieldOptions = componentInSecondParam
 		? typeof optionsOrComponent === 'object'
 			? (optionsOrComponent as FieldOptions)
 			: {fieldType: optionsOrComponent as FieldType}
 		: undefined;
+
+	// 2. fieldType
 	const fieldType = options ? options.fieldType ?? undefined : undefined;
+
+	// 3. hideErrorInXSec
 	const hideErrorInXSec = options
 		? typeof options.hideErrorInXSec !== 'undefined'
 			? options.hideErrorInXSec
 			: DEF_HIDE_ERROR_IN_X_SEC
 		: DEF_HIDE_ERROR_IN_X_SEC;
+
+	// 4. component
 	const component: (props: FieldProps<FieldCustomProps, Input>) => JSX.Element =
 		componentInSecondParam ??
 		(optionsOrComponent as (

@@ -30,24 +30,18 @@ export const NamedFieldArray = <
 	validate,
 	...rest
 }: IProps<CustomFieldProps, ArrayItemProps>): JSX.Element => {
-	// TODO: Мы делаем валидаторы нереагирующими на изменение валидаторов, т.к. неясно как сохранить
-	//   массив валидаторов так, чтоб он не изменялся при перерендере родителя
-	const validators = useMemo(
-		() => (typeof validate === 'function' ? [validate] : validate),
-		[],
-	);
-
-	const {field, isInsideForm, isRegistered, name} = useRegisterField(
-		fieldArrayState,
-		formState,
-		providedName,
-		// undefined здесь означат, что пользователь не задал никакого типа для предоставленного поля
-		// (для массива мы не поддерживаем пользовательские типы полей)
-		validators,
-		undefined,
-		true,
-		undefined,
-	);
+	const {field, isInsideForm, isRegistered, name, validators} =
+		useRegisterField(
+			fieldArrayState,
+			formState,
+			providedName,
+			// undefined здесь означат, что пользователь не задал никакого типа для предоставленного поля
+			// (для массива мы не поддерживаем пользовательские типы полей)
+			validate,
+			undefined,
+			true,
+			undefined,
+		);
 
 	const setItems = useMemo(() => formState?.setItems, [formState?.setItems]);
 

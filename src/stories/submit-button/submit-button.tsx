@@ -1,13 +1,22 @@
 import React from 'react';
 
-import {SubmitProps, createSubmitButton} from '~/create-submit-button';
+import {SubmitProps} from '~/@common/types';
+import {createSubmit} from '~/create-submit';
 
-interface Props extends SubmitProps {
+export interface ISubmit {
+	children: string;
+	className?: string;
 	skipUntouched?: boolean;
 }
 
-export const SubmitButton = createSubmitButton<Props>(
-	({isInvalid, isSubmitting, isUntouched, skipUntouched, ...props}) => {
+export const SubmitButton = createSubmit<ISubmit>(
+	({
+		isInvalid,
+		isSubmitting,
+		isUntouched,
+		skipUntouched,
+		...props
+	}: SubmitProps<ISubmit>) => {
 		return (
 			<button
 				{...props}

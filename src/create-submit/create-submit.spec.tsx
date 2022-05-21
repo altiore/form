@@ -6,17 +6,15 @@ import {mount} from 'enzyme';
 import sinon from 'sinon';
 
 import {createField} from '~/create-field/create-field';
-import {createSubmitButton} from '~/create-submit-button';
+import {createSubmit} from '~/create-submit';
 import {Form} from '~/form';
 import {isEmail} from '~/validators/is-email';
 
 const memoizedRenderEvent = sinon.spy();
-const SubmitButton = createSubmitButton(
-	({isInvalid, isSubmitting, isUntouched}) => {
-		memoizedRenderEvent();
-		return <button disabled={isInvalid || isSubmitting || isUntouched} />;
-	},
-);
+const SubmitButton = createSubmit(({isInvalid, isSubmitting, isUntouched}) => {
+	memoizedRenderEvent();
+	return <button disabled={isInvalid || isSubmitting || isUntouched} />;
+});
 
 const Field = createField(({error, name}) => {
 	return (
@@ -42,7 +40,7 @@ const Parent = ({name}: any) => {
 
 let container: any;
 
-describe('~/create-submit-button', () => {
+describe('~/create-submit', () => {
 	describe('не перерендеривать, если рендерится родитель, но пропсы не меняются', () => {
 		it('Button должен отрендерится только 1 раз не смотря на то, что родитель рендерится дважды', () => {
 			act(() => {

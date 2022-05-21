@@ -1,6 +1,14 @@
-import React, {useMemo, useRef} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 
-import {FieldArrayProps, FieldMeta, ValidateFunc} from '~/@common/types';
+import intersection from 'lodash/intersection';
+
+import {forbiddenPropsError} from '~/@common/errors';
+import {
+	FieldArrayProps,
+	FieldMeta,
+	FieldMetaName,
+	ValidateFunc,
+} from '~/@common/types';
 
 import {useList} from './hooks/use-list';
 
@@ -41,6 +49,15 @@ export const ValidatedFieldArray = <
 		fieldMeta,
 		setItems,
 	);
+
+	useEffect(() => {
+		const forbiddenProps = intersection(Object.keys(componentProps), [
+			...Object.values(FieldMetaName),
+			'list',
+			'listRef',
+		]);
+		forbiddenPropsError(forbiddenProps, name);
+	}, [componentProps, name]);
 
 	return useMemo(
 		() =>

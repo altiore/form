@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import {useRegisterField} from '~/@common/hooks/use-register-field';
 import {
@@ -33,22 +33,16 @@ export const NamedField = <
 	validate,
 	...rest
 }: Props<FieldCustomProps, Input>): JSX.Element => {
-	// TODO: Мы делаем валидаторы нереагирующими на изменение валидаторов, т.к. неясно как сохранить
-	//   массив валидаторов так, чтоб он не изменялся при перерендере родителя
-	const validators = useMemo(
-		() => (typeof validate === 'function' ? [validate] : validate),
-		[],
-	);
-
-	const {field, isInsideForm, isRegistered, name} = useRegisterField(
-		fieldArrayState,
-		formState,
-		providedName,
-		validators,
-		fieldType,
-		false,
-		defaultValue,
-	);
+	const {field, isInsideForm, isRegistered, name, validators} =
+		useRegisterField(
+			fieldArrayState,
+			formState,
+			providedName,
+			validate,
+			fieldType,
+			false,
+			defaultValue,
+		);
 
 	if ((isInsideForm && !field) || !isRegistered) {
 		return null;

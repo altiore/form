@@ -1,6 +1,15 @@
-import React, {MutableRefObject, useMemo, useRef} from 'react';
+import React, {MutableRefObject, useEffect, useMemo, useRef} from 'react';
 
-import {FieldMeta, FieldProps, FieldType, ValidateFunc} from '~/@common/types';
+import intersection from 'lodash/intersection';
+
+import {forbiddenPropsError} from '~/@common/errors';
+import {
+	FieldMeta,
+	FieldMetaName,
+	FieldProps,
+	FieldType,
+	ValidateFunc,
+} from '~/@common/types';
 import {getInputTypeByFieldType} from '~/@common/utils';
 
 import {useValidateInput} from './hooks/use-validate-input';
@@ -44,6 +53,22 @@ export const ValidatedField = <
 		name,
 		hideErrorInXSec,
 	);
+
+	useEffect(() => {
+		const forbiddenProps = intersection(Object.keys(componentProps), [
+			...Object.values(FieldMetaName),
+			'inputRef',
+		]);
+		forbiddenPropsError(forbiddenProps, name);
+
+		if (forbiddenProps.includes('type')) {
+			console.error(
+				'Поле type используется для указания типа внутреннего поля ввода input.' +
+					' Используйте первый аргумент функции createField для корректного задания внутреннего' +
+					' типа поля ввода. Например: createField(FieldType.TEXT, FieldViewComponent)',
+			);
+		}
+	}, [componentProps, name]);
 
 	return useMemo(
 		() =>

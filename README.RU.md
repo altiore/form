@@ -220,4 +220,109 @@ const MyForm = () => {
 };
 ```
 
+## Пример всего доступного в библиотеке функционала
+
+```tsx
+import React, {useCallback} from 'react';
+
+import {FieldProps, createField, createFieldArray, createSubmit, Form, isRequired} from '@altiore/form';
+
+interface IField {
+  label: string;
+}
+
+const FieldView = createField<IField>(({error, name, label}: FieldProps<IField>) => {
+  return (
+    <div>
+      <label>{label}</label>
+      <input name={name} />
+      <span>{error}</span>
+    </div>
+  );
+});
+
+export interface IFieldArray {
+  label?: string;
+}
+
+export const FieldIngredients = createFieldArray<IFieldArray>(({list}) => {
+  const renderIng = useCallback(({key, remove}) => {
+    return (
+      <div key={key}>
+        <div>
+          <div>
+            <button
+              onClick={remove}
+              type="button">
+              -
+            </button>
+          </div>
+          <div>
+            <Field
+              label="Ингредиент"
+              {/* обрати внимание, что здесь нужно писать локальное имя переменной. Поддерживается бесконечная вложенность */}
+              name="title"
+              validate={[isRequired(null)]}
+            />
+
+            <Field
+              label="Описание ингредиента"
+              {/* обрати внимание, что здесь нужно писать локальное имя переменной. Поддерживается бесконечная вложенность */}
+              name="desc"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }, []);
+
+  return (
+    <>
+      {list.map(renderIng)}
+      <button
+        onClick={list.add}
+        type="button">
+        Добавить ингредиент
+      </button>
+    </>
+  );
+});
+
+export interface ISubmit {
+  children: string;
+  className?: string;
+  skipUntouched?: boolean;
+}
+
+export const Submit = createSubmit<ISubmit>(
+  ({isInvalid, isSubmitting, isUntouched, ...props}: SubmitProps<ISubmit>) => {
+    return (
+      <button {...props} disabled={isInvalid || isSubmitting || isUntouched} />
+    );
+  },
+);
+
+interface FormState {
+  name: string;
+}
+
+const MyForm = () => {
+  const handleSubmit = useCallback((values: FormState) => {
+    console.log('form.values is', values);
+  }, []);
+
+  return (
+    <Form<FormState> onSubmit={handleSubmit}>
+      <Field<FormState>
+        label="Label"
+        name="name"
+        validate={isRequired(null)}
+      />
+      <FieldIngredients label="Ingredients" name="ingredients" />
+      <Submit>Submit</Submit>
+    </Form>
+  );
+};
+```
+
 [Детальный пример валидации](.docs/valid.md)

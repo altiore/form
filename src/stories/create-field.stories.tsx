@@ -3,6 +3,7 @@ import React, {useCallback} from 'react';
 import {ComponentMeta, ComponentStory} from '@storybook/react';
 
 import {Form} from '~/form';
+import FieldWrong from '~/stories/field-wrong';
 import SubmitButton from '~/stories/submit-button';
 import {minLength} from '~/stories/validators';
 
@@ -222,11 +223,31 @@ export const InsideFormFloatNumber: ComponentStory<typeof Field> = ({
 	onSubmit,
 }: any) => {
 	return (
-		<Form<T4>
-			defaultValues={{sent: false}}
+		<Form<T5>
 			onSubmit={onSubmit}
 			className="shadow border border-secondary rounded-3 p-3 w-75">
 			<FieldFloat<T5> name="amount" label="Заголовок" step={0.5} />
+
+			<button className="btn btn-success" type="submit">
+				Отправить
+			</button>
+		</Form>
+	);
+};
+
+export const InsideFormWrongField: ComponentStory<typeof Field> = ({
+	onSubmit,
+}: any) => {
+	return (
+		<Form
+			onSubmit={onSubmit}
+			className="shadow border border-secondary rounded-3 p-3 w-75">
+			<FieldWrong<T5>
+				name="amount"
+				label="Загляни в консоль - там должна быть ошибка"
+				items={['test']}
+				type="number"
+			/>
 
 			<button className="btn btn-success" type="submit">
 				Отправить
