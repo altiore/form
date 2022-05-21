@@ -5,7 +5,7 @@ import {MouseEventHandler, MutableRefObject} from 'react';
  */
 export enum FieldType {
 	ARRAY = 'array',
-	BOOLEAN = 'checkbox',
+	BOOLEAN = 'boolean',
 	CHECKBOX = 'checkbox',
 	ENUM = 'enum',
 	NUMBER = 'number',

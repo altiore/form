@@ -87,6 +87,13 @@ export const parseValueByType = new Map([
 ]);
 
 export const inputTypeByType = new Map([
+	[FieldType.BOOLEAN, 'checkbox'],
+	[FieldType.CHECKBOX, 'checkbox'],
+	[FieldType.ENUM, 'text'],
+	[FieldType.PASSWORD, 'password'],
+	[FieldType.SELECT, 'text'],
+	[FieldType.SELECT_MULTIPLE, 'text'],
+	[FieldType.EMAIL, 'email'],
 	[FieldType.TEXT, 'text'],
 	[FieldType.BOOLEAN, 'checkbox'],
 	[FieldType.NUMBER, 'number'],
