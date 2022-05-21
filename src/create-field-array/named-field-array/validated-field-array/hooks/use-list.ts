@@ -21,7 +21,9 @@ import {add, map, remove} from './utils';
 const DEF_GET_VALUE = () =>
 	console.info('Получение переменной внутри валидации массива не реализовано');
 
-export const useList = (
+export const useList = <
+	ArrayItemProps extends Record<string, any> = Record<string, any>,
+>(
 	name: string,
 	validators: Array<ValidateFunc>,
 	fieldMeta?: FieldMeta,
@@ -32,7 +34,7 @@ export const useList = (
 		defaultValue?: any,
 	) => void,
 	setDefValue?: (fieldName: string, defValue: any) => void,
-): [ListInterface, string[]] => {
+): [ListInterface<ArrayItemProps>, string[]] => {
 	const fieldName = useMemo(() => {
 		return fieldMeta?.name ?? name;
 	}, [name, fieldMeta?.name]);

@@ -1,23 +1,52 @@
 import React, {useMemo, useRef} from 'react';
 
-import {useList} from './hooks/use-list';
-import {ValidatedFieldArrayProps} from './types/validated-field-array-props';
+import {FieldArrayProps, FieldMeta, ValidateFunc} from '~/@common/types';
 
-export const ValidatedFieldArray = <T,>({
+import {useList} from './hooks/use-list';
+
+export interface ValidatedFieldArrayProps<
+	CustomFieldProps extends Record<string, any> = Record<string, any>,
+	ArrayItemProps extends Record<string, any> = Record<string, any>,
+> {
+	component: (
+		props: FieldArrayProps<CustomFieldProps, ArrayItemProps>,
+	) => JSX.Element;
+	componentProps: CustomFieldProps;
+	field: FieldMeta;
+	name: string;
+	setItems: (
+		fieldName: string,
+		setItems: (i: number[]) => number[],
+		setErrors: (i: number[]) => string[],
+		defValue?: any,
+	) => void;
+	validators: Array<ValidateFunc>;
+}
+
+export const ValidatedFieldArray = <
+	CustomFieldProps extends Record<string, any> = Record<string, any>,
+	ArrayItemProps extends Record<string, any> = Record<string, any>,
+>({
 	component,
 	componentProps,
 	field: fieldMeta,
 	name,
 	setItems,
 	validators,
-}: ValidatedFieldArrayProps<T>): JSX.Element => {
+}: ValidatedFieldArrayProps<CustomFieldProps, ArrayItemProps>): JSX.Element => {
 	const listRef = useRef<HTMLElement>(null);
-	const [list, errors] = useList(name, validators, fieldMeta, setItems);
+	const [list, errors] = useList<ArrayItemProps>(
+		name,
+		validators,
+		fieldMeta,
+		setItems,
+	);
 
 	return useMemo(
 		() =>
 			React.createElement(component, {
 				...componentProps,
+				...(fieldMeta || ({} as any)),
 				error: errors?.[0],
 				errors: errors || [],
 				isInvalid: Boolean(errors?.length),

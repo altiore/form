@@ -2,10 +2,9 @@ import React from 'react';
 
 import {FieldArrayContext} from '~/@common/field-array-context';
 import {FormContext} from '~/@common/form-context';
-import {FieldMeta} from '~/@common/types';
+import {FieldArrayProps, FieldOuterProps} from '~/@common/types';
 
-import NamedFieldArray, {InternalFieldArrayProps} from './named-field-array';
-import {FieldArrayProps} from './types/field-array-props';
+import NamedFieldArray from './named-field-array';
 
 /**
  * Создает массив полей
@@ -21,9 +20,9 @@ import {FieldArrayProps} from './types/field-array-props';
  * @example
  *
  * import React from 'react';
- * import {FieldArrayProps, createFieldArray} from '~/create-field-array';
+ * import {createFieldArray} from '~/create-field-array';
  *
- * const FieldArray = createFieldArray<FieldArrayProps>(({list}) => {
+ * const FieldArray = createFieldArray(({list}) => {
  *	return (
  *		<div>
  *			{list.map(({key, remove, append, prepend}) => {
@@ -52,27 +51,36 @@ import {FieldArrayProps} from './types/field-array-props';
  *	);
  * });
  */
-export const createFieldArray = <T extends FieldArrayProps>(
+export const createFieldArray = <
+	CustomFieldProps extends Record<string, any> = {name: string},
+	ArrayItemProps extends Record<string, any> = Record<string, any>,
+>(
 	component: (
-		props: Omit<T, 'validate'> & InternalFieldArrayProps & FieldMeta,
+		props: FieldArrayProps<CustomFieldProps, ArrayItemProps>,
 	) => JSX.Element,
-): (<Values extends Record<string, any> = Record<string, any>>(
-	props: T & {name: keyof Values},
+): (<FormState extends Record<string, any> = Record<string, any>>(
+	props: CustomFieldProps & FieldOuterProps<FormState>,
 ) => JSX.Element) => {
-	return ({name, validate, ...props}) => {
+	return ({
+		defaultValue,
+		name,
+		validate,
+		...props
+	}: FieldArrayProps<CustomFieldProps, ArrayItemProps>) => {
 		return (
 			<FormContext.Consumer>
 				{(formState) => (
 					<FieldArrayContext.Consumer>
 						{(fieldArrayState) => {
 							return (
-								<NamedFieldArray<Omit<T, 'name' | 'validate'>>
+								<NamedFieldArray<CustomFieldProps, ArrayItemProps>
 									fieldArrayState={fieldArrayState}
 									formState={formState}
-									component={component}
-									componentProps={props}
-									providedName={name}
+									defaultValue={defaultValue}
 									validate={validate}
+									name={name}
+									component={component}
+									componentProps={props as CustomFieldProps}
 								/>
 							);
 						}}

@@ -10,7 +10,7 @@ import Field from './field';
 import FieldMultiSelect from './field-multi-select';
 import FieldRadio from './field-radio';
 import FieldSelect from './field-select';
-import {FieldBoolean, FieldNumber} from './field-typed';
+import {FieldBoolean, FieldFloat, FieldNumber} from './field-typed';
 
 export default {
 	argTypes: {onSubmit: {action: 'submit'}},
@@ -194,7 +194,6 @@ export const InsideFormFieldMultiSelect: ComponentStory<typeof Field> = ({
 };
 
 type T4 = {
-	title: string;
 	sent: boolean;
 };
 
@@ -202,25 +201,36 @@ export const InsideFormFieldCheckbox: ComponentStory<typeof Field> = ({
 	onSubmit,
 }: any) => {
 	return (
-		<div>
-			<legend>Выбор с помощью селекта несколько вариантов (+ crtl)</legend>
-			<Form<T4>
-				defaultValues={{sent: false}}
-				onSubmit={onSubmit}
-				className="shadow border border-secondary rounded-3 p-3 w-75">
-				<Field<T4>
-					name="title"
-					label="Заголовок"
-					defaultValue={''}
-					validate={[minLength(3)]}
-				/>
+		<Form<T4>
+			defaultValues={{sent: false}}
+			onSubmit={onSubmit}
+			className="shadow border border-secondary rounded-3 p-3 w-75">
+			<FieldBoolean<T4> name="sent" label="Отправлено" defaultValue={true} />
 
-				<FieldBoolean<T4> name="sent" label="Отправлено" defaultValue={true} />
+			<button className="btn btn-success" type="submit">
+				Отправить
+			</button>
+		</Form>
+	);
+};
 
-				<button className="btn btn-success" type="submit">
-					Отправить
-				</button>
-			</Form>
-		</div>
+type T5 = {
+	amount: number;
+};
+
+export const InsideFormFloatNumber: ComponentStory<typeof Field> = ({
+	onSubmit,
+}: any) => {
+	return (
+		<Form<T4>
+			defaultValues={{sent: false}}
+			onSubmit={onSubmit}
+			className="shadow border border-secondary rounded-3 p-3 w-75">
+			<FieldFloat<T5> name="amount" label="Заголовок" />
+
+			<button className="btn btn-success" type="submit">
+				Отправить
+			</button>
+		</Form>
 	);
 };

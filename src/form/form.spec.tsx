@@ -2,13 +2,15 @@ import React from 'react';
 import ReactDOM, {unmountComponentAtNode} from 'react-dom';
 import {Simulate, act} from 'react-dom/test-utils';
 
-import {FieldMeta, FieldType} from '~/@common/types';
+import {FieldProps, FieldType} from '~/@common/types';
 import {createField} from '~/create-field/create-field';
 import {Form} from '~/form';
 
-type FieldViewProps = FieldMeta;
+type IField = {
+	label?: string;
+};
 
-const FieldView = ({defaultValue, error, name, type}: FieldViewProps) => {
+const FieldView = ({defaultValue, error, name, type}: FieldProps<IField>) => {
 	return (
 		<div>
 			<span>{name}</span>
@@ -19,9 +21,9 @@ const FieldView = ({defaultValue, error, name, type}: FieldViewProps) => {
 };
 
 const Field = {
-	Boolean: createField({fieldType: FieldType.BOOLEAN}, FieldView),
-	Number: createField({fieldType: FieldType.NUMBER}, FieldView),
-	String: createField({fieldType: FieldType.TEXT}, FieldView),
+	Boolean: createField<IField>({fieldType: FieldType.BOOLEAN}, FieldView),
+	Number: createField<IField>({fieldType: FieldType.NUMBER}, FieldView),
+	String: createField<IField>({fieldType: FieldType.TEXT}, FieldView),
 };
 
 const FormParent = ({name, onSubmit}: any) => {

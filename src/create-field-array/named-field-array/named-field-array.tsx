@@ -1,23 +1,35 @@
 import React, {useMemo} from 'react';
 
 import {useRegisterField} from '~/@common/hooks/use-register-field';
-import {NamedFieldProps, ValidateFunc} from '~/@common/types';
+import {
+	FieldArrayProps,
+	FieldOuterProps,
+	NamedFieldProps,
+} from '~/@common/types';
 
-import ValidatedFieldArray, {
-	ValidatedFieldArrayProps,
-} from './validated-field-array';
+import ValidatedFieldArray from './validated-field-array';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const NamedFieldArray = <T,>({
+type IProps<
+	CustomFieldProps,
+	ArrayItemProps extends Record<string, any> = Record<string, any>,
+> = NamedFieldProps &
+	FieldOuterProps & {
+		component: (
+			props: FieldArrayProps<CustomFieldProps, ArrayItemProps>,
+		) => JSX.Element;
+		componentProps: CustomFieldProps;
+	};
+
+export const NamedFieldArray = <
+	CustomFieldProps extends Record<string, any> = Record<string, any>,
+	ArrayItemProps extends Record<string, any> = Record<string, any>,
+>({
 	fieldArrayState,
 	formState,
-	providedName,
+	name: providedName,
 	validate,
 	...rest
-}: NamedFieldProps<
-	ValidatedFieldArrayProps<T>,
-	'field' | 'name' | 'setItems' | 'validators'
-> & {validate: ValidateFunc | Array<ValidateFunc>}) => {
+}: IProps<CustomFieldProps, ArrayItemProps>): JSX.Element => {
 	// TODO: Мы делаем валидаторы нереагирующими на изменение валидаторов, т.к. неясно как сохранить
 	//   массив валидаторов так, чтоб он не изменялся при перерендере родителя
 	const validators = useMemo(

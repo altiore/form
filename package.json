@@ -1,6 +1,6 @@
 {
 	"name": "@altiore/form",
-	"version": "2.0.7",
+	"version": "3.0.0",
 	"description": "Form helper for building powerful forms",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",

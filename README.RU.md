@@ -52,13 +52,13 @@ import {Form} from '@altiore/form';
 
 const MyForm = () => {
   const handleSubmit = useCallback((values) => {
-    console.log('form.values is', values);
+    console.log('Переменные формы:', values);
   }, []);
 
   return (
     <Form onSubmit={handleSubmit}>
       <input name="name" />
-      <button type="submit">Submit</button>
+      <button type="submit">Отправить</button>
     </Form>
   );
 };
@@ -92,17 +92,17 @@ export const Field = createField(FieldView);
 
 const MyForm = () => {
   const handleSubmit = useCallback((values) => {
-    console.log('form.values is', values);
+    console.log('Переменные формы', values);
   }, []);
 
   return (
     <Form onSubmit={handleSubmit}>
       <Field
-        label="Label"
+        label="Имя"
         name="name"
         validate={/* здесь вы можете добавить функцию/массив функций для валидации */}
       />
-      <button type="submit">Submit</button>
+      <button type="submit">Отправить</button>
     </Form>
   );
 };
@@ -127,14 +127,14 @@ const tooShort = (value) => {
 
 const MyForm = () => {
   const handleSubmit = useCallback((values) => {
-    console.log('form.values is', values);
+    console.log('Переменные формы:', values);
   }, []);
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Field label="Email" name="email" validate={[isRequired(), isEmail()]} />
-      <Field label="Long" name="long" validate={tooShort} />
-      <button type="submit">Submit</button>
+      <Field label="E-mail" name="email" validate={[isRequired(), isEmail()]} />
+      <Field label="Длинное имя" name="long" validate={tooShort} />
+      <button type="submit">Отправить</button>
     </Form>
   );
 };
@@ -163,13 +163,58 @@ const MyForm = () => {
       setErrors(errors);
       return;
     }
-    console.log('Верные данные для отправки', values);
+    console.log('Верные данные для отправки:', values);
   }, []);
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Field label="Long" name="long" />
-      <button type="submit">Submit</button>
+      <Field label="Длинное имя" name="long" />
+      <button type="submit">Отправить</button>
+    </Form>
+  );
+};
+```
+
+## С использованием TypeScript:
+
+```tsx
+import React, {useCallback} from 'react';
+
+import {FieldProps, createField, Form} from '@altiore/form';
+
+interface IField {
+  label: string;
+}
+
+const FieldView = ({error, name, label}: FieldProps<IField>) => {
+  return (
+    <div>
+      <label>{label}</label>
+      <input name={name} />
+      <span>{error}</span>
+    </div>
+  );
+};
+
+export const Field = createField<IField>(FieldView);
+
+interface FormState {
+  name: string;
+}
+
+const MyForm = () => {
+  const handleSubmit = useCallback((values: FormState) => {
+    console.log('Переменные формы:', values);
+  }, []);
+
+  return (
+    <Form<FormState> onSubmit={handleSubmit}>
+      <Field<FormState>
+        label="Имя"
+        name="name"
+        validate={/* ты можешь добавить функцию/массив функций для валидации здесь */}
+      />
+      <button type="submit">Отправить</button>
     </Form>
   );
 };

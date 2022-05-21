@@ -1,26 +1,39 @@
-import React, {useMemo, useRef} from 'react';
+import React, {MutableRefObject, useMemo, useRef} from 'react';
 
-import {FieldType, ValidateFunc} from '~/@common/types';
+import {FieldMeta, FieldProps, FieldType, ValidateFunc} from '~/@common/types';
 import {inputTypeByType} from '~/@common/utils';
 
 import {useValidateInput} from './hooks/use-validate-input';
-import {ValidatedFieldProps} from './types/validated-field-props';
+
+type IProps<
+	FieldCustomProps extends Record<string, any>,
+	Input extends HTMLElement = HTMLInputElement,
+> = {
+	component: (props: FieldProps<FieldCustomProps, Input>) => JSX.Element;
+	componentProps: FieldCustomProps;
+	defaultValue?: any;
+	fieldMeta?: FieldMeta;
+	validators: Array<ValidateFunc>;
+	name: string;
+	formRef?: MutableRefObject<HTMLFormElement>;
+	type?: FieldType;
+	hideErrorInXSec?: false | number;
+};
 
 export const ValidatedField = <
-	T extends {defaultValue?: any},
+	FieldCustomProps extends Record<string, any>,
 	Input extends HTMLElement = HTMLInputElement,
 >({
 	component,
 	componentProps,
-	field: fieldMeta,
+	defaultValue,
+	fieldMeta,
 	formRef,
 	name,
 	type,
 	validators,
 	hideErrorInXSec,
-}: Omit<ValidatedFieldProps<T, Input>, 'validate'> & {
-	validators: Array<ValidateFunc>;
-}): JSX.Element => {
+}: IProps<FieldCustomProps, Input>): JSX.Element => {
 	const inputRef = useRef<Input>();
 	const {errors, setErrors} = useValidateInput<Input>(
 		inputRef as any,
@@ -39,7 +52,7 @@ export const ValidatedField = <
 				...(fieldMeta || ({} as any)),
 				defaultValue:
 					typeof fieldMeta?.defaultValue === 'undefined'
-						? componentProps.defaultValue
+						? defaultValue
 						: fieldMeta?.defaultValue,
 				error: errors?.[0],
 				errors,

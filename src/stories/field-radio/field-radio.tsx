@@ -1,9 +1,9 @@
 import React from 'react';
 
 import {FieldType} from '~/@common/types';
-import {FieldProps, createField} from '~/create-field';
+import {createField} from '~/create-field';
 
-export interface IField extends FieldProps {
+export interface IField {
 	label: string;
 }
 

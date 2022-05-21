@@ -1,11 +1,12 @@
 import React, {useCallback} from 'react';
 
-import {FieldArrayProps, createFieldArray} from '~/create-field-array';
+import {FieldArrayProps} from '~/@common/types';
+import {createFieldArray} from '~/create-field-array';
 import Field from '~/stories/field';
 import {FieldNumber} from '~/stories/field-typed';
 import {minLength} from '~/validators';
 
-export const TagsArray = createFieldArray<FieldArrayProps>(({list}) => {
+export const TagsArray = createFieldArray(({list}: FieldArrayProps) => {
 	const renderItem = useCallback(({key, remove}) => {
 		return (
 			<div className="w-75 mb-3" key={key}>
@@ -36,7 +37,7 @@ export const TagsArray = createFieldArray<FieldArrayProps>(({list}) => {
 	);
 });
 
-export interface IFieldArray extends FieldArrayProps {
+export interface IFieldArray {
 	label?: string;
 }
 

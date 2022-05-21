@@ -17,10 +17,9 @@ export enum FieldType {
 	SELECT_MULTIPLE = 'select-multiple',
 }
 
-export type NamedFieldProps<T, R extends string> = Omit<T, R> & {
+export type NamedFieldProps = {
 	fieldArrayState: FieldArrayState;
 	formState: FormContextState;
-	providedName: string;
 };
 
 export enum InsertPosition {
@@ -90,8 +89,8 @@ export interface FieldArrayState {
 }
 
 // Если возвращает строку - это означает, что есть ошибка. undefined означает, что ошибки нет
-export type ValidateFunc = (
-	value: any,
+export type ValidateFunc = <ValueType = any>(
+	value: ValueType,
 	fieldName?: string,
 	getFieldValueByName?: (name: string) => any,
 ) => string | undefined;
@@ -100,3 +99,52 @@ export type ReusableValidator<T> = (
 	getMessage: null | undefined | string | ((value: any, forCheck: T) => string),
 	forCheck?: T,
 ) => ValidateFunc;
+
+export type FieldOuterProps<
+	FormState extends Record<string, any> = Record<string, any>,
+> = {
+	name: keyof FormState;
+	defaultValue?: any;
+	validate?: ValidateFunc | Array<ValidateFunc>;
+};
+
+export type FieldResProps<
+	FormState extends Record<string, any> = Record<string, any>,
+	FieldCustomProps extends Record<string, any> = Record<string, any>,
+> = FieldCustomProps & FieldOuterProps<FormState>;
+
+export type FieldHiddenProps<T = HTMLInputElement> = {
+	inputRef: MutableRefObject<T>;
+};
+
+export type FieldInnerProps<
+	Input extends HTMLElement = HTMLInputElement,
+	ValueType = any,
+> = FieldHiddenProps<Input> & FieldMeta<ValueType>;
+
+export type FieldProps<
+	FieldCustomProps extends Record<string, any> = {name: string},
+	Input extends HTMLElement = HTMLInputElement,
+	ValueType = any,
+> = FieldCustomProps & FieldInnerProps<Input, ValueType>;
+
+export type FieldOptions = {
+	fieldType?: FieldType;
+	hideErrorInXSec?: false | number;
+};
+
+export type FieldArrayHiddenProps<
+	Item extends Record<string, any> = Record<string, any>,
+> = {
+	listRef: MutableRefObject<HTMLElement>;
+	list: ListInterface<Item>;
+};
+
+export type FieldArrayInnerProps<
+	Item extends Record<string, any> = Record<string, any>,
+> = FieldArrayHiddenProps<Item> & FieldMeta<Item>;
+
+export type FieldArrayProps<
+	FieldCustomProps extends Record<string, any> = Record<string, unknown>,
+	ArrayItemProps extends Record<string, any> = Record<string, any>,
+> = FieldCustomProps & FieldArrayInnerProps<ArrayItemProps>;

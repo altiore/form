@@ -1,27 +1,38 @@
 import React, {useMemo} from 'react';
 
 import {useRegisterField} from '~/@common/hooks/use-register-field';
-import {NamedFieldProps} from '~/@common/types';
+import {
+	FieldOptions,
+	FieldOuterProps,
+	FieldProps,
+	NamedFieldProps,
+} from '~/@common/types';
 
-import ValidatedField, {ValidatedFieldProps} from './validated-field';
+import ValidatedField from './validated-field';
 
-type Props<T extends {defaultValue?: any}, Input> = NamedFieldProps<
-	ValidatedFieldProps<T, Input>,
-	'field' | 'name'
->;
+type Props<
+	FieldCustomProps extends Record<string, any>,
+	Input extends HTMLElement = HTMLInputElement,
+> = NamedFieldProps &
+	FieldOuterProps &
+	FieldOptions & {
+		component: (props: FieldProps<FieldCustomProps, Input>) => JSX.Element;
+		componentProps: FieldCustomProps;
+	};
 
 export const NamedField = <
-	T extends {defaultValue?: any},
+	FieldCustomProps extends Record<string, any> = Record<string, any>,
 	Input extends HTMLElement = HTMLInputElement,
 >({
+	defaultValue,
 	fieldArrayState,
 	formState,
-	providedName,
-	type,
+	name: providedName,
+	fieldType,
 	componentProps,
 	validate,
 	...rest
-}: Props<T, Input>): JSX.Element => {
+}: Props<FieldCustomProps, Input>): JSX.Element => {
 	// TODO: Мы делаем валидаторы нереагирующими на изменение валидаторов, т.к. неясно как сохранить
 	//   массив валидаторов так, чтоб он не изменялся при перерендере родителя
 	const validators = useMemo(
@@ -34,9 +45,9 @@ export const NamedField = <
 		formState,
 		providedName,
 		validators,
-		type,
+		fieldType,
 		false,
-		componentProps.defaultValue,
+		defaultValue,
 	);
 
 	if ((isInsideForm && !field) || !isRegistered) {
@@ -46,12 +57,13 @@ export const NamedField = <
 	return (
 		<ValidatedField
 			{...rest}
+			defaultValue={defaultValue}
 			validators={validators}
 			componentProps={componentProps}
 			formRef={formState?.formRef}
-			field={field}
+			fieldMeta={field}
 			name={name}
-			type={type}
+			type={fieldType}
 		/>
 	);
 };

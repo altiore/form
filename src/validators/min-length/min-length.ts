@@ -3,7 +3,7 @@ import {getErrorMessage} from '~/validators/@common/get-error-message';
 
 export const minLength: ReusableValidator<number> =
 	(getMessage, length: number): ValidateFunc =>
-	(value: string | any[] = '') => {
+	(value: any = '') => {
 		if (typeof value?.length !== 'number') {
 			throw new Error(
 				`Неподдерживаемый тип значения для валидации "${typeof value}" передан функции для проверки данных "minLength"`,

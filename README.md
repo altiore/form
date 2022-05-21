@@ -177,4 +177,53 @@ const MyForm = () => {
 };
 ```
 
+## With Typescript
+
+```tsx
+import React, {useCallback} from 'react';
+
+import {FieldProps, createField, Form} from '@altiore/form';
+
+interface IField {
+  label: string;
+}
+
+/**
+ * "error" here is added by createField
+ * "name" and "label" comes from usage area
+ */
+const FieldView = ({error, name, label}: FieldProps<IField>) => {
+  return (
+    <div>
+      <label>{label}</label>
+      <input name={name} />
+      <span>{error}</span>
+    </div>
+  );
+};
+
+export const Field = createField<IField>(FieldView);
+
+interface FormState {
+  name: string;
+}
+
+const MyForm = () => {
+  const handleSubmit = useCallback((values: FormState) => {
+    console.log('form.values is', values);
+  }, []);
+
+  return (
+    <Form<FormState> onSubmit={handleSubmit}>
+      <Field<FormState>
+        label="Label"
+        name="name"
+        validate={/* you can add validators here */}
+      />
+      <button type="submit">Submit</button>
+    </Form>
+  );
+};
+```
+
 [Validation detailed example](.docs/valid.md)
