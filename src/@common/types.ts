@@ -89,7 +89,7 @@ export interface FieldArrayState {
 }
 
 // Если возвращает строку - это означает, что есть ошибка. undefined означает, что ошибки нет
-export type ValidateFunc = <ValueType = any>(
+export type ValidateFunc<ValueType = any> = (
 	value: ValueType,
 	fieldName?: string,
 	getFieldValueByName?: (name: string) => any,
