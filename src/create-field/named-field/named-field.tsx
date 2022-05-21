@@ -63,7 +63,7 @@ export const NamedField = <
 			formRef={formState?.formRef}
 			fieldMeta={field}
 			name={name}
-			type={fieldType}
+			fieldType={fieldType}
 		/>
 	);
 };

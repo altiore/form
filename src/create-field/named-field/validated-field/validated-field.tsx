@@ -1,7 +1,7 @@
 import React, {MutableRefObject, useMemo, useRef} from 'react';
 
 import {FieldMeta, FieldProps, FieldType, ValidateFunc} from '~/@common/types';
-import {inputTypeByType} from '~/@common/utils';
+import {getInputTypeByFieldType} from '~/@common/utils';
 
 import {useValidateInput} from './hooks/use-validate-input';
 
@@ -16,7 +16,7 @@ type IProps<
 	validators: Array<ValidateFunc>;
 	name: string;
 	formRef?: MutableRefObject<HTMLFormElement>;
-	type?: FieldType;
+	fieldType?: FieldType;
 	hideErrorInXSec?: false | number;
 };
 
@@ -30,7 +30,7 @@ export const ValidatedField = <
 	fieldMeta,
 	formRef,
 	name,
-	type,
+	fieldType,
 	validators,
 	hideErrorInXSec,
 }: IProps<FieldCustomProps, Input>): JSX.Element => {
@@ -40,7 +40,7 @@ export const ValidatedField = <
 		validators,
 		formRef,
 		fieldMeta,
-		type,
+		fieldType,
 		name,
 		hideErrorInXSec,
 	);
@@ -60,9 +60,7 @@ export const ValidatedField = <
 				isInvalid: Boolean(errors.length),
 				name,
 				setErrors,
-				type: inputTypeByType.has(type)
-					? inputTypeByType.get(type)
-					: inputTypeByType.get(FieldType.TEXT),
+				type: getInputTypeByFieldType(fieldType),
 			}),
 		[componentProps, fieldMeta, errors, inputRef, name, setErrors],
 	);

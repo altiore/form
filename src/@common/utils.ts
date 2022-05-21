@@ -91,12 +91,15 @@ export const inputTypeByType = new Map([
 	[FieldType.CHECKBOX, 'checkbox'],
 	[FieldType.ENUM, 'text'],
 	[FieldType.PASSWORD, 'password'],
-	[FieldType.SELECT, 'text'],
-	[FieldType.SELECT_MULTIPLE, 'text'],
 	[FieldType.EMAIL, 'email'],
 	[FieldType.TEXT, 'text'],
 	[FieldType.BOOLEAN, 'checkbox'],
 	[FieldType.NUMBER, 'number'],
 	[FieldType.FLOAT, 'number'],
-	[FieldType.SELECT_MULTIPLE, 'select-multiple'],
 ]);
+
+export const getInputTypeByFieldType = (fieldType: FieldType): string => {
+	return inputTypeByType.has(fieldType)
+		? inputTypeByType.get(fieldType)
+		: fieldType;
+};
