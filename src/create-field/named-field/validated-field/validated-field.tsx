@@ -67,23 +67,25 @@ export const ValidatedField = <
 		}
 	}, [componentProps, name]);
 
-	return useMemo(
-		() =>
-			React.createElement(component, {
-				...componentProps,
-				...(fieldMeta || ({} as any)),
-				defaultValue:
-					typeof fieldMeta?.defaultValue === 'undefined'
-						? defaultValue
-						: fieldMeta?.defaultValue,
-				error: errors?.[0],
-				errors,
-				inputRef,
-				isInvalid: Boolean(errors.length),
-				name,
-				setErrors,
-				type: getInputTypeByFieldType(fieldType),
-			}),
-		[componentProps, fieldMeta, errors, inputRef, name, setErrors],
-	);
+	return useMemo(() => {
+		if (!formRef) {
+			return null;
+		}
+
+		return React.createElement(component, {
+			...componentProps,
+			...(fieldMeta || ({} as any)),
+			defaultValue:
+				typeof fieldMeta?.defaultValue === 'undefined'
+					? defaultValue
+					: fieldMeta?.defaultValue,
+			error: errors?.[0],
+			errors,
+			inputRef,
+			isInvalid: Boolean(errors.length),
+			name,
+			setErrors,
+			type: getInputTypeByFieldType(fieldType),
+		});
+	}, [componentProps, fieldMeta, formRef, errors, inputRef, name, setErrors]);
 };

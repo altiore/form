@@ -11,6 +11,7 @@ import {FormContext} from '~/@common/form-context';
 import {FieldType, FormContextState, ValidateFunc} from '~/@common/types';
 import {
 	getNodeByName,
+	getValueByNodeName,
 	getValueByTypeAndTarget,
 	parseValueByType,
 } from '~/@common/utils';
@@ -198,6 +199,16 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 		[defaultValues, setFields],
 	);
 
+	const getFormValueByName = useCallback(
+		(name: string) => {
+			if (!formRef) {
+				throw new Error('Форма недоступна');
+			}
+			return getValueByNodeName(name, formRef);
+		},
+		[formRef],
+	);
+
 	const handleSubmit = useCallback(
 		(evt?: FormEvent) => {
 			const localSubmitFunc = typeof evt === 'function' ? evt : onSubmit;
@@ -222,7 +233,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 					}
 					const errors: string[] = [];
 					fieldMeta.validators.forEach((validate: ValidateFunc) => {
-						const error = validate(value);
+						const error = validate(value, fieldName, getFormValueByName);
 						if (error) {
 							isFormInvalid = true;
 							errors.push(error);
@@ -291,7 +302,14 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				})
 				.catch(console.error);
 		},
-		[fields, onSubmit, setIsSubmitting, setErrors, setNestedErrors],
+		[
+			fields,
+			getFormValueByName,
+			onSubmit,
+			setIsSubmitting,
+			setErrors,
+			setNestedErrors,
+		],
 	);
 
 	return (
