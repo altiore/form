@@ -2,7 +2,7 @@ import {isRequired} from '~/validators';
 
 describe('isRequired()', () => {
 	it('Ничего не ввели', () => {
-		expect(isRequired(null)('')).toEqual('Обязательное поле ввода');
+		expect(isRequired(null)('')).toEqual('Обязательное поле');
 	});
 
 	it('Ввели текст', () => {

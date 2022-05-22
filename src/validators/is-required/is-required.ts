@@ -11,7 +11,7 @@ export const isRequired: ReusableValidator<string> =
 		}
 
 		if (value.length < 1) {
-			const defError = `Обязательное поле ввода`;
+			const defError = `Обязательное поле`;
 			return getErrorMessage(value, value, defError, getMessage);
 		}
 		return undefined;
