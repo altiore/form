@@ -19,7 +19,7 @@ export const comparePassword: ReusableValidator<string> =
 		const firstPassword = getFieldValueByName(namePasswordField);
 
 		if (value !== firstPassword) {
-			const defError = `Пароль не совпадает`;
+			const defError = `Пароли не совпадают`;
 			return getErrorMessage(value, firstPassword, defError, getMessage);
 		}
 		return undefined;

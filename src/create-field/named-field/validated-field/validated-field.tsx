@@ -68,10 +68,6 @@ export const ValidatedField = <
 	}, [componentProps, name]);
 
 	return useMemo(() => {
-		if (!formRef) {
-			return null;
-		}
-
 		return React.createElement(component, {
 			...componentProps,
 			...(fieldMeta || ({} as any)),
@@ -87,5 +83,5 @@ export const ValidatedField = <
 			setErrors,
 			type: getInputTypeByFieldType(fieldType),
 		});
-	}, [componentProps, fieldMeta, formRef, errors, inputRef, name, setErrors]);
+	}, [componentProps, fieldMeta, errors, inputRef, name, setErrors]);
 };

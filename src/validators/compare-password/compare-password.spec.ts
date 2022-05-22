@@ -1,14 +1,14 @@
 import {comparePassword} from '~/validators';
 
 describe('comparePassword()', () => {
-	it('Пароль не совпадает', () => {
+	it('Пароли не совпадают', () => {
 		expect(
 			comparePassword(null, 'password')(
 				'pestPassasword',
 				'',
 				() => 'testPassword',
 			),
-		).toEqual('Пароль не совпадает');
+		).toEqual('Пароли не совпадают');
 	});
 	it('Пароль совпадает', () => {
 		expect(
