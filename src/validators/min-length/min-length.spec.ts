@@ -16,4 +16,7 @@ describe('minLength()', () => {
 			`Заданная длина не может быть меньше нуля`,
 		);
 	});
+	it('Длина', () => {
+		expect(minLength(5)('12345')).toBeUndefined();
+	});
 });
