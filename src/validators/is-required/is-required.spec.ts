@@ -1,14 +1,39 @@
 import {isRequired} from '~/validators';
 
 describe('isRequired()', () => {
-	it('Ничего не ввели', () => {
-		expect(isRequired(null)('')).toEqual('Обязательное поле');
+	it('Пустая строка', () => {
+		expect(isRequired()('')).toEqual('Обязательное поле');
 	});
 
-	it('Ввели текст', () => {
-		expect(isRequired(null)('Some text')).toBeUndefined();
+	it('Строка с одними пробелами', () => {
+		expect(isRequired()('   ')).toEqual('Обязательное поле');
 	});
-	it('Некорректный text, который должен выдать ошибку пользователю', () => {
-		expect(isRequired(null, undefined)).toThrow(Error);
+
+	it('null', () => {
+		expect(isRequired()(null)).toEqual('Обязательное поле');
+	});
+
+	it('undefined', () => {
+		expect(isRequired()(undefined)).toEqual('Обязательное поле');
+	});
+
+	it('NaN', () => {
+		expect(isRequired()(NaN)).toEqual('Обязательное поле');
+	});
+
+	it('текст', () => {
+		expect(isRequired()('Some text')).toBeUndefined();
+	});
+
+	it('число', () => {
+		expect(isRequired()(5)).toBeUndefined();
+	});
+
+	it('объект (может быть и пустой)', () => {
+		expect(isRequired()({})).toBeUndefined();
+	});
+
+	it('массив (может быть и пустой)', () => {
+		expect(isRequired()([])).toBeUndefined();
 	});
 });

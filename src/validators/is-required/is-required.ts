@@ -4,13 +4,12 @@ import {getErrorMessage} from '~/validators/@common/get-error-message';
 export const isRequired: ReusableValidator<string> =
 	(getMessage = null): ValidateFunc =>
 	(value: any) => {
-		if (typeof value !== 'string') {
-			throw new Error(
-				`Неподдерживаемый тип значения для валидации "${typeof value}" передан функции для проверки данных "isRequired"`,
-			);
-		}
-
-		if (value.length < 1) {
+		if (
+			value === undefined ||
+			value === null ||
+			(typeof value === 'string' && value.trim()) === '' ||
+			Number.isNaN(value)
+		) {
 			const defError = `Обязательное поле`;
 			return getErrorMessage(value, value, defError, getMessage);
 		}
