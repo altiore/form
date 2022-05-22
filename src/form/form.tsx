@@ -6,6 +6,7 @@ import isEqual from 'lodash/isEqual';
 import set from 'lodash/set';
 import unset from 'lodash/unset';
 
+import {DEF_HIDE_ERROR_IN_X_SEC} from '~/@common/consts';
 import {FormContext} from '~/@common/form-context';
 import {FieldType, FormContextState, ValidateFunc} from '~/@common/types';
 import {
@@ -37,6 +38,32 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	const [fields, setFields] = useState<FormContextState['fields']>({});
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
+	const timeout = useRef<any>();
+
+	const clearErrors = useCallback(() => {
+		setFields((curFields) => {
+			const newFields = {...curFields};
+			let shouldUpdate = false;
+			Object.entries(newFields).forEach(([curFieldName, curFieldVal]) => {
+				if (curFieldVal.isInvalid) {
+					shouldUpdate = true;
+					newFields[curFieldName] = {
+						...newFields[curFieldName],
+						error: undefined,
+						errors: [],
+						isInvalid: false,
+					};
+				}
+			});
+
+			if (shouldUpdate) {
+				return newFields;
+			}
+
+			return curFields;
+		});
+	}, [setFields]);
+
 	const setErrors = useCallback(
 		(fieldName: string, errors: string[], force?: boolean) => {
 			setFields((s) => {
@@ -56,13 +83,21 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				if (isEqual(s[fieldName], fieldData) && !force) {
 					return s;
 				}
+
+				if (errors?.length) {
+					if (timeout.current) {
+						clearTimeout(timeout.current);
+					}
+					timeout.current = setTimeout(clearErrors, DEF_HIDE_ERROR_IN_X_SEC);
+				}
+
 				return {
 					...s,
 					[fieldName]: fieldData,
 				};
 			});
 		},
-		[setFields],
+		[clearErrors, setFields],
 	);
 
 	const setNestedErrors = useCallback(

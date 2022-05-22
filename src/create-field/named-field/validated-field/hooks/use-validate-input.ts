@@ -9,6 +9,7 @@ import {
 
 import isEqual from 'lodash/isEqual';
 
+import {DEF_HIDE_ERROR_IN_X_SEC} from '~/@common/consts';
 import {useIsMounted} from '~/@common/hooks/use-is-mounted';
 import {FieldMeta, FieldType, ValidateFunc} from '~/@common/types';
 import {
@@ -31,7 +32,6 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	field?: FieldMeta,
 	type?: FieldType,
 	nameFromProp?: string,
-	hideErrorInXSec?: false | number,
 ): ValidateInputRes => {
 	const [mounted, setMounted] = useState(false);
 	useEffect(() => {
@@ -75,31 +75,39 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 		[formRef],
 	);
 
-	const [errors, setErrors] = useState<string[]>(DEF_ERRORS);
+	const [errors, setErrorsState] = useState<string[]>(DEF_ERRORS);
+
+	const setErrors = useCallback(
+		(errors: string[], force?: boolean) => {
+			setErrorsState((s: string[]) => {
+				if (isEqual(s, errors) && !force) {
+					return s;
+				}
+
+				if (timeout.current) {
+					clearTimeout(timeout.current);
+				}
+
+				timeout.current = setTimeout(() => {
+					setErrorsState([]);
+				}, DEF_HIDE_ERROR_IN_X_SEC);
+				return errors;
+			});
+		},
+		[setErrorsState],
+	);
 
 	const handleSetErrors = useCallback(
 		(errors: string[], force?: boolean) => {
-			if (field?.setErrors) {
-				field.setErrors(errors, force);
-			} else {
-				setErrors((s) => {
-					if (isEqual(s, errors) && !force) {
-						return s;
-					}
-					return errors;
-				});
-			}
-		},
-		[field?.setErrors, setErrors],
-	);
-
-	const setEmptyErrors = useCallback(
-		(force?: boolean) => {
 			if (getMounted()) {
-				handleSetErrors([], force);
+				if (field?.setErrors) {
+					field.setErrors(errors, force);
+				} else {
+					setErrors(errors, force);
+				}
 			}
 		},
-		[getMounted, handleSetErrors],
+		[getMounted, field?.setErrors, setErrors],
 	);
 
 	const timeout = useRef<any>();
@@ -132,29 +140,17 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 			}
 
 			handleSetErrors(errors);
-			if (hideErrorInXSec) {
-				timeout.current = setTimeout(setEmptyErrors, hideErrorInXSec);
-			}
 		},
-		[
-			handleSetErrors,
-			setEmptyErrors,
-			getFormValueByName,
-			getMounted,
-			name,
-			type,
-			validators,
-			hideErrorInXSec,
-		],
+		[getFormValueByName, getMounted, handleSetErrors, name, type, validators],
 	);
 
 	const handleFocus = useCallback(
 		(e: Event) => {
 			e.preventDefault();
 
-			setEmptyErrors(true);
+			handleSetErrors([], true);
 		},
-		[setEmptyErrors],
+		[handleSetErrors],
 	);
 
 	useEffect(() => {

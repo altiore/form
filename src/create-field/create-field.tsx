@@ -39,9 +39,6 @@ import NamedField from './named-field';
 
 export type FieldOpt = FieldOptions | FieldType;
 
-// измеряется в миллисекундах
-const DEF_HIDE_ERROR_IN_X_SEC = 7000;
-
 export function createField<
 	FieldCustomProps extends Record<string, any> = {name: string},
 	Input extends HTMLElement = HTMLInputElement,
@@ -86,14 +83,7 @@ export function createField<
 	// 2. fieldType
 	const fieldType = options ? options.fieldType ?? undefined : undefined;
 
-	// 3. hideErrorInXSec
-	const hideErrorInXSec = options
-		? typeof options.hideErrorInXSec !== 'undefined'
-			? options.hideErrorInXSec
-			: DEF_HIDE_ERROR_IN_X_SEC
-		: DEF_HIDE_ERROR_IN_X_SEC;
-
-	// 4. component
+	// 3. component
 	const component: (props: FieldProps<FieldCustomProps, Input>) => JSX.Element =
 		componentInSecondParam ??
 		(optionsOrComponent as (
@@ -121,7 +111,6 @@ export function createField<
 									name={name}
 									fieldType={fieldType}
 									validate={validate}
-									hideErrorInXSec={hideErrorInXSec}
 								/>
 							);
 						}}

@@ -149,7 +149,6 @@ export type FieldProps<
 
 export type FieldOptions = {
 	fieldType?: FieldType;
-	hideErrorInXSec?: false | number;
 };
 
 export type FieldArrayHiddenProps<

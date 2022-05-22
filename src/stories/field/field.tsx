@@ -7,7 +7,7 @@ export interface IField {
 	label: string;
 }
 
-export const Field = createField<IField>({hideErrorInXSec: false}, (props) => {
+export const Field = createField<IField>((props) => {
 	const {className, defaultValue, error, label, name} = props;
 
 	console.log('Field.render', {
