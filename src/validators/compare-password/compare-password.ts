@@ -10,6 +10,12 @@ export const comparePassword: ReusableValidator<string> =
 			);
 		}
 
+		if (!getFieldValueByName) {
+			throw new Error(
+				`Валидатор формы должен содержать getFieldValueByName функцию для корректной работы`,
+			);
+		}
+
 		const firstPassword = getFieldValueByName(namePasswordField);
 
 		if (value !== firstPassword) {
