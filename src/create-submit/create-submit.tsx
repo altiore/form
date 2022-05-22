@@ -47,13 +47,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = React.memo(
 				if (onSubmit) {
 					onFormSubmit(onSubmit);
 				} else {
-					if (formRef.current.submit) {
-						formRef.current.submit();
-					} else if (formRef.current.requestSubmit) {
-						formRef.current.requestSubmit();
-					} else {
-						onFormSubmit();
-					}
+					onFormSubmit();
 				}
 			},
 			[onSubmit, formRef, onFormSubmit],
