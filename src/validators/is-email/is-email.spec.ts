@@ -8,7 +8,12 @@ describe('isEmail()', () => {
 	it('Корректный email', () => {
 		expect(isEmail(null)('test@test.com')).toBeUndefined();
 	});
-	it('Некорректный email, который должен выдать ошибку пользователю', () => {
-		expect(isEmail(null, undefined)).toThrow(Error);
+
+	it('Пропускать проверку, если поле undefined', () => {
+		expect(isEmail(null)(undefined)).toBeUndefined();
+	});
+
+	it('Пропускать проверку, если поле null', () => {
+		expect(isEmail(null)(null)).toBeUndefined();
 	});
 });

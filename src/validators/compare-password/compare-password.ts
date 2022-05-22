@@ -6,13 +6,13 @@ export const comparePassword: ReusableValidator<string> =
 	(value, fieldName, getFieldValueByName) => {
 		if (typeof namePasswordField !== 'string') {
 			throw new Error(
-				`Неподдерживаемый тип значения для валидации "${typeof value}" передан функции для проверки данных "comparePassword"`,
+				`Укажите поле, с которым хотите сравнить текущее значение "${value}" для проверки данных, например: "comparePassword('password')"`,
 			);
 		}
 
 		if (!getFieldValueByName) {
 			throw new Error(
-				`Валидатор формы должен содержать getFieldValueByName функцию для корректной работы`,
+				`Валидатор "comparePassword" должен содержать getFieldValueByName функцию для корректной работы`,
 			);
 		}
 
