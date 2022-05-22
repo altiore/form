@@ -62,6 +62,9 @@ describe('~/create-field', () => {
 	});
 
 	describe('Не перерендеривать, если рендерится родитель, но пропсы не меняются', () => {
+		beforeEach(() => {
+			jest.useFakeTimers();
+		});
 		it('Field должен отрендерится только 1 раз не смотря на то, что родитель рендерится дважды', () => {
 			act(() => {
 				const wrapper = mount(<Parent name="foo" />);
@@ -73,6 +76,9 @@ describe('~/create-field', () => {
 	});
 
 	describe('Проверить, что валидация работает внутри отрендерренного Field', () => {
+		beforeEach(() => {
+			jest.useFakeTimers();
+		});
 		it('Есть ошибка валидации', () => {
 			act(() => {
 				ReactDOM.render(<Parent name="foo" />, container);
@@ -106,6 +112,9 @@ describe('~/create-field', () => {
 	});
 
 	describe('Проверяем рендер родителя при валидации', () => {
+		beforeEach(() => {
+			jest.useFakeTimers();
+		});
 		it('Field РЕрендерится при валидации, родитель не перерендеривается', () => {
 			act(() => {
 				ReactDOM.render(<Parent name="foo" />, container);
@@ -123,6 +132,9 @@ describe('~/create-field', () => {
 	});
 
 	describe('Проверяем Multi Select Field', () => {
+		beforeEach(() => {
+			jest.useFakeTimers();
+		});
 		it('Выбираем одно и несколько значений в мульти селекте', () => {
 			act(() => {
 				ReactDOM.render(<Parent name="foo" />, container);

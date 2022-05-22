@@ -19,60 +19,76 @@ type SubmitButtonProps = SubmitOuterProps & {
 const getIsInvalid = (fields: FormContextState['fields']) =>
 	fields ? Object.values(fields).some((el) => el.isInvalid) : false;
 
-const SubmitButton: React.FC<SubmitButtonProps> = ({
-	component,
-	componentProps,
-	formState,
-	onSubmit,
-}) => {
-	const fields = useMemo(() => formState?.fields, [formState?.fields]);
-	const isInvalid = useMemo(() => {
-		return getIsInvalid(fields);
-	}, [fields]);
-	const isSubmitting = useMemo(() => formState?.isSubmitting, [formState]);
-	const isUntouched = useMemo(() => {
-		return fields ? Object.values(fields).every((el) => el.isUntouched) : false;
-	}, [fields]);
+const SubmitButton: React.FC<SubmitButtonProps> = React.memo(
+	({component, componentProps, formState, onSubmit}) => {
+		const fields = useMemo(() => formState?.fields, [formState?.fields]);
+		const isInvalid = useMemo(() => {
+			return getIsInvalid(fields);
+		}, [fields]);
+		const isSubmitting = useMemo(() => formState?.isSubmitting, [formState]);
+		const isUntouched = useMemo(() => {
+			return fields
+				? Object.values(fields).every((el) => el.isUntouched)
+				: false;
+		}, [fields]);
 
-	const onClick = useCallback(
-		(evt) => {
-			evt.preventDefault();
-			evt.stopPropagation();
+		const onFormSubmit = useMemo(
+			() => formState.onSubmit,
+			[formState.onSubmit],
+		);
+		const formRef = useMemo(() => formState.formRef, [formState.formRef]);
 
-			// Если есть кастомное свойство onSubmit у кнопки, то будет использована функция из него
-			if (onSubmit) {
-				formState.onSubmit(onSubmit);
-			} else {
-				formState.formRef.current.requestSubmit();
+		const onClick = useCallback(
+			(evt) => {
+				evt.preventDefault();
+				evt.stopPropagation();
+
+				// Если есть кастомное свойство onSubmit у кнопки, то будет использована функция из него
+				if (onSubmit) {
+					onFormSubmit(onSubmit);
+				} else {
+					formRef.current.requestSubmit();
+				}
+			},
+			[onSubmit, formRef, onFormSubmit],
+		);
+
+		useEffect(() => {
+			const forbiddenProps = intersection(Object.keys(componentProps), [
+				'isInvalid',
+				'isSubmitting',
+				'isUntouched',
+				'onClick',
+				'type',
+			]);
+			forbiddenPropsError(forbiddenProps, 'SubmitButton');
+		}, [componentProps]);
+
+		return useMemo(() => {
+			if (!formRef.current) {
+				return null;
 			}
-		},
-		[onSubmit, fields, formState],
-	);
 
-	useEffect(() => {
-		const forbiddenProps = intersection(Object.keys(componentProps), [
-			'isInvalid',
-			'isSubmitting',
-			'isUntouched',
-			'onClick',
-			'type',
-		]);
-		forbiddenPropsError(forbiddenProps, 'SubmitButton');
-	}, [componentProps]);
-
-	return useMemo(
-		() =>
-			React.createElement(component, {
+			return React.createElement(component, {
 				...componentProps,
 				isInvalid,
 				isSubmitting,
 				isUntouched,
 				onClick,
 				type: onSubmit ? 'button' : 'submit',
-			}),
-		[componentProps, fields, isInvalid, isSubmitting, isUntouched],
-	);
-};
+			});
+		}, [
+			componentProps,
+			fields,
+			formRef,
+			isInvalid,
+			isSubmitting,
+			isUntouched,
+			onClick,
+			onSubmit,
+		]);
+	},
+);
 
 export function createSubmit<
 	CustomSubmitProps extends Record<string, any> = SubmitOuterProps,

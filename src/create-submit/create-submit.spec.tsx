@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import ReactDOM, {unmountComponentAtNode} from 'react-dom';
 import {act} from 'react-dom/test-utils';
 
@@ -11,10 +11,13 @@ import {Form} from '~/form';
 import {isEmail} from '~/validators/is-email';
 
 const memoizedRenderEvent = sinon.spy();
-const SubmitButton = createSubmit(({isInvalid, isSubmitting, isUntouched}) => {
-	memoizedRenderEvent();
-	return <button disabled={isInvalid || isSubmitting || isUntouched} />;
-});
+const SubmitButton = createSubmit(
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	({isInvalid, isSubmitting, isUntouched, ...props}) => {
+		memoizedRenderEvent();
+		return <button {...props} disabled={isInvalid || isSubmitting} />;
+	},
+);
 
 const Field = createField(({error, name}) => {
 	return (
@@ -28,11 +31,14 @@ const Field = createField(({error, name}) => {
 
 const parentRenderEvent = sinon.spy();
 const Parent = ({name}: any) => {
+	const onSubmit = useCallback((values) => {
+		console.log(values);
+	}, []);
 	parentRenderEvent();
 	return (
-		<Form onSubmit={console.log}>
+		<Form onSubmit={onSubmit}>
 			<span>{name}</span>
-			<Field name="test" validate={[isEmail(null)]} />
+			<Field name="test" validate={[isEmail()]} />
 			<SubmitButton>Отправить</SubmitButton>
 		</Form>
 	);
@@ -48,15 +54,14 @@ describe('~/create-submit', () => {
 				wrapper.setProps({name: 'bar'});
 			});
 			expect(parentRenderEvent.callCount).toEqual(2);
-			//TODO: Скорее всего должен рендериться один раз.
-			expect(memoizedRenderEvent.callCount).toEqual(2);
+			expect(memoizedRenderEvent.callCount).toEqual(1);
 		});
 	});
-
 	describe('Доступность кнопки реагирует на валидацию поля', () => {
 		beforeEach(() => {
 			container = document.createElement('div');
 			document.body.appendChild(container);
+			jest.useFakeTimers();
 		});
 		afterEach(() => {
 			unmountComponentAtNode(container);
@@ -68,10 +73,10 @@ describe('~/create-submit', () => {
 				ReactDOM.render(<Parent name="foo" />, container);
 			});
 
-			const button = container?.querySelector('button');
-
+			let button: any;
 			act(() => {
-				expect(button.hasAttribute('disabled')).toBe(true);
+				button = container?.querySelector('button');
+				expect(button.hasAttribute('disabled')).toBe(false);
 			});
 
 			const input = container?.querySelector('input');
