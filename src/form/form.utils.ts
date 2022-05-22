@@ -1,20 +1,20 @@
 export const toFlatErrors = (
 	errors: Record<string, any>,
 	setErrors: (fieldName: string, errors: string[]) => void,
+	prefix = '',
 ): void => {
-	Object.keys(errors).forEach((namePart) => {
-		const v = errors[namePart];
-		if (Array.isArray(v) && typeof v[0] === 'string') {
-			setErrors(namePart, v);
-		} else {
-			const newObj = Object.entries(v).reduce<Record<string, any>>(
-				(r, [name, value]) => {
-					r[`${namePart}.${name}`] = value;
-					return r;
-				},
-				{},
+	Object.entries(errors).forEach(([namePart, errorField]) => {
+		const name = (prefix ? `${prefix}.` : '') + namePart;
+		if (
+			(Array.isArray(errorField) && typeof errorField[0] === 'string') ||
+			typeof errorField === 'string'
+		) {
+			setErrors(
+				name,
+				typeof errorField === 'string' ? [errorField] : errorField,
 			);
-			toFlatErrors(newObj, setErrors);
+		} else {
+			toFlatErrors(errorField, setErrors, name);
 		}
 	});
 };
