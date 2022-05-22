@@ -154,7 +154,8 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 					dynamicDefault = Array.isArray(defValueFromPar)
 						? undefined
 						: defValueFromPar
-						? defValueFromPar?.[fieldNameArr[fieldNameArrLength - 1]] || ' '
+						? defValueFromPar?.[fieldNameArr[fieldNameArrLength - 1]] ??
+						  undefined
 						: undefined;
 				}
 				const defaultValue =
