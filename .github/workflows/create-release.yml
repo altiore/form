@@ -10,10 +10,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - name: Set PRE_LAST_GIT_TAG
+        run: |
+          git pull origin main --rebase --tags -f
+          git tag
+          echo "PRE_LAST_GIT_TAG=$(git tag --sort=version:refname | tail -2 | head -n 1)" >> $GITHUB_ENV
+          echo "DATE_FORMAT='%an%x09%s'" >> $GITHUB_ENV
+
+      - name: Set commits.txt
+        run: |
+          echo ${{ env.PRE_LAST_GIT_TAG }}
+          echo ${{ env.DATE_FORMAT }}
+          git log ${{ env.PRE_LAST_GIT_TAG }}..HEAD --oneline --pretty=format:${{ env.DATE_FORMAT }} >> changelogs/commits.txt
+
+      - name: Create CHANGELOG
+        run: |
+          cat changelogs/commits.txt
+          node ./bin/get-changelog.js "$(cat changelogs/commits.txt)"
+
+      - name: Show recently created changelog
+        run: |
+          cat changelogs/CHANGELOG.md
+
       - uses: ncipollo/release-action@v1
         with:
           artifacts: 'release.tar.gz'
-          bodyFile: 'README.md'
+          bodyFile: 'changelogs/CHANGELOG.md'
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # Setup .npmrc file to publish to npm

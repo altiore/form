@@ -8,8 +8,8 @@
   <img src="https://img.shields.io/npm/v/@altiore/form.svg" alt="NPM Version" />
 </a>
 
-**английская версия**
-[**README.md**](README.md)
+**English version**
+[**README.md**](https://github.com/altiore/form/blob/main/README.md)
 
 ## Зачем?
 

@@ -8,8 +8,8 @@ Productive, flexible and extensible forms with easy-to-use validation and the mo
   <img src="https://img.shields.io/npm/v/@altiore/form.svg" alt="NPM Version" />
 </a>
 
-**русская версия**
-[**README.RU.md**](README.RU.md)
+**Русская версия**
+[**README.RU.md**](https://github.com/altiore/form/blob/main/README.RU.md)
 
 ## Why?
 

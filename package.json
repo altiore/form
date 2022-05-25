@@ -15,8 +15,8 @@
 		"npm:major": "npm version major && npm publish --access=public && git push && git push --tags",
 		"test": "jest --detectOpenHandles",
 		"test:ci": "jest --ci --detectOpenHandles",
-		"lint": "tsc --noEmit && prettier --write \"**/*.{js,jsx,ts,tsx,json,yml}\" && prettier --write \"**/*.md\" --use-tabs=false && eslint . --fix --ext .js,.jsx,.ts,.tsx --max-warnings=0",
-		"lint:ci": "tsc --noEmit && prettier --check \"**/*.{js,jsx,ts,tsx,json,yml}\" && prettier --check \"**/*.md\" --use-tabs=false && eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0",
+		"lint": "tsc --noEmit && prettier --write \"**/*.{js,jsx,ts,tsx,json,yml}\" && prettier --write \"**/*.md\" --use-tabs=false && eslint . --fix --ext .js,.jsx,.ts,.tsx --max-warnings=1",
+		"lint:ci": "tsc --noEmit && prettier --check \"**/*.{js,jsx,ts,tsx,json,yml}\" && prettier --check \"**/*.md\" --use-tabs=false && eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=1",
 		"jsdoc": "jsdoc -c jsdoc.json",
 		"prepublish": "npm run build",
 		"prepare": "husky install",
@@ -140,11 +140,11 @@
 	"lint-staged": {
 		"*.{ts,tsx}": [
 			"prettier --write",
-			"eslint --fix --max-warnings=0"
+			"eslint --fix --max-warnings=1"
 		],
 		"*.{js,jsx}": [
 			"prettier --write",
-			"eslint --fix --max-warnings=0"
+			"eslint --fix --max-warnings=1"
 		],
 		"*.{json,yml}": [
 			"prettier --write"
