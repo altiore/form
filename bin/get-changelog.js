@@ -32,7 +32,7 @@ const path = require('path');
 		);
 		let resStr = '';
 		if (bugs && bugs.length) {
-			resStr = resStr + '\n#### Bugs fixes:\n';
+			resStr = resStr + '\n#### Bug fixes:\n';
 			resStr = resStr + bugs.reduce(reduceChange, '');
 		}
 		if (features && features.length) {
