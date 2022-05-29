@@ -80,12 +80,12 @@ import {createField, Form} from '@altiore/form';
  * "error" here is added by createField
  * "name" and "label" comes from usage area
  */
-const FieldView = ({error, name, label}) => {
+const FieldView = ({fieldProps, inputProps, label}) => {
   return (
     <div>
       <label>{label}</label>
-      <input name={name} />
-      <span>{error}</span>
+      <input {...inputProps} />
+      <span>{fieldProps.error}</span>
     </div>
   );
 };
@@ -192,12 +192,12 @@ interface IField {
  * "error" here is added by createField
  * "name" and "label" comes from usage area
  */
-const FieldView = ({error, name, label}: FieldProps<IField>) => {
+const FieldView = ({fieldProps, inputProps, label}: FieldProps<IField>) => {
   return (
     <div>
       <label>{label}</label>
-      <input name={name} />
-      <span>{error}</span>
+      <input {...inputProps} />
+      <span>{fieldProps.error}</span>
     </div>
   );
 };
@@ -245,12 +245,12 @@ interface IField {
 }
 
 const FieldView = createField<IField>(
-  ({error, name, label}: FieldProps<IField>) => {
+  ({fieldProps, inputProps, label}: FieldProps<IField>) => {
     return (
       <div>
         <label>{label}</label>
-        <input name={name} />
-        <span>{error}</span>
+        <input {...inputProps} />
+        <span>{fieldProps.error}</span>
       </div>
     );
   },

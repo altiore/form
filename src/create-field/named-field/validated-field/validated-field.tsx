@@ -4,10 +4,11 @@ import intersection from 'lodash/intersection';
 
 import {forbiddenPropsError} from '~/@common/errors';
 import {
+	FieldInputProps,
 	FieldMeta,
-	FieldMetaName,
 	FieldProps,
 	FieldType,
+	IgnoredProp,
 	ValidateFunc,
 } from '~/@common/types';
 import {getInputTypeByFieldType} from '~/@common/utils';
@@ -52,10 +53,10 @@ export const ValidatedField = <
 	);
 
 	useEffect(() => {
-		const forbiddenProps = intersection(Object.keys(componentProps), [
-			...Object.values(FieldMetaName),
-			'inputRef',
-		]);
+		const forbiddenProps = intersection(
+			Object.keys(componentProps),
+			Object.values(IgnoredProp),
+		);
 		forbiddenPropsError(forbiddenProps, name);
 
 		if (forbiddenProps.includes('type')) {
@@ -68,20 +69,36 @@ export const ValidatedField = <
 	}, [componentProps, name]);
 
 	return useMemo(() => {
+		const type = getInputTypeByFieldType(fieldType);
+		const defValue =
+			typeof fieldMeta?.defaultValue === 'undefined'
+				? defaultValue
+				: fieldMeta?.defaultValue;
+		const isChecked = ['checkbox', 'radio'].includes(type);
+		const inputProps: FieldInputProps<any> = {
+			defaultChecked: isChecked ? defValue : undefined,
+			defaultValue: isChecked ? undefined : defValue,
+			name,
+			type: [FieldType.SELECT, FieldType.SELECT_MULTIPLE].includes(fieldType)
+				? undefined
+				: type,
+			value: type === 'checkbox' ? 'on' : undefined,
+		};
 		return React.createElement(component, {
 			...componentProps,
-			...(fieldMeta || ({} as any)),
-			defaultValue:
-				typeof fieldMeta?.defaultValue === 'undefined'
-					? defaultValue
-					: fieldMeta?.defaultValue,
-			error: errors?.[0],
-			errors,
-			inputRef,
-			isInvalid: Boolean(errors.length),
-			name,
-			setErrors,
-			type: getInputTypeByFieldType(fieldType),
+			[IgnoredProp.FIELD_PROPS]: fieldMeta
+				? {...fieldMeta, inputRef}
+				: {
+						defaultValue: defValue,
+						error: errors?.[0],
+						errors,
+						fieldType,
+						inputRef,
+						isInvalid: Boolean(errors.length),
+						name,
+						setErrors,
+				  },
+			[IgnoredProp.INPUT_PROPS]: inputProps,
 		});
-	}, [componentProps, fieldMeta, errors, inputRef, name, setErrors]);
+	}, [componentProps, fieldMeta, fieldType, errors, inputRef, name, setErrors]);
 };

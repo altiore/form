@@ -30,7 +30,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	validators: Array<ValidateFunc>,
 	formRef?: MutableRefObject<HTMLFormElement>,
 	field?: FieldMeta,
-	type?: FieldType,
+	fieldType?: FieldType,
 	nameFromProp?: string,
 ): ValidateInputRes => {
 	const [mounted, setMounted] = useState(false);
@@ -47,7 +47,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 
 	const inputRef = useMemo<MutableRefObject<T>>(() => {
 		const ERROR_MESSAGE =
-			'Не удалось найти ссылку на инпут. Добавьте корректное имя вашему полю' +
+			`Не удалось найти ссылку на поле ввода "${name}". Добавьте корректное имя вашему полю` +
 			' input, или используйте inputRef';
 
 		if (customRef.current) {
@@ -120,16 +120,16 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 			const isMultiSelect =
 				(e.target as any)?.tagName === 'SELECT' &&
 				Boolean((e.target as any)?.multiple);
-			if (isMultiSelect && type !== FieldType.SELECT_MULTIPLE) {
+			if (isMultiSelect && fieldType !== FieldType.SELECT_MULTIPLE) {
 				throw new Error(
-					'Вы используете select со сойством multiple. Укажите' +
+					'Вы используете select со свойством multiple. Укажите' +
 						' FieldType.SELECT_MULTIPLE явно для корректной работы элемента',
 				);
 			}
 
 			const hasValidation = Boolean(validators?.length && e.target);
 			if (hasValidation) {
-				const value = getValueByTypeAndTarget(type, e.target);
+				const value = getValueByTypeAndTarget(fieldType, e.target);
 
 				validators.forEach((validate) => {
 					const result = validate(value, name, getFormValueByName);
@@ -141,7 +141,14 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 
 			handleSetErrors(errors);
 		},
-		[getFormValueByName, getMounted, handleSetErrors, name, type, validators],
+		[
+			getFormValueByName,
+			getMounted,
+			handleSetErrors,
+			name,
+			fieldType,
+			validators,
+		],
 	);
 
 	const handleFocus = useCallback(
@@ -156,8 +163,12 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	useEffect(() => {
 		const input = inputRef.current;
 		const hasEventHandler = Boolean(input);
+
+		const isChange =
+			(hasEventHandler && input.tagName.toUpperCase() === 'SELECT') ||
+			(input as any)?.type === 'checkbox';
 		if (hasEventHandler) {
-			if (input.tagName.toUpperCase() === 'SELECT') {
+			if (isChange) {
 				input.addEventListener('change', handleFieldChanged);
 			}
 			input.addEventListener('blur', handleFieldChanged);
@@ -166,7 +177,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 
 		return () => {
 			if (hasEventHandler) {
-				if (input.tagName.toUpperCase() === 'SELECT') {
+				if (isChange) {
 					input.removeEventListener('change', handleFieldChanged);
 				}
 				input.removeEventListener('blur', handleFieldChanged);

@@ -13,16 +13,20 @@ import ValidatedField from './validated-field';
 type Props<
 	FieldCustomProps extends Record<string, any>,
 	Input extends HTMLElement = HTMLInputElement,
+	FormState extends Record<string, any> = Record<string, any>,
 > = NamedFieldProps &
-	FieldOuterProps &
+	FieldOuterProps<FormState> &
 	FieldOptions & {
-		component: (props: FieldProps<FieldCustomProps, Input>) => JSX.Element;
+		component: (
+			props: FieldProps<FieldCustomProps, Input, FormState[keyof FormState]>,
+		) => JSX.Element;
 		componentProps: FieldCustomProps;
 	};
 
 export const NamedField = <
 	FieldCustomProps extends Record<string, any> = Record<string, any>,
 	Input extends HTMLElement = HTMLInputElement,
+	FormState extends Record<string, any> = Record<string, any>,
 >({
 	defaultValue,
 	fieldArrayState,
@@ -32,9 +36,9 @@ export const NamedField = <
 	componentProps,
 	validate,
 	...rest
-}: Props<FieldCustomProps, Input>): JSX.Element => {
+}: Props<FieldCustomProps, Input, FormState>): JSX.Element => {
 	const {field, isInsideForm, isRegistered, name, validators} =
-		useRegisterField(
+		useRegisterField<FormState>(
 			fieldArrayState,
 			formState,
 			providedName,
@@ -57,7 +61,7 @@ export const NamedField = <
 			formRef={formState?.formRef}
 			fieldMeta={field}
 			name={name}
-			fieldType={fieldType}
+			fieldType={field?.fieldType ?? fieldType}
 		/>
 	);
 };

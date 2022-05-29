@@ -17,6 +17,32 @@ export enum FieldType {
 	SELECT_MULTIPLE = 'select-multiple',
 }
 
+// TODO: не уверен на счет 'button'
+export type InputType =
+	| 'button'
+	| 'checkbox'
+	| 'color'
+	| 'date'
+	| 'datetime'
+	| 'datetime-local'
+	| 'email'
+	| 'file'
+	| 'hidden'
+	| 'image'
+	| 'month'
+	| 'number'
+	| 'password'
+	| 'radio'
+	| 'range'
+	| 'reset'
+	| 'search'
+	| 'submit'
+	| 'text'
+	| 'tel'
+	| 'time'
+	| 'url'
+	| 'week';
+
 export type NamedFieldProps = {
 	fieldArrayState: FieldArrayState;
 	formState: FormContextState;
@@ -59,11 +85,16 @@ export enum FieldMetaName {
 	ERRORS = 'errors',
 	ITEMS = 'items',
 	SET_ERRORS = 'setErrors',
-	FIELD_TYPE = 'type',
+	FIELD_TYPE = 'fieldType',
 	IS_UNTOUCHED = 'isUntouched',
 	IS_INVALID = 'isInvalid',
 	ERROR = 'error',
 	VALIDATORS = 'validators',
+}
+
+export enum IgnoredProp {
+	INPUT_PROPS = 'inputProps',
+	FIELD_PROPS = 'fieldProps',
 }
 
 export type FieldMeta<ValueType = any> = {
@@ -136,10 +167,21 @@ export type FieldHiddenProps<T = HTMLInputElement> = {
 	inputRef: MutableRefObject<T>;
 };
 
+export type FieldInputProps<ValueType> = {
+	type: InputType;
+	defaultValue?: ValueType extends boolean ? undefined : ValueType;
+	defaultChecked?: ValueType extends boolean ? ValueType : undefined;
+	name: string;
+	value?: 'on' | undefined;
+};
+
 export type FieldInnerProps<
 	Input extends HTMLElement = HTMLInputElement,
 	ValueType = any,
-> = FieldHiddenProps<Input> & FieldMeta<ValueType>;
+> = {
+	[IgnoredProp.FIELD_PROPS]: FieldMeta<ValueType> & FieldHiddenProps<Input>;
+	[IgnoredProp.INPUT_PROPS]: FieldInputProps<ValueType>;
+};
 
 export type FieldProps<
 	FieldCustomProps extends Record<string, any> = {name: string},

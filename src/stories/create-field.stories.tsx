@@ -6,6 +6,7 @@ import {Form} from '~/form';
 import FieldWrong from '~/stories/field-wrong';
 import SubmitButton from '~/stories/submit-button';
 import {minLength} from '~/stories/validators';
+import {isRequired, isTrue} from '~/validators';
 
 import Field from './field';
 import FieldMultiSelect from './field-multi-select';
@@ -206,7 +207,12 @@ export const InsideFormFieldCheckbox: ComponentStory<typeof Field> = ({
 			defaultValues={{sent: false}}
 			onSubmit={onSubmit}
 			className="shadow border border-secondary rounded-3 p-3 w-75">
-			<FieldBoolean<T4> name="sent" label="Отправлено" defaultValue={true} />
+			<FieldBoolean<T4>
+				name="sent"
+				label="Отправлено"
+				defaultValue={true}
+				validate={isTrue()}
+			/>
 
 			<button className="btn btn-success" type="submit">
 				Отправить
@@ -226,7 +232,12 @@ export const InsideFormFloatNumber: ComponentStory<typeof Field> = ({
 		<Form<T5>
 			onSubmit={onSubmit}
 			className="shadow border border-secondary rounded-3 p-3 w-75">
-			<FieldFloat<T5> name="amount" label="Заголовок" step={0.5} />
+			<FieldFloat<T5>
+				name="amount"
+				label="Заголовок"
+				step={0.5}
+				validate={isRequired()}
+			/>
 
 			<button className="btn btn-success" type="submit">
 				Отправить

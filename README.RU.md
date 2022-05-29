@@ -78,12 +78,12 @@ import {createField, Form} from '@altiore/form';
  * error здесь добавляются вспомогательной функцией createField
  * name и label приходят из свойств, указанных в месте использования
  */
-const FieldView = ({error, name, label}) => {
+const FieldView = ({fieldProps, inputProps, label}) => {
   return (
     <div>
       <label>{label}</label>
-      <input name={name} />
-      <span>{error}</span>
+      <input {...inputProps} />
+      <span>{fieldProps.error}</span>
     </div>
   );
 };
@@ -186,12 +186,12 @@ interface IField {
   label: string;
 }
 
-const FieldView = ({error, name, label}: FieldProps<IField>) => {
+const FieldView = ({fieldProps, inputProps, label}: FieldProps<IField>) => {
   return (
     <div>
       <label>{label}</label>
-      <input name={name} />
-      <span>{error}</span>
+      <input {...inputProps} />
+      <span>{fieldProps.error}</span>
     </div>
   );
 };
@@ -231,12 +231,12 @@ interface IField {
   label: string;
 }
 
-const FieldView = createField<IField>(({error, name, label}: FieldProps<IField>) => {
+const FieldView = createField<IField>(({fieldProps, inputProps, label}: FieldProps<IField>) => {
   return (
     <div>
       <label>{label}</label>
-      <input name={name} />
-      <span>{error}</span>
+      <input {...inputProps} />
+      <span>{fieldProps.error}</span>
     </div>
   );
 });

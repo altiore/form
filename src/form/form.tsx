@@ -169,6 +169,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 						defaultValue,
 						error: undefined,
 						errors: [],
+						fieldType,
 						isInvalid: false,
 						// Этот флаг работает только для полей у которых есть валидаторы
 						isUntouched: true,
@@ -180,7 +181,6 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 								: undefined,
 						name: fieldName,
 						setErrors: setErrors.bind({}, fieldName),
-						type: fieldType,
 						validators: validators ? validators : [],
 					},
 				};
@@ -221,15 +221,15 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 			let isFormInvalid = false;
 			Object.entries(fields).forEach(([fieldName, fieldMeta]: any) => {
 				if (fieldMeta.validators) {
-					const type: FieldType = fieldMeta.type || FieldType.TEXT;
+					const fieldType: FieldType = fieldMeta.fieldType || FieldType.TEXT;
 					let value: any;
-					if (type === FieldType.ARRAY) {
+					if (fieldType === FieldType.ARRAY) {
 						// TODO: для элемента массива получить все данные из вложеных инпутов
 						value = fieldMeta.items;
 					} else {
 						const target = getNodeByName(fieldMeta.name, formRef);
 						value = target?.current
-							? getValueByTypeAndTarget(type, target.current as any)
+							? getValueByTypeAndTarget(fieldType, target.current as any)
 							: null;
 					}
 					const errors: string[] = [];
@@ -272,7 +272,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				.reverse()
 				.forEach((fieldKey) => {
 					const items = fields[fieldKey].items;
-					const fieldType = fields[fieldKey].type;
+					const fieldType = fields[fieldKey].fieldType;
 
 					if (Array.isArray(items)) {
 						const value = items.map((index: number) => {

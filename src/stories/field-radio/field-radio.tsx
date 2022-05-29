@@ -8,8 +8,9 @@ export interface IField {
 }
 
 export const FieldRadio = createField<IField>(FieldType.ENUM, (props) => {
-	const {defaultValue, label, name} = props;
+	const {inputProps, label} = props;
 
+	console.log('inputProps', inputProps);
 	return (
 		<div className="mb-3">
 			<p>{label}</p>
@@ -18,11 +19,12 @@ export const FieldRadio = createField<IField>(FieldType.ENUM, (props) => {
 				<div>
 					<input
 						className="form-check-input"
+						{...inputProps}
 						type="radio"
 						id="contactChoice1"
-						name={name}
+						defaultValue={undefined}
+						defaultChecked={inputProps.defaultValue === 'email'}
 						value="email"
-						defaultChecked={defaultValue === 'email'}
 					/>
 					<label className="form-check-label ms-2" htmlFor="contactChoice1">
 						Email
@@ -33,11 +35,12 @@ export const FieldRadio = createField<IField>(FieldType.ENUM, (props) => {
 					<div>
 						<input
 							className="form-check-input"
+							{...inputProps}
 							type="radio"
 							id="contactChoice2"
-							name={name}
 							value="phone"
-							defaultChecked={defaultValue === 'phone'}
+							defaultValue={undefined}
+							defaultChecked={inputProps.defaultValue === 'phone'}
 						/>
 						<label className="form-check-label ms-2" htmlFor="contactChoice2">
 							Phone
@@ -48,11 +51,12 @@ export const FieldRadio = createField<IField>(FieldType.ENUM, (props) => {
 				<div>
 					<input
 						className="form-check-input"
+						{...inputProps}
 						type="radio"
 						id="contactChoice3"
-						name={name}
 						value="mail"
-						defaultChecked={defaultValue === 'mail'}
+						defaultValue={undefined}
+						defaultChecked={inputProps.defaultValue === 'mail'}
 					/>
 					<label className="form-check-label ms-2" htmlFor="contactChoice3">
 						Mail

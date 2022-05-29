@@ -26,8 +26,8 @@ import NamedField from './named-field';
  * interface IField {
  *  label: string;
  * }
- * const Field = createField<CustomAdditionalFieldProps>(({error, label, name}: FieldProps<IField>) => {
- *   return (
+ * const Field = createField<CustomAdditionalFieldProps>(({error, label, name}: FieldProps<IField>)
+ *   => { return (
  *     <div>
  *       <label>{label}</label>
  *       <input name={name} />
@@ -40,7 +40,7 @@ import NamedField from './named-field';
 export type FieldOpt = FieldOptions | FieldType;
 
 export function createField<
-	FieldCustomProps extends Record<string, any> = {name: string},
+	FieldCustomProps extends Record<string, any> = Record<string, any>,
 	Input extends HTMLElement = HTMLInputElement,
 >(
 	options: FieldOpt,
@@ -50,7 +50,7 @@ export function createField<
 ) => JSX.Element;
 
 export function createField<
-	FieldCustomProps extends Record<string, any> = {name: string},
+	FieldCustomProps extends Record<string, any> = Record<string, any>,
 	Input extends HTMLElement = HTMLInputElement,
 >(
 	component: (props: FieldProps<FieldCustomProps, Input>) => JSX.Element,
@@ -59,7 +59,7 @@ export function createField<
 ) => JSX.Element;
 
 export function createField<
-	FieldCustomProps extends Record<string, any> = {name: string},
+	FieldCustomProps extends Record<string, any> = Record<string, any>,
 	Input extends HTMLElement = HTMLInputElement,
 >(
 	optionsOrComponent:
@@ -90,24 +90,24 @@ export function createField<
 			props: FieldProps<FieldCustomProps, Input>,
 		) => JSX.Element);
 
-	return ({
+	return <FormState extends Record<string, any> = Record<string, any>>({
 		defaultValue,
 		name,
 		validate,
 		...props
-	}: FieldProps<FieldCustomProps, Input>): JSX.Element => {
+	}: FieldResProps<FormState, FieldCustomProps>): JSX.Element => {
 		return (
 			<FormContext.Consumer>
 				{(formState) => (
 					<FieldArrayContext.Consumer>
 						{(fieldArrayState) => {
 							return (
-								<NamedField<FieldCustomProps, Input>
+								<NamedField<FieldCustomProps, Input, FormState>
 									defaultValue={defaultValue}
 									fieldArrayState={fieldArrayState}
 									formState={formState}
 									component={component}
-									componentProps={props as FieldCustomProps}
+									componentProps={props as any}
 									name={name}
 									fieldType={fieldType}
 									validate={validate}

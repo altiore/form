@@ -1,6 +1,6 @@
 import {MutableRefObject} from 'react';
 
-import {FieldType} from '~/@common/types';
+import {FieldType, InputType} from '~/@common/types';
 
 export const getNodeByName = <T>(
 	name: string,
@@ -49,6 +49,7 @@ const getMultipleSelect = (target: HTMLElement) =>
 
 const getValueByType = new Map<FieldType, (evt: any) => any>([
 	[FieldType.BOOLEAN, getChecked],
+	[FieldType.CHECKBOX, getChecked],
 	[FieldType.NUMBER, getValue],
 	[FieldType.FLOAT, getValue],
 	[FieldType.TEXT, getValue],
@@ -86,20 +87,19 @@ export const parseValueByType = new Map([
 	[FieldType.SELECT_MULTIPLE, toArray],
 ]);
 
-export const inputTypeByType = new Map([
+export const inputTypeByType = new Map<FieldType, InputType>([
 	[FieldType.BOOLEAN, 'checkbox'],
 	[FieldType.CHECKBOX, 'checkbox'],
 	[FieldType.ENUM, 'text'],
 	[FieldType.PASSWORD, 'password'],
 	[FieldType.EMAIL, 'email'],
 	[FieldType.TEXT, 'text'],
-	[FieldType.BOOLEAN, 'checkbox'],
 	[FieldType.NUMBER, 'number'],
 	[FieldType.FLOAT, 'number'],
 ]);
 
-export const getInputTypeByFieldType = (fieldType: FieldType): string => {
+export const getInputTypeByFieldType = (fieldType: FieldType): InputType => {
 	return inputTypeByType.has(fieldType)
 		? inputTypeByType.get(fieldType)
-		: fieldType;
+		: (fieldType as InputType);
 };

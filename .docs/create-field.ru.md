@@ -8,17 +8,17 @@ import {createField, Form} from '@altiore/form';
 
 export const Field = createField(
   ({
-    error,
-    name,
+    fieldProps,
+    inputProps,
     label /* вы можете добавить сюда любые дополнительные поля: */,
   }) => {
     return (
       <div>
         <label htmlFor="input-id">
           {label}
-          <input id="input-id" name={name} />
+          <input id="input-id" {...inputProps} />
         </label>
-        <span>{error}</span>
+        <span>{fieldProps.error}</span>
       </div>
     );
   },

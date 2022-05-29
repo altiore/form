@@ -7,14 +7,18 @@ import React from 'react';
 import {createField, Form} from '@altiore/form';
 
 export const Field = createField(
-  ({error, name, label /* you can add any extra fields here: */}) => {
+  ({
+    fieldProps,
+    inputProps,
+    label /* you can add any extra fields here: */,
+  }) => {
     return (
       <div>
         <label htmlFor="input-id">
           {label}
-          <input id="input-id" name={name} />
+          <input id="input-id" {...inputProps} />
         </label>
-        <span>{error}</span>
+        <span>{fieldProps.error}</span>
       </div>
     );
   },

@@ -7,7 +7,7 @@ export interface IField {
 }
 
 export const FieldSelect = createField<IField>((props) => {
-	const {defaultValue, label, name} = props;
+	const {inputProps, label} = props;
 
 	console.log('FieldSelect.render', {
 		props,
@@ -15,7 +15,7 @@ export const FieldSelect = createField<IField>((props) => {
 	return (
 		<div className="mb-3">
 			<div>{label}</div>
-			<select className="form-select" name={name} defaultValue={defaultValue}>
+			<select className="form-select" {...inputProps}>
 				<option value="one">Один</option>
 				<option value="two">Два</option>
 			</select>

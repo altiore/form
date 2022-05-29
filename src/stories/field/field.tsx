@@ -8,7 +8,12 @@ export interface IField {
 }
 
 export const Field = createField<IField>((props) => {
-	const {className, defaultValue, error, label, name} = props;
+	const {
+		className,
+		inputProps,
+		label,
+		fieldProps: {error},
+	} = props;
 
 	console.log('Field.render', {
 		props,
@@ -18,8 +23,7 @@ export const Field = createField<IField>((props) => {
 			<label className="form-label">{label}</label>
 			<input
 				className={'form-control' + (error ? ' is-invalid' : '')}
-				defaultValue={defaultValue}
-				name={name}
+				{...inputProps}
 			/>
 			<span className="invalid-feedback d-block">{error}</span>
 		</div>

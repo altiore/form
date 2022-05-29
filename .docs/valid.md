@@ -5,11 +5,11 @@ import React from 'react';
 
 import {Form, createField} from '@altiore/form';
 
-const Field = createField(({error, name}) => {
+const Field = createField(({fieldProps, inputProps}) => {
   return (
     <div>
-      <input name={name} />
-      <span>Ошибка валидации: {error}</span>
+      <input {...inputProps} />
+      <span>Ошибка валидации: {fieldProps.error}</span>
     </div>
   );
 });

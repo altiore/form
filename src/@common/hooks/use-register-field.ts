@@ -16,10 +16,12 @@ type ResType = {
 	validators: Array<ValidateFunc>;
 };
 
-export const useRegisterField = (
+export const useRegisterField = <
+	FormState extends Record<string, any> = Record<string, any>,
+>(
 	fieldArrayState: FieldArrayState,
 	formState: FormContextState,
-	providedName: string,
+	providedName: keyof FormState,
 	validate: ValidateFunc | Array<ValidateFunc>,
 	fieldType?: FieldType,
 	isArray?: boolean,
@@ -37,9 +39,11 @@ export const useRegisterField = (
 	// свойств
 	const fieldName = useMemo(() => {
 		return fieldArrayState?.name &&
-			!providedName.match(new RegExp('^' + String(fieldArrayState.name)))
+			!(providedName as string).match(
+				new RegExp('^' + String(fieldArrayState.name)),
+			)
 			? `${fieldArrayState.name}.${providedName}`
-			: providedName;
+			: (providedName as string);
 	}, [fieldArrayState?.name, providedName]);
 
 	const registerField = useMemo(
@@ -65,7 +69,7 @@ export const useRegisterField = (
 			if (fieldType) {
 				console.warn(
 					`Указанный fieldType=${fieldType} будет проигнорирован вне контекста формы. Разместите` +
-						` ваш инпут ${fieldName} внутри компонента формы, чтоб это заработало`,
+						` ваше поле ввода ${fieldName} внутри компонента формы, чтоб это заработало`,
 				);
 			}
 
