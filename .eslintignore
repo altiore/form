@@ -1,4 +1,5 @@
 /bin/get-changelog.js
+/changelogs
 /dist
 /node_modules
 !.storybook
