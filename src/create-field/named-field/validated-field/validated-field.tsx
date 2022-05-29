@@ -78,6 +78,7 @@ export const ValidatedField = <
 		const inputProps: FieldInputProps<any> = {
 			defaultChecked: isChecked ? defValue : undefined,
 			defaultValue: isChecked ? undefined : defValue,
+			multiple: fieldType === FieldType.SELECT_MULTIPLE ? true : undefined,
 			name,
 			type: [FieldType.SELECT, FieldType.SELECT_MULTIPLE].includes(fieldType)
 				? undefined

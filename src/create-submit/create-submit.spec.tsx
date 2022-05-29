@@ -19,12 +19,12 @@ const SubmitButton = createSubmit(
 	},
 );
 
-const Field = createField(({error, name}) => {
+const Field = createField(({fieldProps, inputProps}) => {
 	return (
 		<div>
-			<span>{name}</span>
-			<input name={name} />
-			<span>{error}</span>
+			<span>{inputProps.name}</span>
+			<input {...inputProps} />
+			<span>{fieldProps.error}</span>
 		</div>
 	);
 });

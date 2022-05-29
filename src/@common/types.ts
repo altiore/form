@@ -173,6 +173,7 @@ export type FieldInputProps<ValueType> = {
 	defaultChecked?: ValueType extends boolean ? ValueType : undefined;
 	name: string;
 	value?: 'on' | undefined;
+	multiple?: true;
 };
 
 export type FieldInnerProps<

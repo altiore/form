@@ -11,28 +11,31 @@ import {Form} from '~/form';
 import {isEmail} from '~/validators';
 
 const memoizedRenderEvent = sinon.spy();
-const Field = createField(({error, name}) => {
+const Field = createField(({fieldProps, inputProps}) => {
 	memoizedRenderEvent();
 	return (
 		<div>
-			<span>{name}</span>
-			<input name={name} />
-			<span>{error}</span>
+			<span>{inputProps.name}</span>
+			<input {...inputProps} />
+			<span>{fieldProps.error}</span>
 		</div>
 	);
 });
 
-const FieldMultiSelect = createField(FieldType.SELECT_MULTIPLE, ({name}) => {
-	return (
-		<div>
-			<select multiple name={name}>
-				<option value="one">Один</option>
-				<option value="two">Два</option>
-				<option value="three">Три</option>
-			</select>
-		</div>
-	);
-});
+const FieldMultiSelect = createField(
+	FieldType.SELECT_MULTIPLE,
+	({inputProps}) => {
+		return (
+			<div>
+				<select {...inputProps}>
+					<option value="one">Один</option>
+					<option value="two">Два</option>
+					<option value="three">Три</option>
+				</select>
+			</div>
+		);
+	},
+);
 
 const parentRenderEvent = sinon.spy();
 const Parent = ({name}: any) => {

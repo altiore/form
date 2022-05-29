@@ -10,12 +10,12 @@ type IField = {
 	label?: string;
 };
 
-const FieldView = ({defaultValue, error, name, type}: FieldProps<IField>) => {
+const FieldView = ({fieldProps, inputProps}: FieldProps<IField>) => {
 	return (
 		<div>
-			<span>{name}</span>
-			<input name={name} defaultValue={defaultValue} type={type} />
-			<span>{error}</span>
+			<span>{inputProps.name}</span>
+			<input {...inputProps} />
+			<span>{fieldProps.error}</span>
 		</div>
 	);
 };
