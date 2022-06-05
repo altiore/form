@@ -13,6 +13,8 @@ describe('mergeMetaPropsToField()', () => {
 			name: 'second',
 			setErrors: jest.fn(),
 			validators: [],
+			warning: undefined,
+			warnings: [],
 		};
 		const fieldProps: any = {
 			defaultValue: 'test',
@@ -42,6 +44,8 @@ describe('mergeMetaPropsToField()', () => {
 			name: 'second',
 			setErrors: jest.fn(),
 			validators: [],
+			warning: undefined,
+			warnings: [],
 		};
 		const fieldProps: any = {
 			defaultValue: 'test',

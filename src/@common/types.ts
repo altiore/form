@@ -91,6 +91,8 @@ export enum FieldMetaName {
 	IS_INVALID = 'isInvalid',
 	ERROR = 'error',
 	VALIDATORS = 'validators',
+	WARNING = 'warning',
+	WARNINGS = 'warnings',
 }
 
 export enum IgnoredProp {
@@ -102,16 +104,23 @@ export type FieldMeta<ValueType = any> = {
 	[FieldMetaName.NAME]: string;
 	[FieldMetaName.DEFAULT_VALUE]?: ValueType;
 	[FieldMetaName.ERRORS]: string[];
+	[FieldMetaName.WARNINGS]: string[];
+
 	// массив номеров в порядке, в котором элементы массива расположены на экране
 	// используюет только для fieldType === FieldType.ARRAY
 	[FieldMetaName.ITEMS]?: number[];
-	[FieldMetaName.SET_ERRORS]: (errors: string[], force?: boolean) => void;
+	[FieldMetaName.SET_ERRORS]: (
+		errors: string[],
+		force?: boolean,
+		isWarnings?: boolean,
+	) => void;
 	[FieldMetaName.FIELD_TYPE]?: FieldType;
 	[FieldMetaName.IS_UNTOUCHED]?: boolean;
 
 	// избыточные поля, которые нужны ТОЛЬКО для удобства
 	[FieldMetaName.IS_INVALID]: boolean;
 	[FieldMetaName.ERROR]?: string;
+	[FieldMetaName.WARNING]?: string;
 	[FieldMetaName.VALIDATORS]: Array<ValidateFunc>;
 };
 

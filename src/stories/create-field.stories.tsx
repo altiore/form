@@ -10,6 +10,7 @@ import {isPhone, isRequired, isTrue} from '~/validators';
 
 import Field from './field';
 import FieldMultiSelect from './field-multi-select';
+import FieldPass from './field-pass';
 import FieldRadio from './field-radio';
 import FieldSelect from './field-select';
 import {FieldBoolean, FieldFloat, FieldNumber, FieldPhone} from './field-typed';
@@ -273,6 +274,22 @@ export const PhoneNumber: ComponentStory<typeof Field> = ({onSubmit}: any) => {
 			onSubmit={onSubmit}
 			className="shadow border border-secondary rounded-3 p-3 w-75">
 			<FieldPhone name="phone" label="Телефон" validate={isPhone()} />
+
+			<button className="btn btn-success" type="submit">
+				Отправить
+			</button>
+		</Form>
+	);
+};
+
+export const PassSecurityWarning: ComponentStory<typeof Field> = ({
+	onSubmit,
+}: any) => {
+	return (
+		<Form
+			onSubmit={onSubmit}
+			className="shadow border border-secondary rounded-3 p-3 w-75">
+			<FieldPass name="password" label="Пароль" />
 
 			<button className="btn btn-success" type="submit">
 				Отправить

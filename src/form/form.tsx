@@ -8,7 +8,12 @@ import unset from 'lodash/unset';
 
 import {DEF_HIDE_ERROR_IN_X_SEC} from '~/@common/consts';
 import {FormContext} from '~/@common/form-context';
-import {FieldType, FormContextState, ValidateFunc} from '~/@common/types';
+import {
+	FieldMeta,
+	FieldType,
+	FormContextState,
+	ValidateFunc,
+} from '~/@common/types';
 import {
 	getNodeByName,
 	getValueByNodeName,
@@ -66,20 +71,36 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	}, [setFields]);
 
 	const setErrors = useCallback(
-		(fieldName: string, errors: string[], force?: boolean) => {
+		(
+			fieldName: string,
+			errors: string[],
+			force?: boolean,
+			isWarning?: boolean,
+		) => {
 			setFields((s) => {
 				if (!s[fieldName]) {
 					// этот код, похоже, никогда не выполняется и здесь лишь для совместимости
 					return s;
 				}
 
-				const fieldData = {
-					...s[fieldName],
-					error: errors?.[0],
-					errors,
-					isInvalid: Boolean(errors?.length),
-					isUntouched: false,
-				};
+				let fieldData: FieldMeta;
+				if (isWarning) {
+					fieldData = {
+						...s[fieldName],
+						isUntouched: false,
+						warning: errors?.[0],
+						warnings: errors,
+					};
+				} else {
+					fieldData = {
+						...s[fieldName],
+						error: errors?.[0],
+						errors,
+						isInvalid: Boolean(errors?.length),
+						isUntouched: false,
+					};
+				}
+
 				// улучает производительность, избегая рендера, если ошибки не изменились
 				if (isEqual(s[fieldName], fieldData) && !force) {
 					return s;
@@ -182,6 +203,8 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 						name: fieldName,
 						setErrors: setErrors.bind({}, fieldName),
 						validators: validators ? validators : [],
+						warning: undefined,
+						warnings: [],
 					},
 				};
 			});

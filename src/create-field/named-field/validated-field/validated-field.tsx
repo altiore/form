@@ -43,7 +43,7 @@ export const ValidatedField = <
 	validators,
 }: IProps<FieldCustomProps, Input>): JSX.Element => {
 	const inputRef = useRef<Input>();
-	const {errors, setErrors} = useValidateInput<Input>(
+	const {errors, setErrors, warnings} = useValidateInput<Input>(
 		inputRef as any,
 		validators,
 		formRef,
@@ -98,6 +98,8 @@ export const ValidatedField = <
 						isInvalid: Boolean(errors.length),
 						name,
 						setErrors,
+						warning: warnings?.[0],
+						warnings,
 				  },
 			[IgnoredProp.INPUT_PROPS]: inputProps,
 		});

@@ -149,6 +149,29 @@ export const formatPhone = function formatPhoneNumber(
 
 export const formatValueByType = new Map([[FieldType.PHONE, formatPhone]]);
 
+const warningPassword = (value: string): string[] => {
+	const warnings = [];
+	if (!value || value.length < 8) {
+		warnings.push('Минимальная рекомендуемая длина пароля - 8 символов');
+	}
+	if (!value || !value.match(/[0-9]+/g)) {
+		warnings.push('Добавьте хотя бы одну цифру');
+	}
+	if (!value || !value.match(/[A-ZА-Я]+/g)) {
+		warnings.push('Добавьте хотя бы одну букву в верхнем регистре');
+	}
+	if (!value || !value.match(/[a-zА-Я]+/g)) {
+		warnings.push('Добавьте хотя бы одну букву в нижнем регистре');
+	}
+	if (!value || !value.match(/[!"№%:,.;()_+\[\]@#$^&*=±§<>]+/g)) {
+		warnings.push('Добавьте хотя бы один спец. символ &,@,$,#...');
+	}
+
+	return warnings;
+};
+
+export const warningsByType = new Map([[FieldType.PASSWORD, warningPassword]]);
+
 export const getValueByTypeAndTarget = (
 	fieldType: FieldType,
 	target: EventTarget | HTMLElement,

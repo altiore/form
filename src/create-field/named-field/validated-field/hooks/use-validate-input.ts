@@ -17,11 +17,13 @@ import {
 	getNodeByName,
 	getValueByNodeName,
 	getValueByTypeAndTarget,
+	warningsByType,
 } from '~/@common/utils';
 
 type ValidateInputRes = {
 	errors: string[];
 	setErrors: (errors: string[]) => void;
+	warnings: string[];
 };
 
 const DEF_ERRORS: string[] = [];
@@ -77,10 +79,11 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	);
 
 	const [errors, setErrorsState] = useState<string[]>(DEF_ERRORS);
+	const [warnings, setWarningsState] = useState<string[]>(DEF_ERRORS);
 
 	const setErrors = useCallback(
-		(errors: string[], force?: boolean) => {
-			setErrorsState((s: string[]) => {
+		(errors: string[], force?: boolean, isWarnings?: boolean) => {
+			const handler = (s: string[]) => {
 				if (isEqual(s, errors) && !force) {
 					return s;
 				}
@@ -93,18 +96,23 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 					setErrorsState([]);
 				}, DEF_HIDE_ERROR_IN_X_SEC);
 				return errors;
-			});
+			};
+			if (isWarnings) {
+				setWarningsState(handler);
+			} else {
+				setErrorsState(handler);
+			}
 		},
-		[setErrorsState],
+		[setErrorsState, setWarningsState],
 	);
 
 	const handleSetErrors = useCallback(
-		(errors: string[], force?: boolean) => {
+		(errors: string[], force?: boolean, isWarnings?: boolean) => {
 			if (getMounted()) {
 				if (field?.setErrors) {
-					field.setErrors(errors, force);
+					field.setErrors(errors, force, isWarnings);
 				} else {
-					setErrors(errors, force);
+					setErrors(errors, force, isWarnings);
 				}
 			}
 		},
@@ -161,6 +169,15 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 		[handleSetErrors],
 	);
 
+	const checkWarnings = useCallback(
+		(evt) => {
+			const getWarnings = warningsByType.get(fieldType);
+			const warnings = getWarnings(evt.target.value);
+			handleSetErrors(warnings, false, true);
+		},
+		[fieldType, handleSetErrors],
+	);
+
 	const formatValue = useCallback(
 		(evt) => {
 			const formatter = formatValueByType.get(fieldType);
@@ -170,14 +187,38 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	);
 
 	useEffect(() => {
-		if (formatValueByType.has(fieldType)) {
-			const input = inputRef.current;
-			const hasEventHandler = Boolean(input);
+		const input = inputRef.current;
+		const hasEventHandler = Boolean(input);
+		if (hasEventHandler) {
+			if (warningsByType.has(fieldType)) {
+				input.addEventListener('keyup', checkWarnings);
+			}
+		}
+		return () => {
 			if (hasEventHandler) {
+				if (warningsByType.has(fieldType)) {
+					input.removeEventListener('keyup', checkWarnings);
+				}
+			}
+		};
+	}, [checkWarnings, inputRef, fieldType]);
+
+	useEffect(() => {
+		const input = inputRef.current;
+		const hasEventHandler = Boolean(input);
+		if (hasEventHandler) {
+			if (formatValueByType.has(fieldType)) {
 				input.addEventListener('keyup', formatValue);
 			}
 		}
-	}, [inputRef, fieldType]);
+		return () => {
+			if (hasEventHandler) {
+				if (formatValueByType.has(fieldType)) {
+					input.removeEventListener('keyup', formatValue);
+				}
+			}
+		};
+	}, [inputRef, fieldType, formatValue]);
 
 	useEffect(() => {
 		const input = inputRef.current;
@@ -216,5 +257,6 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	return {
 		errors: field?.errors ?? errors,
 		setErrors: field?.setErrors ?? setErrors,
+		warnings: field?.warnings ?? warnings,
 	};
 };
