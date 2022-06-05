@@ -166,7 +166,8 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 
 			handleSetErrors([], true);
 			if (warningsByType.has(fieldType)) {
-				handleSetErrors(warningsByType.get(fieldType)(null), true, true);
+				const value = getValueByTypeAndTarget(fieldType, e.target);
+				handleSetErrors(warningsByType.get(fieldType)(value), true, true);
 			}
 		},
 		[handleSetErrors, fieldType],
