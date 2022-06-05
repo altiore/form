@@ -106,13 +106,14 @@ export const formatPhone = function formatPhoneNumber(
 	phoneNumberString: string,
 ): string | null {
 	const match = phoneNumberString.match(
-		/^(\+?7\s?)?(\s?\(?\d{3}\)?\s?|\s?\(?\d{2}|\s?\(?\d|\s?\(?)?(\d{3}|\d{2}|\d)?(\s?-?\s?\d{2}|\s?-?\s?\d|\s?-?\s?)?(\s?-?\s?\d{2}|\s?-?\s?\d|\s?-?\s?)?$/,
+		/^(\+?7\s?|\+?3\s?|\+?1\s?)?(\s?\(?\d{3}\)?\s?|\s?\(?\d{2}|\s?\(?\d|\s?\(?)?(\d{3}|\d{2}|\d)?(\s?-?\s?\d{2}|\s?-?\s?\d|\s?-?\s?)?(\s?-?\s?\d{2}|\s?-?\s?\d|\s?-?\s?)?$/,
 	);
 	if (match) {
 		let res = '';
 		if (match[1]) {
 			res += match[1][0] === '+' ? match[1] : `+${match[1]}`;
 		} else if (phoneNumberString.length) {
+			// TODO: определять стартовые цифры по локально установленной стране
 			res = '+7 ' + res;
 		}
 		if (match[2]) {
