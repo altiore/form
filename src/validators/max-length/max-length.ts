@@ -1,5 +1,6 @@
 import {ReusableValidator, ValidateFunc} from '~/@common/types';
 import {getErrorMessage} from '~/validators/@common/get-error-message';
+import {pluralNoun} from '~/validators/@common/plural';
 
 export const maxLength: ReusableValidator<number> =
 	(getMessage = null, length: number): ValidateFunc<string | any[]> =>
@@ -15,7 +16,12 @@ export const maxLength: ReusableValidator<number> =
 			return getErrorMessage(value, length, defError, getMessage);
 		}
 		if (value.length > length) {
-			const defError = `Максимальная длина введенного значения - ${length}`;
+			const defError = `Максимум ${length} символ${pluralNoun(
+				length,
+				'',
+				'а',
+				'ов',
+			)}`;
 			return getErrorMessage(value, length, defError, getMessage);
 		}
 		return undefined;
