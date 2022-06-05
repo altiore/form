@@ -4,7 +4,7 @@ import {getErrorMessage} from '~/validators/@common/get-error-message';
 export const regexp: ReusableValidator<RegExp> =
 	(getMessage: any, regex: RegExp): ValidateFunc<string> =>
 	(value, fieldName) => {
-		if (value === undefined || value === null) {
+		if (value === undefined) {
 			return undefined;
 		}
 		if (typeof value !== 'string') {

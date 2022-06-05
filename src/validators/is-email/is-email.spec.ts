@@ -13,7 +13,7 @@ describe('isEmail()', () => {
 		expect(isEmail(null)(undefined)).toBeUndefined();
 	});
 
-	it('Пропускать проверку, если поле null', () => {
-		expect(isEmail(null)(null)).toBeUndefined();
+	it('Не пропускать проверку, если поле null', () => {
+		expect(isEmail(null)(null)).toEqual('Введите корректный email');
 	});
 });

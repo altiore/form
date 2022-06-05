@@ -163,9 +163,6 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 
 	const formatValue = useCallback(
 		(evt) => {
-			console.log('formatValue', {
-				val: evt.target.value,
-			});
 			const formatter = formatValueByType.get(fieldType);
 			evt.target.value = formatter(evt.target.value);
 		},

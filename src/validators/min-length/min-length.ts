@@ -7,7 +7,7 @@ export const minLength: ReusableValidator<number> =
 		if (length < 0) {
 			throw new Error(`Заданная длина не может быть меньше нуля`);
 		}
-		if (value === undefined || value === null) {
+		if (value === undefined) {
 			return undefined;
 		}
 		if (typeof value?.length !== 'number') {

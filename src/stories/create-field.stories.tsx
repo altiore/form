@@ -6,7 +6,7 @@ import {Form} from '~/form';
 import FieldWrong from '~/stories/field-wrong';
 import SubmitButton from '~/stories/submit-button';
 import {minLength} from '~/stories/validators';
-import {isRequired, isTrue} from '~/validators';
+import {isPhone, isRequired, isTrue} from '~/validators';
 
 import Field from './field';
 import FieldMultiSelect from './field-multi-select';
@@ -272,7 +272,7 @@ export const PhoneNumber: ComponentStory<typeof Field> = ({onSubmit}: any) => {
 		<Form
 			onSubmit={onSubmit}
 			className="shadow border border-secondary rounded-3 p-3 w-75">
-			<FieldPhone name="phone" label="Телефон" />
+			<FieldPhone name="phone" label="Телефон" validate={isPhone()} />
 
 			<button className="btn btn-success" type="submit">
 				Отправить

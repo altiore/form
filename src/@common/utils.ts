@@ -56,14 +56,6 @@ const getValueByType = new Map<FieldType, (evt: any) => any>([
 	[FieldType.SELECT_MULTIPLE, getMultipleSelect],
 ]);
 
-export const getValueByTypeAndTarget = (
-	type: FieldType,
-	target: EventTarget | HTMLElement,
-): any => {
-	const getCurrentValue = getValueByType.get(type) ?? getValue;
-	return getCurrentValue(target);
-};
-
 const parseBoolean = (value: string | undefined): any => value === 'on';
 const parseNumber = (value: string): any => parseInt(value, 10);
 const parseDefault = (value: string): any => (value === '' ? null : value);
@@ -155,3 +147,14 @@ export const formatPhone = function formatPhoneNumber(
 };
 
 export const formatValueByType = new Map([[FieldType.PHONE, formatPhone]]);
+
+export const getValueByTypeAndTarget = (
+	fieldType: FieldType,
+	target: EventTarget | HTMLElement,
+): any => {
+	const getCurrentValue = getValueByType.get(fieldType) ?? getValue;
+	const value = getCurrentValue(target);
+
+	const prepareValue = parseValueByType.get(fieldType || FieldType.TEXT);
+	return prepareValue ? prepareValue(value) : value;
+};

@@ -4,7 +4,7 @@ import {getErrorMessage} from '~/validators/@common/get-error-message';
 export const isPhone: ReusableValidator<string> =
 	(getMessage = null): ValidateFunc<string> =>
 	(value) => {
-		if (value === undefined || value === null) {
+		if (value === undefined) {
 			return undefined;
 		}
 
