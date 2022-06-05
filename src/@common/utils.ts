@@ -56,7 +56,8 @@ const getValueByType = new Map<FieldType, (evt: any) => any>([
 	[FieldType.SELECT_MULTIPLE, getMultipleSelect],
 ]);
 
-const parseBoolean = (value: string | undefined): any => value === 'on';
+const parseBoolean = (value: string | undefined): any =>
+	typeof value === 'boolean' ? value : value === 'on';
 const parseNumber = (value: string): any => parseInt(value, 10);
 const parseDefault = (value: string): any => (value === '' ? null : value);
 const parsePhone = (value: string): any =>

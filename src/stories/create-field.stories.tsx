@@ -297,3 +297,19 @@ export const PassSecurityWarning: ComponentStory<typeof Field> = ({
 		</Form>
 	);
 };
+
+export const AcceptedField: ComponentStory<typeof Field> = ({
+	onSubmit,
+}: any) => {
+	return (
+		<Form
+			onSubmit={onSubmit}
+			className="shadow border border-secondary rounded-3 p-3 w-75">
+			<FieldBoolean name="accept" label="Принять условия" validate={isTrue()} />
+
+			<button className="btn btn-success" type="submit">
+				Отправить
+			</button>
+		</Form>
+	);
+};
