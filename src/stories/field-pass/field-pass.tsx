@@ -13,7 +13,7 @@ export const FieldPass = createField<IField>(FieldType.PASSWORD, (props) => {
 		className,
 		inputProps,
 		label,
-		fieldProps: {error, warnings, warning},
+		fieldProps: {error, warnings, warning, isUntouched},
 	} = props;
 
 	console.log('Field.render', {
@@ -26,7 +26,8 @@ export const FieldPass = createField<IField>(FieldType.PASSWORD, (props) => {
 				className={'form-control' + (error ? ' is-invalid' : '')}
 				{...inputProps}
 			/>
-			<span>Уровень защиты {5 - warnings.length}</span>
+			{!isUntouched && <span>Уровень защиты {5 - warnings.length}</span>}
+
 			<span className="invalid-feedback d-block">{warning}</span>
 			<span className="invalid-feedback d-block">{error}</span>
 		</div>

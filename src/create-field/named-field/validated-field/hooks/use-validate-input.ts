@@ -165,8 +165,11 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 			e.preventDefault();
 
 			handleSetErrors([], true);
+			if (warningsByType.has(fieldType)) {
+				handleSetErrors(warningsByType.get(fieldType)(null), true, true);
+			}
 		},
-		[handleSetErrors],
+		[handleSetErrors, fieldType],
 	);
 
 	const checkWarnings = useCallback(

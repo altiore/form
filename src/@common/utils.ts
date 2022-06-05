@@ -149,22 +149,36 @@ export const formatPhone = function formatPhoneNumber(
 
 export const formatValueByType = new Map([[FieldType.PHONE, formatPhone]]);
 
+export const PassWarn = {
+	minLength: 'Минимальная рекомендуемая длина пароля - 8 символов',
+	// eslint-disable-next-line sort-keys
+	lowerRequired: 'Добавьте хотя бы одну букву в нижнем регистре',
+	// eslint-disable-next-line sort-keys
+	digitRequired: 'Добавьте хотя бы одну цифру',
+	upperRequired: 'Добавьте хотя бы одну букву в верхнем регистре',
+	// eslint-disable-next-line sort-keys
+	specRequired: 'Добавьте хотя бы один спец. символ &,@,$,#...',
+};
+
 const warningPassword = (value: string): string[] => {
+	if (!value) {
+		return Object.values(PassWarn);
+	}
 	const warnings = [];
-	if (!value || value.length < 8) {
-		warnings.push('Минимальная рекомендуемая длина пароля - 8 символов');
+	if (value.length < 8) {
+		warnings.push(PassWarn.minLength);
 	}
-	if (!value || !value.match(/[0-9]+/g)) {
-		warnings.push('Добавьте хотя бы одну цифру');
+	if (!value.match(/[a-zА-Я]+/g)) {
+		warnings.push(PassWarn.lowerRequired);
 	}
-	if (!value || !value.match(/[A-ZА-Я]+/g)) {
-		warnings.push('Добавьте хотя бы одну букву в верхнем регистре');
+	if (!value.match(/[0-9]+/g)) {
+		warnings.push(PassWarn.digitRequired);
 	}
-	if (!value || !value.match(/[a-zА-Я]+/g)) {
-		warnings.push('Добавьте хотя бы одну букву в нижнем регистре');
+	if (!value.match(/[A-ZА-Я]+/g)) {
+		warnings.push(PassWarn.upperRequired);
 	}
-	if (!value || !value.match(/[!"№%:,.;()_+\[\]@#$^&*=±§<>]+/g)) {
-		warnings.push('Добавьте хотя бы один спец. символ &,@,$,#...');
+	if (!value.match(/[!"№%:,.;()_+\[\]@#$^&*=±§<>]+/g)) {
+		warnings.push(PassWarn.specRequired);
 	}
 
 	return warnings;
