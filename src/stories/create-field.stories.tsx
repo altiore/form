@@ -12,7 +12,7 @@ import Field from './field';
 import FieldMultiSelect from './field-multi-select';
 import FieldRadio from './field-radio';
 import FieldSelect from './field-select';
-import {FieldBoolean, FieldFloat, FieldNumber} from './field-typed';
+import {FieldBoolean, FieldFloat, FieldNumber, FieldPhone} from './field-typed';
 
 export default {
 	argTypes: {onSubmit: {action: 'submit'}},
@@ -259,6 +259,20 @@ export const InsideFormWrongField: ComponentStory<typeof Field> = ({
 				items={['test']}
 				type="number"
 			/>
+
+			<button className="btn btn-success" type="submit">
+				Отправить
+			</button>
+		</Form>
+	);
+};
+
+export const PhoneNumber: ComponentStory<typeof Field> = ({onSubmit}: any) => {
+	return (
+		<Form
+			onSubmit={onSubmit}
+			className="shadow border border-secondary rounded-3 p-3 w-75">
+			<FieldPhone name="phone" label="Телефон" />
 
 			<button className="btn btn-success" type="submit">
 				Отправить

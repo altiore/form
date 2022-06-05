@@ -10,6 +10,7 @@ export enum FieldType {
 	ENUM = 'enum',
 	NUMBER = 'number',
 	FLOAT = 'float',
+	PHONE = 'phone',
 	PASSWORD = 'password',
 	TEXT = 'text',
 	EMAIL = 'email',

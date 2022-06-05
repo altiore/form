@@ -13,6 +13,7 @@ import {DEF_HIDE_ERROR_IN_X_SEC} from '~/@common/consts';
 import {useIsMounted} from '~/@common/hooks/use-is-mounted';
 import {FieldMeta, FieldType, ValidateFunc} from '~/@common/types';
 import {
+	formatValueByType,
 	getNodeByName,
 	getValueByNodeName,
 	getValueByTypeAndTarget,
@@ -159,6 +160,27 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 		},
 		[handleSetErrors],
 	);
+
+	const formatValue = useCallback(
+		(evt) => {
+			console.log('formatValue', {
+				val: evt.target.value,
+			});
+			const formatter = formatValueByType.get(fieldType);
+			evt.target.value = formatter(evt.target.value);
+		},
+		[fieldType],
+	);
+
+	useEffect(() => {
+		if (formatValueByType.has(fieldType)) {
+			const input = inputRef.current;
+			const hasEventHandler = Boolean(input);
+			if (hasEventHandler) {
+				input.addEventListener('keyup', formatValue);
+			}
+		}
+	}, [inputRef, fieldType]);
 
 	useEffect(() => {
 		const input = inputRef.current;

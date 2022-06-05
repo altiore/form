@@ -30,6 +30,7 @@ const FieldView = (props: FieldProps<IField>) => {
 
 export const FieldNumber = createField<IField>(FieldType.NUMBER, FieldView);
 export const FieldFloat = createField<IField>(FieldType.FLOAT, FieldView);
+export const FieldPhone = createField<IField>(FieldType.PHONE, FieldView);
 
 export const FieldBoolean = createField<IField>(FieldType.BOOLEAN, (props) => {
 	const {

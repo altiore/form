@@ -67,6 +67,8 @@ export const getValueByTypeAndTarget = (
 const parseBoolean = (value: string | undefined): any => value === 'on';
 const parseNumber = (value: string): any => parseInt(value, 10);
 const parseDefault = (value: string): any => (value === '' ? null : value);
+const parsePhone = (value: string): any =>
+	typeof value === 'string' ? value.replace(/[()\s\-]/gi, '') : value;
 const toArray = (value: any): string[] => {
 	if (typeof value === 'string') {
 		return [value];
@@ -85,6 +87,7 @@ export const parseValueByType = new Map([
 	[FieldType.NUMBER, parseNumber],
 	[FieldType.FLOAT, parseFloat],
 	[FieldType.SELECT_MULTIPLE, toArray],
+	[FieldType.PHONE, parsePhone],
 ]);
 
 export const inputTypeByType = new Map<FieldType, InputType>([
@@ -96,6 +99,7 @@ export const inputTypeByType = new Map<FieldType, InputType>([
 	[FieldType.TEXT, 'text'],
 	[FieldType.NUMBER, 'number'],
 	[FieldType.FLOAT, 'number'],
+	[FieldType.PHONE, 'tel'],
 ]);
 
 export const getInputTypeByFieldType = (fieldType: FieldType): InputType => {
@@ -103,3 +107,51 @@ export const getInputTypeByFieldType = (fieldType: FieldType): InputType => {
 		? inputTypeByType.get(fieldType)
 		: (fieldType as InputType);
 };
+
+const digitStrArr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+export const formatPhone = function formatPhoneNumber(
+	phoneNumberString: string,
+): string | null {
+	const match = phoneNumberString.match(
+		/^(\+?7\s?)?(\s?\(?\d{3}\)?\s?|\s?\(?\d{2}|\s?\(?\d|\s?\(?)?(\d{3}|\d{2}|\d)?(\s?-?\s?\d{2}|\s?-?\s?\d|\s?-?\s?)?(\s?-?\s?\d{2}|\s?-?\s?\d|\s?-?\s?)?$/,
+	);
+	if (match) {
+		let res = '';
+		if (match[1]) {
+			res += match[1][0] === '+' ? match[1] : `+${match[1]}`;
+		} else if (phoneNumberString.length) {
+			res = '+7 ' + res;
+		}
+		if (match[2]) {
+			res = res.replace(/\s$/gi, '') + ' (' + match[2].replace(/^[\s(]/gi, '');
+		}
+		if (match[3]) {
+			res = res.replace(/\)?\s?$/gi, '') + ') ' + match[3];
+		}
+		if (match[4]) {
+			res =
+				res.replace(/\s?-?\s?$/gi, '') +
+				(digitStrArr.includes(match[4][0])
+					? ' - ' + match[4]
+					: digitStrArr.includes(match[4][1]) ||
+					  digitStrArr.includes(match[4][2])
+					? match[4].replace(/^\s?-?\s?/gi, ' - ')
+					: match[4]);
+		}
+		if (match[5]) {
+			res =
+				res.replace(/\s?-?\s?$/gi, '') +
+				(digitStrArr.includes(match[5][0])
+					? ' - ' + match[5]
+					: digitStrArr.includes(match[5][1]) ||
+					  digitStrArr.includes(match[5][2])
+					? match[5].replace(/^\s?-?\s?/gi, ' - ')
+					: match[5]);
+		}
+		return res;
+	}
+	return null;
+};
+
+export const formatValueByType = new Map([[FieldType.PHONE, formatPhone]]);
