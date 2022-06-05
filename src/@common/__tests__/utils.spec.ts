@@ -56,6 +56,10 @@ describe('@common/utils', () => {
 			expect(formatPhone('')).toBe('');
 		});
 
+		it('только начало номера, начинающееся с +', () => {
+			expect(formatPhone('+')).toBe('+');
+		});
+
 		it('только начало номера, начинающееся с 7', () => {
 			expect(formatPhone('7')).toBe('+7');
 		});
