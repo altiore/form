@@ -9,4 +9,5 @@ export interface FormProps<Values extends Record<string, any>>
 		setErrors: (errors: Record<string, any>) => void,
 		evt: FormEvent,
 	) => Promise<any> | any;
+	html5Validation?: boolean;
 }

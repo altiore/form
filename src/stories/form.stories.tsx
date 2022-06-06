@@ -33,36 +33,11 @@ SimplestForm.args = {
 	},
 };
 
-SimplestForm.parameters = {
-	docs: {
-		source: {
-			code: `
-import React, {useCallback} from 'react';
-
-import {Form} from '@altiore/form';
-
-const MyForm = () => {
-	const handleSubmit = useCallback((values) => {
-		console.log('form.values is', values);
-	}, []);
-
-	return (
-		<Form onSubmit={handleSubmit}>
-			<input name="name" />
-			<button type="submit">Submit</button>
-		</Form>
-	);
-}
-`,
-		},
-	},
-};
-
 export const FormWithCustomField = Template.bind({});
 FormWithCustomField.args = {
 	children: (
 		<div className="p-3">
-			<legend> Форма с настраиваемым полем</legend>
+			<legend>Форма с настраиваемым полем</legend>
 			<div className="mb-3">
 				<Field label="Ярлык поля" name="name" />
 				<button className="btn btn-success btn-sm" type="submit">
@@ -74,42 +49,5 @@ FormWithCustomField.args = {
 	className: 'shadow border border-secondary rounded-3 w-75 ',
 	defaultValues: {
 		field: 'initial field',
-	},
-};
-
-FormWithCustomField.parameters = {
-	docs: {
-		source: {
-			code: `
-import React, {useCallback} from 'react';
-
-import {createField, Form} from '@altiore/form';
-
-export const Field = createField(({error, inputRef, name, /* you can add any extra fields here: */ label}) => {
-	return (
-		<div>
-			<label htmlFor="input-id">
-				{label}
-				<input id="input-id" name={name} ref={inputRef} />
-			</label>
-			<span>{error}</span>
-		</div>
-	);
-});
-
-const MyForm = () => {
-	const handleSubmit = useCallback((values) => {
-		console.log('form.values is', values);
-	}, []);
-
-	return (
-		<Form onSubmit={handleSubmit}>
-			<Field label="Field Label" name="name" />
-			<button type="submit">Submit</button>
-		</Form>
-	);
-}
-`,
-		},
 	},
 };

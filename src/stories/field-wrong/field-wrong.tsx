@@ -5,7 +5,7 @@ import {createField} from '~/create-field';
 export interface IField {
 	className?: string;
 	label: string;
-	items: string[];
+	inputProps: string[];
 	type: string;
 }
 
@@ -15,9 +15,11 @@ export const FieldWrong = createField<IField>((props) => {
 		inputProps,
 		label,
 		fieldProps: {error},
+		...otherProps
 	} = props;
 
 	console.log('Field.render', {
+		otherProps,
 		props,
 	});
 	return (
@@ -26,6 +28,7 @@ export const FieldWrong = createField<IField>((props) => {
 			<input
 				className={'form-control' + (error ? ' is-invalid' : '')}
 				{...inputProps}
+				{...otherProps}
 			/>
 			<span className="invalid-feedback d-block">{error}</span>
 		</div>

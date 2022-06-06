@@ -107,7 +107,7 @@ export type FieldMeta<ValueType = any> = {
 	[FieldMetaName.WARNINGS]: string[];
 
 	// массив номеров в порядке, в котором элементы массива расположены на экране
-	// используюет только для fieldType === FieldType.ARRAY
+	// используется только для fieldType === FieldType.ARRAY
 	[FieldMetaName.ITEMS]?: number[];
 	[FieldMetaName.SET_ERRORS]: (
 		errors: string[],
@@ -173,25 +173,23 @@ export type FieldResProps<
 	FieldCustomProps extends Record<string, any> = Record<string, any>,
 > = FieldCustomProps & FieldOuterProps<FormState>;
 
-export type FieldHiddenProps<T = HTMLInputElement> = {
-	inputRef: MutableRefObject<T>;
-};
-
-export type FieldInputProps<ValueType> = {
-	type: InputType;
-	defaultValue?: ValueType extends boolean ? undefined : ValueType;
+export type FieldInputProps<ValueType, El extends HTMLElement = HTMLElement> = {
 	defaultChecked?: ValueType extends boolean ? ValueType : undefined;
-	name: string;
-	value?: 'on' | undefined;
+	defaultValue?: ValueType extends boolean ? undefined : ValueType;
 	multiple?: true;
+	name: string;
+	// ref должен быть так же any - для совместимости с компонентом select
+	ref: MutableRefObject<El | undefined> | any;
+	type: InputType;
+	value?: 'on' | undefined;
 };
 
 export type FieldInnerProps<
 	Input extends HTMLElement = HTMLInputElement,
 	ValueType = any,
 > = {
-	[IgnoredProp.FIELD_PROPS]: FieldMeta<ValueType> & FieldHiddenProps<Input>;
-	[IgnoredProp.INPUT_PROPS]: FieldInputProps<ValueType>;
+	[IgnoredProp.FIELD_PROPS]: FieldMeta<ValueType>;
+	[IgnoredProp.INPUT_PROPS]: FieldInputProps<ValueType, Input>;
 };
 
 export type FieldProps<

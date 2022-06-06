@@ -257,7 +257,7 @@ export const InsideFormWrongField: ComponentStory<typeof Field> = ({
 			<FieldWrong<T5>
 				name="amount"
 				label="Загляни в консоль - там должна быть ошибка"
-				items={['test']}
+				inputProps={['test']}
 				type="number"
 			/>
 

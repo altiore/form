@@ -51,7 +51,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	const inputRef = useMemo<MutableRefObject<T>>(() => {
 		const ERROR_MESSAGE =
 			`Не удалось найти ссылку на поле ввода "${name}". Добавьте корректное имя вашему полю` +
-			' input, или используйте inputRef';
+			' input, или используйте inputRef (используется по-умолчанию внутри inputProps)';
 
 		if (customRef.current) {
 			return customRef;
@@ -136,6 +136,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 				);
 			}
 
+			// TODO: добавить дефолтные валидаторы
 			const hasValidation = Boolean(validators?.length && e.target);
 			if (hasValidation) {
 				const value = getValueByTypeAndTarget(fieldType, e.target);

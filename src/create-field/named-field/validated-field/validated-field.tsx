@@ -44,7 +44,7 @@ export const ValidatedField = <
 }: IProps<FieldCustomProps, Input>): JSX.Element => {
 	const inputRef = useRef<Input>();
 	const {errors, setErrors, warnings} = useValidateInput<Input>(
-		inputRef as any,
+		inputRef,
 		validators,
 		formRef,
 		fieldMeta,
@@ -80,6 +80,7 @@ export const ValidatedField = <
 			defaultValue: isChecked ? undefined : defValue,
 			multiple: fieldType === FieldType.SELECT_MULTIPLE ? true : undefined,
 			name,
+			ref: inputRef,
 			type: [FieldType.SELECT, FieldType.SELECT_MULTIPLE].includes(fieldType)
 				? undefined
 				: type,
@@ -87,20 +88,17 @@ export const ValidatedField = <
 		};
 		return React.createElement(component, {
 			...componentProps,
-			[IgnoredProp.FIELD_PROPS]: fieldMeta
-				? {...fieldMeta, inputRef}
-				: {
-						defaultValue: defValue,
-						error: errors?.[0],
-						errors,
-						fieldType,
-						inputRef,
-						isInvalid: Boolean(errors.length),
-						name,
-						setErrors,
-						warning: warnings?.[0],
-						warnings,
-				  },
+			[IgnoredProp.FIELD_PROPS]: fieldMeta ?? {
+				defaultValue: defValue,
+				error: errors?.[0],
+				errors,
+				fieldType,
+				isInvalid: Boolean(errors.length),
+				name,
+				setErrors,
+				warning: warnings?.[0],
+				warnings,
+			},
 			[IgnoredProp.INPUT_PROPS]: inputProps,
 		});
 	}, [componentProps, fieldMeta, fieldType, errors, inputRef, name, setErrors]);

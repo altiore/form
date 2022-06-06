@@ -1,5 +1,6 @@
 import {MutableRefObject} from 'react';
 
+import {getCountryCode} from '~/@common/get-country-code';
 import {FieldType, InputType} from '~/@common/types';
 
 export const getNodeByName = <T>(
@@ -107,15 +108,14 @@ export const formatPhone = function formatPhoneNumber(
 	phoneNumberString: string,
 ): string | null {
 	const match = phoneNumberString.match(
-		/^(\+?7?\s?|\+?3?\s?|\+?1?\s?)?(\s?\(?\d{3}\)?\s?|\s?\(?\d{2}|\s?\(?\d|\s?\(?)?(\d{3}|\d{2}|\d)?(\s?-?\s?\d{2}|\s?-?\s?\d|\s?-?\s?)?(\s?-?\s?\d{2}|\s?-?\s?\d|\s?-?\s?)?$/,
+		/^(\+?38?\s?|\+?7?\s?)?(\s?\(?\d{3}\)?\s?|\s?\(?\d{2}|\s?\(?\d|\s?\(?)?(\d{3}|\d{2}|\d)?(\s?-?\s?\d{2}|\s?-?\s?\d|\s?-?\s?)?(\s?-?\s?\d{4}|\s?-?\s?\d{3}|\s?-?\s?\d{2}|\s?-?\s?\d|\s?-?\s?)?$/,
 	);
 	if (match) {
 		let res = '';
 		if (match[1]) {
 			res += match[1][0] === '+' ? match[1] : `+${match[1]}`;
 		} else if (phoneNumberString.length) {
-			// TODO: определять стартовые цифры по локально установленной стране
-			res = '+7 ' + res;
+			res = getCountryCode() + res;
 		}
 		if (match[2]) {
 			res = res.replace(/\s$/gi, '') + ' (' + match[2].replace(/^[\s(]/gi, '');
@@ -151,14 +151,14 @@ export const formatPhone = function formatPhoneNumber(
 export const formatValueByType = new Map([[FieldType.PHONE, formatPhone]]);
 
 export const PassWarn = {
-	minLength: 'Минимальная рекомендуемая длина пароля - 8 символов',
+	minLength: 'Минимум 8 символов',
 	// eslint-disable-next-line sort-keys
-	lowerRequired: 'Добавьте хотя бы одну букву в нижнем регистре',
+	lowerRequired: 'Минимум 1 буква в нижнем регистре',
 	// eslint-disable-next-line sort-keys
-	digitRequired: 'Добавьте хотя бы одну цифру',
-	upperRequired: 'Добавьте хотя бы одну букву в верхнем регистре',
+	digitRequired: 'Минимум 1 цифра',
+	upperRequired: 'Минимум 1 буква в верхнем регистре',
 	// eslint-disable-next-line sort-keys
-	specRequired: 'Добавьте хотя бы один спец. символ &,@,$,#...',
+	specRequired: 'Минимум 1 спец. символ % * ( ) ? ! @ # ₽ ...',
 };
 
 const warningPassword = (value: string): string[] => {
@@ -178,7 +178,7 @@ const warningPassword = (value: string): string[] => {
 	if (!value.match(/[A-ZА-Я]+/g)) {
 		warnings.push(PassWarn.upperRequired);
 	}
-	if (!value.match(/[!"№%:,.;()_+\[\]@#$^&*=±§<>]+/g)) {
+	if (!value.match(/[!"№%:,.;()_+\[\]@#₽$^&*=±§<>?\\|\/~`'\-}{]+/g)) {
 		warnings.push(PassWarn.specRequired);
 	}
 

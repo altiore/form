@@ -28,15 +28,11 @@ const getItemsFromDefVal = (_: any, i: number) => i;
 
 /**
  * Форма - элемент взаимодействия пользователя с сайтом или приложением
- *
- * Простейший вариант формы выглядит следующим образом: мы используем элементы <input name="name"/>
- * и <button type="submit">Submit</button>, предварительно импортировав ее из библиотеки <a href
- * ='https://github.com/altiore/form'>@altiore/form</a>.
  */
-
 export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	children,
 	defaultValues,
+	html5Validation,
 	onSubmit,
 	...props
 }: FormProps<Values>): JSX.Element => {
@@ -247,7 +243,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 					const fieldType: FieldType = fieldMeta.fieldType || FieldType.TEXT;
 					let value: any;
 					if (fieldType === FieldType.ARRAY) {
-						// TODO: для элемента массива получить все данные из вложеных инпутов
+						// TODO: для элемента массива получить все данные из вложенных полей ввода
 						value = fieldMeta.items;
 					} else {
 						const target = getNodeByName(fieldMeta.name, formRef);
@@ -337,7 +333,11 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	);
 
 	return (
-		<form {...props} onSubmit={handleSubmit} ref={formRef}>
+		<form
+			{...props}
+			onSubmit={handleSubmit}
+			ref={formRef}
+			noValidate={!html5Validation}>
 			<FormContext.Provider
 				value={{
 					fields,

@@ -8,10 +8,10 @@ export const isPhone: ReusableValidator<string> =
 			return undefined;
 		}
 
-		const regexpPhone = /^\+\d{11}$/;
+		const regexpPhone = /^\+\d{12}$|^\+\d{11}$/;
 
 		if (typeof value !== 'string' || !regexpPhone.test(value)) {
-			const defError = `Телефон должен начинаться с "+" и содержать 11 цифр`;
+			const defError = `Телефон должен начинаться с "+" и содержать 11 или 12 цифр`;
 			return getErrorMessage(value, value, defError, getMessage);
 		}
 		return undefined;
