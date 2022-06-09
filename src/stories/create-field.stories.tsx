@@ -2,6 +2,7 @@ import React, {useCallback} from 'react';
 
 import {ComponentMeta, ComponentStory} from '@storybook/react';
 
+import {ValidateFunc} from '~/@common/types';
 import {Form} from '~/form';
 import FieldWrong from '~/stories/field-wrong';
 import SubmitButton from '~/stories/submit-button';
@@ -268,12 +269,24 @@ export const InsideFormWrongField: ComponentStory<typeof Field> = ({
 	);
 };
 
+type S7F = {
+	oneMore1: number;
+	oneMore2: boolean;
+	phone: string;
+};
+
+const phone: ValidateFunc<string> = isPhone();
+
 export const PhoneNumber: ComponentStory<typeof Field> = ({onSubmit}: any) => {
 	return (
-		<Form
+		<Form<S7F>
 			onSubmit={onSubmit}
 			className="shadow border border-secondary rounded-3 p-3 w-75">
-			<FieldPhone name="phone" label="Телефон" validate={isPhone()} />
+			<FieldPhone<S7F>
+				name="phone"
+				label="Телефон"
+				validate={[require, phone]}
+			/>
 
 			<button className="btn btn-success" type="submit">
 				Отправить
