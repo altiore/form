@@ -122,8 +122,8 @@ export const formatPhone = function formatPhoneNumber(
 		}
 		if (match[3]) {
 			res = res.replace(/\)?\s?$/gi, '') + ') ' + match[3];
-		} else {
-			res += ')';
+		} else if (match[4]) {
+			res = res.replace(/\)?\s?$/gi, '') + ') ';
 		}
 		if (match[4]) {
 			res =
