@@ -122,6 +122,8 @@ export const formatPhone = function formatPhoneNumber(
 		}
 		if (match[3]) {
 			res = res.replace(/\)?\s?$/gi, '') + ') ' + match[3];
+		} else {
+			res += ')';
 		}
 		if (match[4]) {
 			res =
@@ -145,7 +147,7 @@ export const formatPhone = function formatPhoneNumber(
 		}
 		return res;
 	}
-	return null;
+	return formatPhone(phoneNumberString.replace(/[()\s\-+a-zа-я]/gi, ''));
 };
 
 export const formatValueByType = new Map([[FieldType.PHONE, formatPhone]]);
