@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {useMemo} from 'react';
+
+import {split} from 'lodash';
 
 import {useRegisterField} from '~/@common/hooks/use-register-field';
 import {
@@ -48,6 +50,27 @@ export const NamedField = <
 			defaultValue,
 		);
 
+	/**
+	 * Переменная, добавленная из родительского массива для задания только что
+	 * добавленных значений. null означает, что переменная была задана пустой
+	 * имеет самый высокий приоритет при добавлении
+	 */
+	const defaultValueJustAdded = useMemo(() => {
+		const s = formState?.fields;
+		const fieldNameArr = split(name, '.');
+		const fieldNameArrLength = fieldNameArr.length;
+		if (fieldNameArrLength > 2) {
+			const defValueFromPar =
+				s?.[fieldNameArr.slice(0, fieldNameArrLength - 2).join('.')]
+					?.defaultValue;
+			return Array.isArray(defValueFromPar)
+				? undefined
+				: defValueFromPar
+				? defValueFromPar?.[fieldNameArr[fieldNameArrLength - 1]] ?? null
+				: undefined;
+		}
+	}, [formState?.fields, name]);
+
 	if ((isInsideForm && !field) || !isRegistered) {
 		return null;
 	}
@@ -56,6 +79,7 @@ export const NamedField = <
 		<ValidatedField
 			{...rest}
 			defaultValue={defaultValue}
+			defaultValueJustAdded={defaultValueJustAdded}
 			validators={validators}
 			componentProps={componentProps}
 			formRef={formState?.formRef}

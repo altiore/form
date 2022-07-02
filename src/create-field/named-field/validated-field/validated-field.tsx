@@ -22,6 +22,7 @@ type IProps<
 	component: (props: FieldProps<FieldCustomProps, Input>) => JSX.Element;
 	componentProps: FieldCustomProps;
 	defaultValue?: any;
+	defaultValueJustAdded?: any;
 	fieldMeta?: FieldMeta;
 	validators: Array<ValidateFunc>;
 	name: string;
@@ -36,6 +37,7 @@ export const ValidatedField = <
 	component,
 	componentProps,
 	defaultValue,
+	defaultValueJustAdded,
 	fieldMeta,
 	formRef,
 	name,
@@ -71,7 +73,9 @@ export const ValidatedField = <
 	return useMemo(() => {
 		const type = getInputTypeByFieldType(fieldType);
 		const defValue =
-			typeof fieldMeta?.defaultValue === 'undefined'
+			defaultValueJustAdded !== undefined
+				? defaultValueJustAdded ?? undefined
+				: typeof fieldMeta?.defaultValue === 'undefined'
 				? defaultValue
 				: fieldMeta?.defaultValue;
 		const isChecked = ['checkbox', 'radio'].includes(type);
@@ -101,5 +105,14 @@ export const ValidatedField = <
 			},
 			[IgnoredProp.INPUT_PROPS]: inputProps,
 		});
-	}, [componentProps, fieldMeta, fieldType, errors, inputRef, name, setErrors]);
+	}, [
+		componentProps,
+		defaultValueJustAdded,
+		fieldMeta,
+		fieldType,
+		errors,
+		inputRef,
+		name,
+		setErrors,
+	]);
 };

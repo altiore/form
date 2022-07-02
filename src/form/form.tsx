@@ -160,25 +160,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 			validators?: Array<ValidateFunc>,
 		) => {
 			setFields((s): FormContextState['fields'] => {
-				const fieldNameArr = fieldName.split('.');
-
-				let dynamicDefault: any = undefined;
-				const fieldNameArrLength = fieldNameArr.length;
-				if (fieldNameArrLength > 2) {
-					const defValueFromPar =
-						s?.[fieldNameArr.slice(0, fieldNameArrLength - 2).join('.')]
-							?.defaultValue;
-					dynamicDefault = Array.isArray(defValueFromPar)
-						? undefined
-						: defValueFromPar
-						? defValueFromPar?.[fieldNameArr[fieldNameArrLength - 1]] ??
-						  undefined
-						: undefined;
-				}
-				const defaultValue =
-					dynamicDefault ??
-					get(defaultValues, fieldNameArr) ??
-					fieldDefaultValue;
+				const defaultValue = get(defaultValues, fieldName) ?? fieldDefaultValue;
 
 				return {
 					...s,
