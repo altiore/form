@@ -270,17 +270,18 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 			// 2. Send data
 			const formData = new window.FormData(formRef.current ?? undefined);
 			const values: Record<string, unknown> = {};
-			const fewValues: any[] = [];
 
 			formData.forEach((value: unknown, name: string) => {
 				const prevValue = get(values, name);
 				if (prevValue) {
-					if (fewValues.length === 0) {
-						fewValues.push(prevValue);
+					let newValue: any[];
+					if (Array.isArray(prevValue)) {
+						newValue = [...prevValue, value];
+					} else {
+						newValue = [prevValue, value];
 					}
-					fewValues.push(value);
 
-					set(values, name, fewValues);
+					set(values, name, newValue);
 				} else {
 					set(values, name, value);
 				}
@@ -295,7 +296,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 
 					if (Array.isArray(items)) {
 						const value = items.map((index: number) => {
-							return (cloneDeep(get(resValues, fieldKey)) as any[])[index];
+							return (get(resValues, fieldKey) as any[])[index];
 						});
 
 						unset(resValues, fieldKey);

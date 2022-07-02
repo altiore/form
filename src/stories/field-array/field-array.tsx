@@ -3,8 +3,8 @@ import React, {useCallback} from 'react';
 import {FieldArrayProps} from '~/@common/types';
 import {createFieldArray} from '~/create-field-array';
 import Field from '~/stories/field';
-import {FieldNumber} from '~/stories/field-typed';
-import {minLength} from '~/validators';
+import {FieldFloat, FieldNumber} from '~/stories/field-typed';
+import {isRequired, minLength} from '~/validators';
 
 export const TagsArray = createFieldArray(({list}: FieldArrayProps) => {
 	const renderItem = useCallback(({key, remove}) => {
@@ -44,12 +44,12 @@ export interface IFieldArray {
 export const FieldArray = createFieldArray<IFieldArray>(({list, error}) => {
 	const renderIngredient = useCallback(({key, remove, append, prepend}) => {
 		return (
-			<div className="w-75 mt-3" key={key}>
+			<div style={{display: 'flex', flexFlow: 'row nowrap'}} key={key}>
 				<button
 					className="btn btn-outline-success mb-3"
 					onClick={prepend}
 					type="button">
-					Добавить до
+					до
 				</button>
 				<div className="shadow border border-secondary rounded-3 mb-3 p-3">
 					<div>
@@ -64,6 +64,12 @@ export const FieldArray = createFieldArray<IFieldArray>(({list, error}) => {
 							name="ingredient"
 							validate={[minLength(null, 3)]}
 						/>
+						<FieldFloat
+							step={0.5}
+							label="Количество"
+							name="amount"
+							validate={[isRequired()]}
+						/>
 
 						<TagsArray name="tags" />
 					</div>
@@ -72,7 +78,7 @@ export const FieldArray = createFieldArray<IFieldArray>(({list, error}) => {
 					className="btn btn-outline-success mb-3"
 					onClick={append}
 					type="button">
-					Добавить после
+					после
 				</button>
 			</div>
 		);
