@@ -75,7 +75,7 @@ const toArray = (value: any): string[] => {
 	return [];
 };
 
-export const parseValueByType = new Map([
+export const parseValueByType = new Map<FieldType, (a: any) => any>([
 	[FieldType.TEXT, parseDefault],
 	[FieldType.BOOLEAN, parseBoolean],
 	[FieldType.NUMBER, parseNumber],

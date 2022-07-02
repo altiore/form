@@ -7,7 +7,7 @@ export interface FormProps<Values extends Record<string, any>>
 	onSubmit: (
 		values: Partial<Values>,
 		setErrors: (errors: Record<string, any>) => void,
-		evt: FormEvent,
+		evt: FormEvent | string,
 	) => Promise<any> | any;
 	html5Validation?: boolean;
 }

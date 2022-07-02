@@ -1,6 +1,5 @@
 import React, {FormEvent, useCallback, useRef, useState} from 'react';
 
-import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
 import set from 'lodash/set';
@@ -14,17 +13,18 @@ import {
 	FormContextState,
 	ValidateFunc,
 } from '~/@common/types';
-import {
-	getNodeByName,
-	getValueByNodeName,
-	getValueByTypeAndTarget,
-	parseValueByType,
-} from '~/@common/utils';
+import {getValueByNodeName, parseValueByType} from '~/@common/utils';
 
 import {toFlatErrors} from './form.utils';
 import {FormProps} from './types';
 
 const getItemsFromDefVal = (_: any, i: number) => i;
+
+const getArrayValue = (fieldName: string, values: any, items: number[]) => {
+	return items.map((index: number) => {
+		return (get(values, fieldName) as any[])[index];
+	});
+};
 
 /**
  * Форма - элемент взаимодействия пользователя с сайтом или приложением
@@ -230,26 +230,52 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	);
 
 	const handleSubmit = useCallback(
-		(evt?: FormEvent) => {
-			const localSubmitFunc = typeof evt === 'function' ? evt : onSubmit;
-			if (evt?.preventDefault) {
-				evt.preventDefault();
+		(formEventOrCustomHandler?: FormEvent) => {
+			let evt: string | FormEvent = 'not a submit event';
+			if (formEventOrCustomHandler?.preventDefault) {
+				formEventOrCustomHandler.preventDefault();
+				evt = formEventOrCustomHandler;
 			}
 
-			// 1. Validate
+			// 1. Преобразовываем данные в правильный формат
+			const formData = new window.FormData(formRef.current ?? undefined);
+			const values: Record<string, unknown> = {};
+
+			formData.forEach((value: unknown, name: string) => {
+				// Мы не можем проверить ошибки валидации внутри этого цикла, т.к. данные еще не
+				// полностью сформированы (особенно для массивов)
+				const fieldType = fields[name]?.fieldType;
+				// находим функцию для преобразования данных к правильному формату,
+				// если такая есть
+				const prepareValue = parseValueByType.get(fieldType);
+
+				const prevValue = get(values, name);
+				if (prevValue) {
+					// если предыдущее значение существует, значит это массив
+					const newValue = Array.isArray(prevValue)
+						? [...prevValue, value]
+						: [prevValue, value];
+
+					// если функция преобразования данных к правильному формату есть -
+					// применяем ее
+					set(values, name, prepareValue ? prepareValue(newValue) : newValue);
+				} else {
+					// если функция преобразования данных к правильному формату есть -
+					// применяем ее
+					set(values, name, prepareValue ? prepareValue(value) : value);
+				}
+			});
+
+			// 2. Проверка данных на соответствие правилам валидации
 			let isFormInvalid = false;
 			Object.entries(fields).forEach(([fieldName, fieldMeta]: any) => {
 				if (fieldMeta.validators) {
 					const fieldType: FieldType = fieldMeta.fieldType || FieldType.TEXT;
 					let value: any;
 					if (fieldType === FieldType.ARRAY) {
-						// TODO: для элемента массива получить все данные из вложенных полей ввода
-						value = fieldMeta.items;
+						value = getArrayValue(fieldName, values, fieldMeta.items);
 					} else {
-						const target = getNodeByName(fieldMeta.name, formRef);
-						value = target?.current
-							? getValueByTypeAndTarget(fieldType, target.current as any)
-							: null;
+						value = get(values, fieldName);
 					}
 					const errors: string[] = [];
 					fieldMeta.validators.forEach((validate: ValidateFunc) => {
@@ -262,61 +288,38 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 					setErrors(fieldName, errors);
 				}
 			});
+
 			if (isFormInvalid) {
 				setIsSubmitting(false);
 				return Promise.resolve();
 			}
 
-			// 2. Send data
-			const formData = new window.FormData(formRef.current ?? undefined);
-			const values: Record<string, unknown> = {};
+			Object.entries(fields).forEach(([fieldName, fieldMeta]: any) => {
+				// Преобразовать массивы к массивам с непустыми данными
+				// (должно быть в самом конце для правильной работы!)
+				// мы не можем выполнить это действие во время проверки валидации,
+				// т.к. не можем менять результирующие данные до их проверки
+				// создание новой переменной с результирующими данными усложняет
+				// понимание кода
+				const items = fields[fieldName].items;
+				if (Array.isArray(items)) {
+					const value = getArrayValue(fieldName, values, fieldMeta.items);
 
-			formData.forEach((value: unknown, name: string) => {
-				const prevValue = get(values, name);
-				if (prevValue) {
-					let newValue: any[];
-					if (Array.isArray(prevValue)) {
-						newValue = [...prevValue, value];
-					} else {
-						newValue = [prevValue, value];
-					}
-
-					set(values, name, newValue);
-				} else {
-					set(values, name, value);
+					unset(values, fieldName);
+					set(values, fieldName, value);
 				}
 			});
-			const resValues: Record<string, unknown> = cloneDeep(values);
-
-			Object.keys(fields)
-				.reverse()
-				.forEach((fieldKey) => {
-					const items = fields[fieldKey].items;
-					const fieldType = fields[fieldKey].fieldType;
-
-					if (Array.isArray(items)) {
-						const value = items.map((index: number) => {
-							return (get(resValues, fieldKey) as any[])[index];
-						});
-
-						unset(resValues, fieldKey);
-						set(resValues, fieldKey, value);
-					} else {
-						const prepareValue = parseValueByType.get(
-							fieldType || FieldType.TEXT,
-						);
-
-						if (prepareValue) {
-							const typedValue = prepareValue(get(resValues, fieldKey) as any);
-
-							set(resValues, fieldKey, typedValue);
-						}
-					}
-				});
 
 			setIsSubmitting(true);
+
+			const localSubmitFunc =
+				typeof formEventOrCustomHandler === 'function'
+					? formEventOrCustomHandler
+					: onSubmit;
 			Promise.resolve(
-				localSubmitFunc(resValues as Values, setNestedErrors, evt),
+				// если было событие submit, то передаем это событие как 3-ий параметр,
+				// чтоб можно было что-то с ним сделать
+				localSubmitFunc(values as Values, setNestedErrors, evt),
 			)
 				.then(function () {
 					setIsSubmitting(false);
