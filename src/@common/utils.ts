@@ -61,8 +61,10 @@ const parseBoolean = (value: string | undefined): any =>
 	typeof value === 'boolean' ? value : value === 'on';
 const parseNumber = (value: string): any => parseInt(value, 10);
 const parseDefault = (value: string): any => (value === '' ? null : value);
-const parsePhone = (value: string): any =>
-	typeof value === 'string' ? value.replace(/[()\s\-]/gi, '') : value;
+const parsePhone = (v: string): any => {
+	const value = parseDefault(v);
+	return typeof value === 'string' ? value.replace(/[()\s\-]/gi, '') : value;
+};
 const toArray = (value: any): string[] => {
 	if (typeof value === 'string') {
 		return [value];
@@ -77,6 +79,8 @@ const toArray = (value: any): string[] => {
 
 export const parseValueByType = new Map<FieldType, (a: any) => any>([
 	[FieldType.TEXT, parseDefault],
+	[FieldType.EMAIL, parseDefault],
+	[FieldType.SELECT, parseDefault],
 	[FieldType.BOOLEAN, parseBoolean],
 	[FieldType.NUMBER, parseNumber],
 	[FieldType.FLOAT, parseFloat],
