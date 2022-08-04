@@ -153,7 +153,9 @@ export const formatPhone = function formatPhoneNumber(
 			}
 			return res;
 		}
-		return formatPhone(phoneNumberString.replace(/[()\s\-+a-zа-я]/gi, ''));
+		if (phoneNumberString.match(/[()\s\-+a-zа-я]/gi)) {
+			return formatPhone(phoneNumberString.replace(/[()\s\-+a-zа-я]/gi, ''));
+		}
 	} catch (err) {
 		console.error('Не удалось форматировать номер телефона');
 		console.error(err);
