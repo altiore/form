@@ -111,47 +111,55 @@ const digitStrArr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 export const formatPhone = function formatPhoneNumber(
 	phoneNumberString: string,
 ): string | null {
-	const match = phoneNumberString.match(
-		/^(\+?38?\s?|\+?7?\s?)?(\s?\(?\d{3}\)?\s?|\s?\(?\d{2}|\s?\(?\d|\s?\(?)?(\d{3}|\d{2}|\d)?(\s?-?\s?\d{2}|\s?-?\s?\d|\s?-?\s?)?(\s?-?\s?\d{4}|\s?-?\s?\d{3}|\s?-?\s?\d{2}|\s?-?\s?\d|\s?-?\s?)?$/,
-	);
-	if (match) {
-		let res = '';
-		if (match[1]) {
-			res += match[1][0] === '+' ? match[1] : `+${match[1]}`;
-		} else if (phoneNumberString.length) {
-			res = getCountryCode() + res;
+	try {
+		const match = phoneNumberString.match(
+			/^(\+?38?\s?|\+?7?\s?)?(\s?\(?\d{3}\)?\s?|\s?\(?\d{2}|\s?\(?\d|\s?\(?)?(\d{3}|\d{2}|\d)?(\s?-?\s?\d{2}|\s?-?\s?\d|\s?-?\s?)?(\s?-?\s?\d{4}|\s?-?\s?\d{3}|\s?-?\s?\d{2}|\s?-?\s?\d|\s?-?\s?)?$/,
+		);
+		if (match) {
+			let res = '';
+			if (match[1]) {
+				res += match[1][0] === '+' ? match[1] : `+${match[1]}`;
+			} else if (phoneNumberString.length) {
+				res = getCountryCode() + res;
+			}
+			if (match[2]) {
+				res =
+					res.replace(/\s$/gi, '') + ' (' + match[2].replace(/^[\s(]/gi, '');
+			}
+			if (match[3]) {
+				res = res.replace(/\)?\s?$/gi, '') + ') ' + match[3];
+			} else if (match[4]) {
+				res = res.replace(/\)?\s?$/gi, '') + ') ';
+			}
+			if (match[4]) {
+				res =
+					res.replace(/\s?-?\s?$/gi, '') +
+					(digitStrArr.includes(match[4][0])
+						? ' - ' + match[4]
+						: digitStrArr.includes(match[4][1]) ||
+						  digitStrArr.includes(match[4][2])
+						? match[4].replace(/^\s?-?\s?/gi, ' - ')
+						: match[4]);
+			}
+			if (match[5]) {
+				res =
+					res.replace(/\s?-?\s?$/gi, '') +
+					(digitStrArr.includes(match[5][0])
+						? ' - ' + match[5]
+						: digitStrArr.includes(match[5][1]) ||
+						  digitStrArr.includes(match[5][2])
+						? match[5].replace(/^\s?-?\s?/gi, ' - ')
+						: match[5]);
+			}
+			return res;
 		}
-		if (match[2]) {
-			res = res.replace(/\s$/gi, '') + ' (' + match[2].replace(/^[\s(]/gi, '');
-		}
-		if (match[3]) {
-			res = res.replace(/\)?\s?$/gi, '') + ') ' + match[3];
-		} else if (match[4]) {
-			res = res.replace(/\)?\s?$/gi, '') + ') ';
-		}
-		if (match[4]) {
-			res =
-				res.replace(/\s?-?\s?$/gi, '') +
-				(digitStrArr.includes(match[4][0])
-					? ' - ' + match[4]
-					: digitStrArr.includes(match[4][1]) ||
-					  digitStrArr.includes(match[4][2])
-					? match[4].replace(/^\s?-?\s?/gi, ' - ')
-					: match[4]);
-		}
-		if (match[5]) {
-			res =
-				res.replace(/\s?-?\s?$/gi, '') +
-				(digitStrArr.includes(match[5][0])
-					? ' - ' + match[5]
-					: digitStrArr.includes(match[5][1]) ||
-					  digitStrArr.includes(match[5][2])
-					? match[5].replace(/^\s?-?\s?/gi, ' - ')
-					: match[5]);
-		}
-		return res;
+		return formatPhone(phoneNumberString.replace(/[()\s\-+a-zа-я]/gi, ''));
+	} catch (err) {
+		console.error('Не удалось форматировать номер телефона');
+		console.error(err);
 	}
-	return formatPhone(phoneNumberString.replace(/[()\s\-+a-zа-я]/gi, ''));
+
+	return phoneNumberString;
 };
 
 export const formatValueByType = new Map([[FieldType.PHONE, formatPhone]]);
