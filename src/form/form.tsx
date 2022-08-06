@@ -1,5 +1,6 @@
 import React, {FormEvent, useCallback, useRef, useState} from 'react';
 
+import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
 import set from 'lodash/set';
@@ -34,6 +35,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	defaultValues,
 	html5Validation,
 	onSubmit,
+	setState,
 	...props
 }: FormProps<Values>): JSX.Element => {
 	const formRef = useRef<HTMLFormElement>(null);
@@ -125,6 +127,90 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 		[setErrors],
 	);
 
+	const setField = useCallback(
+		(fieldName: string, value?: any) => {
+			if (setState) {
+				setFields((fields) => {
+					let newFields = fields;
+					if (value === undefined) {
+						newFields = {
+							...fields,
+							[fieldName]: undefined,
+						} as any;
+						delete newFields[fieldName];
+					}
+
+					setTimeout(() => {
+						setState((s) => {
+							const fieldNameArr = fieldName.split('.');
+							let preparedFieldName = '';
+							let firstParentName = '';
+							let secondParentName = '';
+							fieldNameArr.forEach((fieldPiece) => {
+								if (preparedFieldName === '') {
+									preparedFieldName = fieldPiece;
+								} else {
+									const fieldInfo = newFields?.[preparedFieldName];
+									secondParentName = firstParentName;
+									firstParentName = preparedFieldName;
+									if (fieldInfo?.fieldType === FieldType.ARRAY) {
+										const index = (
+											value === undefined
+												? fieldInfo.itemsPrev
+												: fieldInfo.items
+										).findIndex((el) => el === parseInt(fieldPiece, 10));
+										if (index !== -1) {
+											preparedFieldName += `.${index}`;
+										} else {
+											throw new Error('Не удалось найти элемент в массиве');
+										}
+									} else {
+										preparedFieldName += `.${fieldPiece}`;
+									}
+								}
+							});
+							const firstParent = firstParentName
+								? get(s, firstParentName)
+								: undefined;
+							if (firstParent && fieldNameArr[fieldNameArr.length - 1]) {
+								firstParent[fieldNameArr[fieldNameArr.length - 1]] = value;
+							}
+							const secondParent = secondParentName
+								? get(s, secondParentName)
+								: undefined;
+							let newState = set(
+								s ? cloneDeep(s) : {},
+								preparedFieldName,
+								value,
+							);
+							if (value === undefined) {
+								if (
+									typeof firstParent === 'object' &&
+									Object.values(firstParent).every((el) => el === undefined) &&
+									secondParent?.length
+								) {
+									newState = set(
+										newState,
+										secondParentName,
+										secondParent.filter(
+											(el: Record<string, any>) =>
+												el !== undefined &&
+												!Object.values(el).every((el) => el === undefined),
+										),
+									);
+								}
+							}
+							return newState;
+						});
+					}, 0);
+
+					return newFields;
+				});
+			}
+		},
+		[setFields, setState],
+	);
+
 	const setItems = useCallback(
 		(
 			fieldName: string,
@@ -133,6 +219,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 			defaultValue?: any,
 		) => {
 			setFields((s) => {
+				const itemsPrev = [...s[fieldName].items];
 				const items = setItemsArg(s[fieldName].items);
 				const errors = getErrors(items);
 				return {
@@ -145,6 +232,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 						isInvalid: Boolean(errors?.length),
 						isUntouched: false,
 						items,
+						itemsPrev,
 					},
 				};
 			});
@@ -188,17 +276,10 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 			});
 
 			return () => {
-				setFields((s) => {
-					const newState: any = {
-						...s,
-						[fieldName]: undefined,
-					};
-					delete newState[fieldName];
-					return newState;
-				});
+				setField(fieldName);
 			};
 		},
-		[defaultValues, setFields],
+		[defaultValues, setField, setFields],
 	);
 
 	const getFormValueByName = useCallback(
@@ -320,10 +401,10 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 
 	return (
 		<form
+			noValidate={!html5Validation}
 			{...props}
 			onSubmit={handleSubmit}
-			ref={formRef}
-			noValidate={!html5Validation}>
+			ref={formRef}>
 			<FormContext.Provider
 				value={{
 					fields,
@@ -331,6 +412,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 					isSubmitting,
 					onSubmit: handleSubmit,
 					registerField,
+					setField,
 					setItems,
 				}}>
 				{children}

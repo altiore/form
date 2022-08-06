@@ -24,10 +24,11 @@ type IProps<
 	defaultValue?: any;
 	defaultValueJustAdded?: any;
 	fieldMeta?: FieldMeta;
-	validators: Array<ValidateFunc>;
-	name: string;
-	formRef?: MutableRefObject<HTMLFormElement>;
 	fieldType?: FieldType;
+	formRef?: MutableRefObject<HTMLFormElement>;
+	name: string;
+	setField?: (fieldName: string, value: any) => void | Promise<void>;
+	validators: Array<ValidateFunc>;
 };
 
 export const ValidatedField = <
@@ -39,9 +40,10 @@ export const ValidatedField = <
 	defaultValue,
 	defaultValueJustAdded,
 	fieldMeta,
+	fieldType,
 	formRef,
 	name,
-	fieldType,
+	setField,
 	validators,
 }: IProps<FieldCustomProps, Input>): JSX.Element => {
 	const inputRef = useRef<Input>();
@@ -52,6 +54,7 @@ export const ValidatedField = <
 		fieldMeta,
 		fieldType,
 		name,
+		setField,
 	);
 
 	useEffect(() => {

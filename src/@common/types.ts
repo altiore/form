@@ -85,6 +85,7 @@ export enum FieldMetaName {
 	DEFAULT_VALUE = 'defaultValue',
 	ERRORS = 'errors',
 	ITEMS = 'items',
+	ITEMS_PREV = 'itemsPrev',
 	SET_ERRORS = 'setErrors',
 	FIELD_TYPE = 'fieldType',
 	IS_UNTOUCHED = 'isUntouched',
@@ -109,6 +110,7 @@ export type FieldMeta<ValueType = any> = {
 	// массив номеров в порядке, в котором элементы массива расположены на экране
 	// используется только для fieldType === FieldType.ARRAY
 	[FieldMetaName.ITEMS]?: number[];
+	[FieldMetaName.ITEMS_PREV]?: number[];
 	[FieldMetaName.SET_ERRORS]: (
 		errors: string[],
 		force?: boolean,
@@ -129,6 +131,7 @@ export type FormContextState = {
 	formRef: MutableRefObject<HTMLFormElement>;
 	isSubmitting: boolean;
 	registerField: RegisterField;
+	setField?: (fieldName: string, value: any) => void | Promise<void>;
 	setItems: (
 		fieldName: string,
 		setItems: (i: number[]) => number[],

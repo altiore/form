@@ -83,6 +83,7 @@ export const NamedField = <
 			validators={validators}
 			componentProps={componentProps}
 			formRef={formState?.formRef}
+			setField={formState?.setField}
 			fieldMeta={field}
 			name={name}
 			fieldType={field?.fieldType ?? fieldType}

@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {ComponentMeta, ComponentStory} from '@storybook/react';
 
@@ -26,20 +26,25 @@ export const SimplestFieldArray: ComponentStory<typeof FieldArray> = () => (
 );
 
 export const InsideFormFieldArraySimplest: ComponentStory<typeof FieldArray> =
-	({onSubmit}: any) => (
-		<>
-			<legend>Простейший массив полей внутри формы</legend>
-			<Form
-				className="shadow border border-secondary rounded-3 p-3 w-75"
-				onSubmit={onSubmit}>
-				<Field label="Название" name="title" />
-				<FieldArraySimplest name="ingredients" />
-				<div className="mt-3">
-					<SubmitBtn className="btn btn-success">Отправить</SubmitBtn>
-				</div>
-			</Form>
-		</>
-	);
+	({onSubmit}: any) => {
+		const [state, setState] = useState({});
+		console.log('state', state);
+		return (
+			<>
+				<legend>Простейший массив полей внутри формы</legend>
+				<Form
+					setState={setState}
+					className="shadow border border-secondary rounded-3 p-3 w-75"
+					onSubmit={onSubmit}>
+					<Field label="Название" name="title" />
+					<FieldArraySimplest name="ingredients" />
+					<div className="mt-3">
+						<SubmitBtn className="btn btn-success">Отправить</SubmitBtn>
+					</div>
+				</Form>
+			</>
+		);
+	};
 
 export const InsideFormFieldArrayWithValidators: ComponentStory<
 	typeof FieldArray
