@@ -44,7 +44,8 @@ export const getFormValues = (
 
 	const formDataMap = new Map(Array.from(formData as any));
 
-	Object.keys(fields).forEach((name) => {
+	const fieldKeys = Object.keys(fields);
+	fieldKeys.forEach((name) => {
 		let value = formDataMap.has(name) ? formDataMap.get(name) : undefined;
 		// Мы не можем проверить ошибки валидации внутри этого цикла, т.к. данные еще не
 		// полностью сформированы (особенно для массивов)
@@ -70,6 +71,16 @@ export const getFormValues = (
 		const prepareValue = parseValueByType.get(fieldType);
 		set(values, name, prepareValue ? prepareValue(value) : value);
 	});
+
+	// установить данные из полей, которые не были зарегистрированы в библиотеке, но есть в форме
+	// (только с непустым полем name)
+	Array.from(formDataMap.keys())
+		.filter((key: string) => !fieldKeys.includes(key))
+		.forEach((name: string) => {
+			if (name) {
+				set(values, name, formDataMap.get(name));
+			}
+		});
 
 	return values;
 };

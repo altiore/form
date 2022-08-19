@@ -93,6 +93,10 @@ export const InsideFormField: ComponentStory<typeof Field> = ({
 					defaultValue={'тест'}
 					validate={[minLength(3)]}
 				/>
+				<div className={'mb-3 w-50 mb-3'}>
+					<label className="form-label">Простое поле</label>
+					<input className="form-control" name="simpleInput" />
+				</div>
 				<button className="btn btn-success mb-3 w-50" type="submit">
 					Отправить
 				</button>
