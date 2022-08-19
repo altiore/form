@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import set from 'lodash/set';
 
-import {FieldMeta} from '~/@common/types';
+import {FieldMeta, FieldType} from '~/@common/types';
 import {parseValueByType} from '~/@common/utils';
 
 export const getArrayValue = (
@@ -42,29 +42,33 @@ export const getFormValues = (
 	const formData = new window.FormData(formRefCurrent ?? undefined);
 	const values: Record<string, unknown> = {};
 
-	formData.forEach((value: unknown, name: string) => {
+	const formDataMap = new Map(Array.from(formData as any));
+
+	Object.keys(fields).forEach((name) => {
+		let value = formDataMap.has(name) ? formDataMap.get(name) : undefined;
 		// Мы не можем проверить ошибки валидации внутри этого цикла, т.к. данные еще не
 		// полностью сформированы (особенно для массивов)
 		const fieldType = fields[name]?.fieldType;
-		// находим функцию для преобразования данных к правильному формату,
-		// если такая есть
-		const prepareValue = parseValueByType.get(fieldType);
+
+		// TODO: возможно, не нужно пропускать это значение
+		// пропускаем массив, т.к. если мы найдем это значение позже вложенных в массив элементов,
+		// то они могут затереться
+		if (fieldType === FieldType.ARRAY) {
+			return;
+		}
 
 		const prevValue = get(values, name);
 		if (prevValue) {
 			// если предыдущее значение существует, значит это массив
-			const newValue = Array.isArray(prevValue)
+			value = Array.isArray(prevValue)
 				? [...prevValue, value]
 				: [prevValue, value];
-
-			// если функция преобразования данных к правильному формату есть -
-			// применяем ее
-			set(values, name, prepareValue ? prepareValue(newValue) : newValue);
-		} else {
-			// если функция преобразования данных к правильному формату есть -
-			// применяем ее
-			set(values, name, prepareValue ? prepareValue(value) : value);
 		}
+
+		// если функция преобразования данных к правильному формату есть -
+		// применяем ее
+		const prepareValue = parseValueByType.get(fieldType);
+		set(values, name, prepareValue ? prepareValue(value) : value);
 	});
 
 	return values;
