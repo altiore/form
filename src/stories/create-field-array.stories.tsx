@@ -33,6 +33,7 @@ export const InsideFormFieldArraySimplest: ComponentStory<typeof FieldArray> =
 			<>
 				<legend>Простейший массив полей внутри формы</legend>
 				<Form
+					defaultValues={{ingredients: [{desc: 'desc1', title: 'title1'}]}}
 					setState={setState}
 					className="shadow border border-secondary rounded-3 p-3 w-75"
 					onSubmit={onSubmit}>

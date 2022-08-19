@@ -35,7 +35,6 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	field?: FieldMeta,
 	fieldType?: FieldType,
 	nameFromProp?: string,
-	setField?: (fieldName: string, value: any) => void | Promise<void>,
 ): ValidateInputRes => {
 	const [mounted, setMounted] = useState(false);
 	useEffect(() => {
@@ -139,11 +138,8 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 
 			// TODO: добавить дефолтные валидаторы
 			const hasValidation = Boolean(validators?.length && e.target);
-			const value = getValueByTypeAndTarget(fieldType, e.target);
-			if (setField) {
-				setField(name, value);
-			}
 			if (hasValidation) {
+				const value = getValueByTypeAndTarget(fieldType, e.target);
 				validators.forEach((validate) => {
 					const result = validate(value, name, getFormValueByName);
 					if (result) {
@@ -160,7 +156,6 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 			getMounted,
 			handleSetErrors,
 			name,
-			setField,
 			validators,
 		],
 	);

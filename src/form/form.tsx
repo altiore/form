@@ -1,6 +1,5 @@
 import React, {FormEvent, useCallback, useRef, useState} from 'react';
 
-import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
 import set from 'lodash/set';
@@ -14,18 +13,12 @@ import {
 	FormContextState,
 	ValidateFunc,
 } from '~/@common/types';
-import {getValueByNodeName, parseValueByType} from '~/@common/utils';
+import {getValueByNodeName} from '~/@common/utils';
 
-import {toFlatErrors} from './form.utils';
+import {getArrayValue, getFormValues, toFlatErrors} from './form.utils';
 import {FormProps} from './types';
 
 const getItemsFromDefVal = (_: any, i: number) => i;
-
-const getArrayValue = (fieldName: string, values: any, items: number[]) => {
-	return items.map((index: number) => {
-		return (get(values, fieldName) as any[])[index];
-	});
-};
 
 /**
  * Форма - элемент взаимодействия пользователя с сайтом или приложением
@@ -35,7 +28,6 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	defaultValues,
 	html5Validation,
 	onSubmit,
-	setState,
 	...props
 }: FormProps<Values>): JSX.Element => {
 	const formRef = useRef<HTMLFormElement>(null);
@@ -127,90 +119,6 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 		[setErrors],
 	);
 
-	const setField = useCallback(
-		(fieldName: string, value?: any) => {
-			if (setState) {
-				setFields((fields) => {
-					let newFields = fields;
-					if (value === undefined) {
-						newFields = {
-							...fields,
-							[fieldName]: undefined,
-						} as any;
-						delete newFields[fieldName];
-					}
-
-					setTimeout(() => {
-						setState((s) => {
-							const fieldNameArr = fieldName.split('.');
-							let preparedFieldName = '';
-							let firstParentName = '';
-							let secondParentName = '';
-							fieldNameArr.forEach((fieldPiece) => {
-								if (preparedFieldName === '') {
-									preparedFieldName = fieldPiece;
-								} else {
-									const fieldInfo = newFields?.[preparedFieldName];
-									secondParentName = firstParentName;
-									firstParentName = preparedFieldName;
-									if (fieldInfo?.fieldType === FieldType.ARRAY) {
-										const index = (
-											value === undefined
-												? fieldInfo.itemsPrev
-												: fieldInfo.items
-										).findIndex((el) => el === parseInt(fieldPiece, 10));
-										if (index !== -1) {
-											preparedFieldName += `.${index}`;
-										} else {
-											throw new Error('Не удалось найти элемент в массиве');
-										}
-									} else {
-										preparedFieldName += `.${fieldPiece}`;
-									}
-								}
-							});
-							const firstParent = firstParentName
-								? get(s, firstParentName)
-								: undefined;
-							if (firstParent && fieldNameArr[fieldNameArr.length - 1]) {
-								firstParent[fieldNameArr[fieldNameArr.length - 1]] = value;
-							}
-							const secondParent = secondParentName
-								? get(s, secondParentName)
-								: undefined;
-							let newState = set(
-								s ? cloneDeep(s) : {},
-								preparedFieldName,
-								value,
-							);
-							if (value === undefined) {
-								if (
-									typeof firstParent === 'object' &&
-									Object.values(firstParent).every((el) => el === undefined) &&
-									secondParent?.length
-								) {
-									newState = set(
-										newState,
-										secondParentName,
-										secondParent.filter(
-											(el: Record<string, any>) =>
-												el !== undefined &&
-												!Object.values(el).every((el) => el === undefined),
-										),
-									);
-								}
-							}
-							return newState;
-						});
-					}, 0);
-
-					return newFields;
-				});
-			}
-		},
-		[setFields, setState],
-	);
-
 	const setItems = useCallback(
 		(
 			fieldName: string,
@@ -250,6 +158,12 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 			setFields((s): FormContextState['fields'] => {
 				const defaultValue = get(defaultValues, fieldName) ?? fieldDefaultValue;
 
+				const items =
+					fieldType === FieldType.ARRAY
+						? Array.isArray(defaultValue)
+							? defaultValue.map(getItemsFromDefVal)
+							: []
+						: undefined;
 				return {
 					...s,
 					[fieldName]: {
@@ -260,12 +174,8 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 						isInvalid: false,
 						// Этот флаг работает только для полей у которых есть валидаторы
 						isUntouched: true,
-						items:
-							fieldType === FieldType.ARRAY
-								? Array.isArray(defaultValue)
-									? defaultValue.map(getItemsFromDefVal)
-									: []
-								: undefined,
+						items,
+						itemsPrev: items,
 						name: fieldName,
 						setErrors: setErrors.bind({}, fieldName),
 						validators: validators ? validators : [],
@@ -276,10 +186,17 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 			});
 
 			return () => {
-				setField(fieldName);
+				setFields((s) => {
+					const newState: any = {
+						...s,
+						[fieldName]: undefined,
+					};
+					delete newState[fieldName];
+					return newState;
+				});
 			};
 		},
-		[defaultValues, setField, setFields],
+		[defaultValues, setFields],
 	);
 
 	const getFormValueByName = useCallback(
@@ -301,33 +218,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 			}
 
 			// 1. Преобразовываем данные в правильный формат
-			const formData = new window.FormData(formRef.current ?? undefined);
-			const values: Record<string, unknown> = {};
-
-			formData.forEach((value: unknown, name: string) => {
-				// Мы не можем проверить ошибки валидации внутри этого цикла, т.к. данные еще не
-				// полностью сформированы (особенно для массивов)
-				const fieldType = fields[name]?.fieldType;
-				// находим функцию для преобразования данных к правильному формату,
-				// если такая есть
-				const prepareValue = parseValueByType.get(fieldType);
-
-				const prevValue = get(values, name);
-				if (prevValue) {
-					// если предыдущее значение существует, значит это массив
-					const newValue = Array.isArray(prevValue)
-						? [...prevValue, value]
-						: [prevValue, value];
-
-					// если функция преобразования данных к правильному формату есть -
-					// применяем ее
-					set(values, name, prepareValue ? prepareValue(newValue) : newValue);
-				} else {
-					// если функция преобразования данных к правильному формату есть -
-					// применяем ее
-					set(values, name, prepareValue ? prepareValue(value) : value);
-				}
-			});
+			const values = getFormValues(formRef.current, fields);
 
 			// 2. Проверка данных на соответствие правилам валидации
 			let isFormInvalid = false;
@@ -412,7 +303,6 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 					isSubmitting,
 					onSubmit: handleSubmit,
 					registerField,
-					setField,
 					setItems,
 				}}>
 				{children}

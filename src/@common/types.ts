@@ -131,7 +131,6 @@ export type FormContextState = {
 	formRef: MutableRefObject<HTMLFormElement>;
 	isSubmitting: boolean;
 	registerField: RegisterField;
-	setField?: (fieldName: string, value: any) => void | Promise<void>;
 	setItems: (
 		fieldName: string,
 		setItems: (i: number[]) => number[],
