@@ -47,6 +47,7 @@ export const getFormValues = (
 	const fieldKeys = Object.keys(fields);
 	fieldKeys.forEach((name) => {
 		let value = formDataMap.has(name) ? formDataMap.get(name) : undefined;
+
 		// Мы не можем проверить ошибки валидации внутри этого цикла, т.к. данные еще не
 		// полностью сформированы (особенно для массивов)
 		const fieldType = fields[name]?.fieldType;
@@ -58,6 +59,18 @@ export const getFormValues = (
 			return;
 		}
 
+		if (fieldType === FieldType.SELECT_MULTIPLE) {
+			if (!Array.isArray(value)) {
+				value = Array.from(
+					document.querySelector<HTMLSelectElement>(`select[name='${name}']`)
+						?.options || [],
+				)
+					.filter((el) => el.selected)
+					.map((el) => el.value);
+			}
+		}
+
+		// TODO: возможно, этот код больше не актуален и полностью покрывается кодом выше про SELECT_MULTIPLE
 		const prevValue = get(values, name);
 		if (prevValue) {
 			// если предыдущее значение существует, значит это массив

@@ -12,6 +12,9 @@ export const FieldMultiSelect = createField<IField>(
 	(props) => {
 		const {inputProps, label} = props;
 
+		console.log('inputProps', {
+			inputProps,
+		});
 		return (
 			<div>
 				<div>{label}</div>
