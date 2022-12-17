@@ -86,6 +86,7 @@ export const NamedField = <
 			fieldMeta={field}
 			name={name}
 			fieldType={field?.fieldType ?? fieldType}
+			hideErrorsInXSeconds={formState.hideErrorsInXSeconds ?? false}
 		/>
 	);
 };

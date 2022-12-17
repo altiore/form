@@ -138,6 +138,7 @@ export type FormContextState = {
 		defValue?: any,
 	) => void;
 	onSubmit: (evt?: any) => void;
+	hideErrorsInXSeconds?: false | number;
 };
 
 export interface FieldArrayState {

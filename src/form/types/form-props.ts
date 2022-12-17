@@ -2,6 +2,7 @@ import {FormEvent, FormHTMLAttributes, ReactNode} from 'react';
 
 export interface FormProps<Values extends Record<string, any>>
 	extends Omit<FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
+	hideErrorsInXSeconds?: false | number;
 	children: ReactNode;
 	defaultValues?: Partial<Values>;
 	html5Validation?: boolean;

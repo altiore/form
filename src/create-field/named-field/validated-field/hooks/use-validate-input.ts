@@ -31,6 +31,7 @@ const DEF_ERRORS: string[] = [];
 export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	customRef: MutableRefObject<T>,
 	validators: Array<ValidateFunc>,
+	hideErrorsInXSeconds: false | number = DEF_HIDE_ERROR_IN_X_SEC,
 	formRef?: MutableRefObject<HTMLFormElement>,
 	field?: FieldMeta,
 	fieldType?: FieldType,
@@ -92,9 +93,11 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 					clearTimeout(timeout.current);
 				}
 
-				timeout.current = setTimeout(() => {
-					setErrorsState([]);
-				}, DEF_HIDE_ERROR_IN_X_SEC);
+				if (typeof hideErrorsInXSeconds === 'number') {
+					timeout.current = setTimeout(() => {
+						setErrorsState([]);
+					}, hideErrorsInXSeconds * 1000);
+				}
 				return errors;
 			};
 			if (isWarnings) {
@@ -103,7 +106,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 				setErrorsState(handler);
 			}
 		},
-		[setErrorsState, setWarningsState],
+		[hideErrorsInXSeconds, setErrorsState, setWarningsState],
 	);
 
 	const handleSetErrors = useCallback(

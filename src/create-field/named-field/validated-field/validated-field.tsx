@@ -28,6 +28,7 @@ type IProps<
 	formRef?: MutableRefObject<HTMLFormElement>;
 	name: string;
 	validators: Array<ValidateFunc>;
+	hideErrorsInXSeconds?: false | number;
 };
 
 export const ValidatedField = <
@@ -43,11 +44,13 @@ export const ValidatedField = <
 	formRef,
 	name,
 	validators,
+	hideErrorsInXSeconds,
 }: IProps<FieldCustomProps, Input>): JSX.Element => {
 	const inputRef = useRef<Input>();
 	const {errors, setErrors, warnings} = useValidateInput<Input>(
 		inputRef,
 		validators,
+		hideErrorsInXSeconds,
 		formRef,
 		fieldMeta,
 		fieldType,

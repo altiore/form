@@ -26,6 +26,7 @@ const getItemsFromDefVal = (_: any, i: number) => i;
 export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	children,
 	defaultValues,
+	hideErrorsInXSeconds = DEF_HIDE_ERROR_IN_X_SEC,
 	html5Validation,
 	onSubmit,
 	...props
@@ -100,7 +101,12 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 					if (timeout.current) {
 						clearTimeout(timeout.current);
 					}
-					timeout.current = setTimeout(clearErrors, DEF_HIDE_ERROR_IN_X_SEC);
+					if (typeof hideErrorsInXSeconds === 'number') {
+						timeout.current = setTimeout(
+							clearErrors,
+							hideErrorsInXSeconds * 1000,
+						);
+					}
 				}
 
 				return {
@@ -109,7 +115,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				};
 			});
 		},
-		[clearErrors, setFields],
+		[clearErrors, hideErrorsInXSeconds, setFields],
 	);
 
 	const setNestedErrors = useCallback(
