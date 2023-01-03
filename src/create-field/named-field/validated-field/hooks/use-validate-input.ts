@@ -251,7 +251,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 				input.removeEventListener('focus', handleFocus);
 			}
 		};
-	}, [inputRef]);
+	}, [handleFieldChanged, handleFocus, inputRef]);
 
 	useEffect(() => {
 		return () => {
