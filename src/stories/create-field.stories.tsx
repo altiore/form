@@ -229,6 +229,8 @@ export const InsideFormFieldCheckbox: ComponentStory<typeof Field> = ({
 
 type T5 = {
 	amount: number;
+	count?: number;
+	num?: number;
 };
 
 export const InsideFormFloatNumber: ComponentStory<typeof Field> = ({
@@ -240,10 +242,12 @@ export const InsideFormFloatNumber: ComponentStory<typeof Field> = ({
 			className="shadow border border-secondary rounded-3 p-3 w-75">
 			<FieldFloat<T5>
 				name="amount"
-				label="Заголовок"
+				label="Количество *"
 				step={0.5}
 				validate={isRequired()}
 			/>
+			<FieldFloat<T5> name="count" label="Количество (необязательное)" />
+			<FieldNumber<T5> name="num" label="необязательное number" />
 
 			<button className="btn btn-success" type="submit">
 				Отправить

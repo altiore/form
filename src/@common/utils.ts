@@ -61,6 +61,8 @@ const parseBoolean = (value: string | undefined): any =>
 	typeof value === 'boolean' ? value : value === 'on';
 const parseNumber = (value: string): any =>
 	value === '' ? null : parseInt(value, 10);
+const parseFloatNumber = (value: string) =>
+	value === '' ? null : parseFloat(value);
 const parseDefault = (value: string): any => (value === '' ? null : value);
 const parsePhone = (v: string): any => {
 	const value = parseDefault(v);
@@ -84,7 +86,7 @@ export const parseValueByType = new Map<FieldType, (a: any) => any>([
 	[FieldType.SELECT, parseDefault],
 	[FieldType.BOOLEAN, parseBoolean],
 	[FieldType.NUMBER, parseNumber],
-	[FieldType.FLOAT, parseFloat],
+	[FieldType.FLOAT, parseFloatNumber],
 	[FieldType.SELECT_MULTIPLE, toArray],
 	[FieldType.PHONE, parsePhone],
 ]);
