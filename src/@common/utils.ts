@@ -59,7 +59,8 @@ const getValueByType = new Map<FieldType, (evt: any) => any>([
 
 const parseBoolean = (value: string | undefined): any =>
 	typeof value === 'boolean' ? value : value === 'on';
-const parseNumber = (value: string): any => parseInt(value, 10);
+const parseNumber = (value: string): any =>
+	value === '' ? null : parseInt(value, 10);
 const parseDefault = (value: string): any => (value === '' ? null : value);
 const parsePhone = (v: string): any => {
 	const value = parseDefault(v);
