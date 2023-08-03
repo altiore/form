@@ -6,10 +6,12 @@ import {createField} from '~/create-field';
 export interface IField {
 	label: string;
 	step?: number;
+	disabled?: boolean;
 }
 
 const FieldView = (props: FieldProps<IField>) => {
 	const {
+		disabled,
 		inputProps,
 		label,
 		step,
@@ -22,7 +24,12 @@ const FieldView = (props: FieldProps<IField>) => {
 	return (
 		<div className="mb-3">
 			<label className="form-label">{label}</label>
-			<input className="form-control" {...inputProps} step={step} />
+			<input
+				className="form-control"
+				{...inputProps}
+				step={step}
+				disabled={disabled}
+			/>
 			<span className="invalid-feedback d-block">{error}</span>
 		</div>
 	);

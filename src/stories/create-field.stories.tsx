@@ -334,3 +334,24 @@ export const AcceptedField: ComponentStory<typeof Field> = ({
 		</Form>
 	);
 };
+
+export const InputDisabledNumber: ComponentStory<typeof Field> = ({
+	onSubmit,
+}: any) => {
+	return (
+		<Form<T5>
+			onSubmit={onSubmit}
+			className="shadow border border-secondary rounded-3 p-3 w-75">
+			<FieldNumber<T5>
+				name="num"
+				label="необязательное number"
+				disabled
+				defaultValue={12}
+			/>
+
+			<button className="btn btn-success" type="submit">
+				Отправить
+			</button>
+		</Form>
+	);
+};
