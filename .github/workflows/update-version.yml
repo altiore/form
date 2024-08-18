@@ -23,7 +23,7 @@ jobs:
       - name: Patch version
         run: |
           git remote set-url origin https://${{ secrets.PAT }}@github.com/$GITHUB_REPOSITORY \
-          && git config --global user.email "razvanlomov+form@gmail.com" \
+          && git config --global user.email "altiore.public@gmail.com" \
           && git config --global user.name "CI" \
           && npm version --no-commit-hooks patch
 
