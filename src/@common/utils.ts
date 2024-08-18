@@ -70,7 +70,7 @@ const parsePhone = (v: string): any => {
 };
 const parseDate = (v: string): any => {
 	const value = parseDefault(v);
-	return typeof value === 'string' ? new Date(value).getTime() : value;
+	return typeof value === 'string' ? new Date(value).getTime() / 1000 : value;
 };
 
 const toArray = (value: any): string[] => {
