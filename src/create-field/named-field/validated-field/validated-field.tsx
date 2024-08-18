@@ -94,7 +94,7 @@ export const ValidatedField = <
 			value: type === 'checkbox' ? 'on' : undefined,
 		};
 		return React.createElement(component, {
-			...componentProps,
+			...(componentProps as any),
 			[IgnoredProp.FIELD_PROPS]: fieldMeta ?? {
 				defaultValue: defValue,
 				error: errors?.[0],

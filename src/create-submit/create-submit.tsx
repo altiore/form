@@ -39,7 +39,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = React.memo(
 		const formRef = useMemo(() => formState.formRef, [formState.formRef]);
 
 		const onClick = useCallback(
-			(evt) => {
+			(evt: any) => {
 				evt.preventDefault();
 				evt.stopPropagation();
 

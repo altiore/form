@@ -68,6 +68,11 @@ const parsePhone = (v: string): any => {
 	const value = parseDefault(v);
 	return typeof value === 'string' ? value.replace(/[()\s\-]/gi, '') : value;
 };
+const parseDate = (v: string): any => {
+	const value = parseDefault(v);
+	return typeof value === 'string' ? new Date(value).getTime() : value;
+};
+
 const toArray = (value: any): string[] => {
 	if (typeof value === 'string') {
 		return [value];
@@ -89,6 +94,8 @@ export const parseValueByType = new Map<FieldType, (a: any) => any>([
 	[FieldType.FLOAT, parseFloatNumber],
 	[FieldType.SELECT_MULTIPLE, toArray],
 	[FieldType.PHONE, parsePhone],
+	[FieldType.DATE, parseDate],
+	[FieldType.DATETIME, parseDate],
 ]);
 
 export const inputTypeByType = new Map<FieldType, InputType>([
@@ -101,6 +108,8 @@ export const inputTypeByType = new Map<FieldType, InputType>([
 	[FieldType.NUMBER, 'number'],
 	[FieldType.FLOAT, 'number'],
 	[FieldType.PHONE, 'tel'],
+	[FieldType.DATE, 'date'],
+	[FieldType.DATETIME, 'datetime-local'],
 ]);
 
 export const getInputTypeByFieldType = (fieldType: FieldType): InputType => {

@@ -129,7 +129,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 		(
 			fieldName: string,
 			setItemsArg: (i: number[]) => number[],
-			getErrors,
+			getErrors: any,
 			defaultValue?: any,
 		) => {
 			setFields((s) => {

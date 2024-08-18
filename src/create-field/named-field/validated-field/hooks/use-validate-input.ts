@@ -177,7 +177,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	);
 
 	const checkWarnings = useCallback(
-		(evt) => {
+		(evt: any) => {
 			const getWarnings = warningsByType.get(fieldType);
 			const warnings = getWarnings(evt.target.value);
 			handleSetErrors(warnings, false, true);
@@ -186,7 +186,7 @@ export const useValidateInput = <T extends HTMLElement = HTMLInputElement>(
 	);
 
 	const formatValue = useCallback(
-		(evt) => {
+		(evt: any) => {
 			const formatter = formatValueByType.get(fieldType);
 			evt.target.value = formatter(evt.target.value);
 		},

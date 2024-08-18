@@ -16,6 +16,8 @@ export enum FieldType {
 	EMAIL = 'email',
 	SELECT = 'select',
 	SELECT_MULTIPLE = 'select-multiple',
+	DATE = 'date',
+	DATETIME = 'datetime-local',
 }
 
 // TODO: не уверен на счет 'button'
