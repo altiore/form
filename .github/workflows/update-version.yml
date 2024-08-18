@@ -38,7 +38,8 @@ jobs:
           && git push origin main \
           && git push --tags
 
-      - name: Deploy Storybook to GitHub Pages
-        run: |
-          npm run story-build \
-          && npm run story-deploy
+# Это пока не работает
+#      - name: Deploy Storybook to GitHub Pages
+#        run: |
+#          npm run story-build \
+#          && npm run story-deploy
