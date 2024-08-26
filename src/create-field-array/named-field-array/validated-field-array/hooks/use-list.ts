@@ -95,6 +95,10 @@ export const useList = <
 			index?: number,
 			offset?: InsertPosition,
 		) => {
+			if (!defaultFieldStateOrEvent) {
+				return;
+			}
+
 			// проверяем, не является ли defaultFieldStateOrEvent синтетическим объектом события
 			if (typeof defaultFieldStateOrEvent.persist === 'function') {
 				setItems((s) => add(s, fieldName, index, offset), {});
