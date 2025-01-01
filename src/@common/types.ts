@@ -18,6 +18,7 @@ export enum FieldType {
 	SELECT_MULTIPLE = 'select-multiple',
 	DATE = 'date',
 	DATETIME = 'datetime-local',
+	SECRET_CURRENCY = 'secret-currency-field-multiple-by-10000',
 }
 
 // TODO: не уверен на счет 'button'

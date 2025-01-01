@@ -11,7 +11,11 @@ import {
 	IgnoredProp,
 	ValidateFunc,
 } from '~/@common/types';
-import {getInputTypeByFieldType} from '~/@common/utils';
+import {
+	getInputTypeByFieldType,
+	prepDefDefault,
+	prepDefValue,
+} from '~/@common/utils';
 
 import {useValidateInput} from './hooks/use-validate-input';
 
@@ -75,13 +79,16 @@ export const ValidatedField = <
 
 	return useMemo(() => {
 		const type = getInputTypeByFieldType(fieldType);
-		const defValue =
+		const prepDef = prepDefValue.get(fieldType) ?? prepDefDefault;
+		const defValue = prepDef(
 			defaultValueJustAdded !== undefined
 				? defaultValueJustAdded ?? undefined
 				: typeof fieldMeta?.defaultValue === 'undefined'
 				? defaultValue
-				: fieldMeta?.defaultValue;
+				: fieldMeta?.defaultValue,
+		);
 		const isChecked = ['checkbox', 'radio'].includes(type);
+
 		const inputProps: FieldInputProps<any> = {
 			defaultChecked: isChecked ? defValue : undefined,
 			defaultValue: isChecked ? undefined : defValue,

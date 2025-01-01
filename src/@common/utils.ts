@@ -55,6 +55,7 @@ const getValueByType = new Map<FieldType, (evt: any) => any>([
 	[FieldType.FLOAT, getValue],
 	[FieldType.TEXT, getValue],
 	[FieldType.SELECT_MULTIPLE, getMultipleSelect],
+	[FieldType.SECRET_CURRENCY, getValue],
 ]);
 
 const parseBoolean = (value: string | undefined): any =>
@@ -85,6 +86,9 @@ const toArray = (value: any): string[] => {
 	return [];
 };
 
+const parseSecretCur = (value: string) =>
+	value === '' ? null : Math.round(parseFloat(value) * 10000);
+
 export const parseValueByType = new Map<FieldType, (a: any) => any>([
 	[FieldType.TEXT, parseDefault],
 	[FieldType.EMAIL, parseDefault],
@@ -96,6 +100,7 @@ export const parseValueByType = new Map<FieldType, (a: any) => any>([
 	[FieldType.PHONE, parsePhone],
 	[FieldType.DATE, parseDate],
 	[FieldType.DATETIME, parseDate],
+	[FieldType.SECRET_CURRENCY, parseSecretCur],
 ]);
 
 export const inputTypeByType = new Map<FieldType, InputType>([
@@ -110,6 +115,20 @@ export const inputTypeByType = new Map<FieldType, InputType>([
 	[FieldType.PHONE, 'tel'],
 	[FieldType.DATE, 'date'],
 	[FieldType.DATETIME, 'datetime-local'],
+	[FieldType.SECRET_CURRENCY, 'number'],
+]);
+
+export const prepDefDefault = (v: any): any => v;
+
+const prepDefSecretCur = (v: any): any => {
+	if (v) {
+		return v / 10000;
+	}
+	return v;
+};
+
+export const prepDefValue = new Map<FieldType, (v: any) => string>([
+	[FieldType.SECRET_CURRENCY, prepDefSecretCur],
 ]);
 
 export const getInputTypeByFieldType = (fieldType: FieldType): InputType => {
