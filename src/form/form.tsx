@@ -128,8 +128,8 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	const normalizeItems = useCallback(
 		(fieldPattern: string) => {
 			setFields((s) => {
-				let newState = s;
 				if (Array.isArray(s[fieldPattern].items)) {
+					let newState = s;
 					const it_len = s[fieldPattern].items.length;
 					for (let i = 0; i < it_len; i++) {
 						Object.entries(s).forEach(([oldFieldName, fieldMeta]) => {
@@ -154,14 +154,20 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 										...newState,
 										[newFieldName]: fieldMeta,
 									};
-									console.log('updated state', newState);
 								}
 							}
 						});
 					}
-				}
 
-				return newState;
+					return {
+						...newState,
+						[fieldPattern]: {
+							...newState[fieldPattern],
+							items: Array.from({length: it_len}, (_, index) => index),
+						},
+					};
+				}
+				return s;
 			});
 		},
 		[setFields],
