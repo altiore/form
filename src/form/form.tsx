@@ -134,10 +134,6 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 			if (Array.isArray(s[fieldPattern].items)) {
 				let newState = s;
 				const it_len = fixedItems.length;
-				console.log('Пытаемся нормализовать', {
-					items: fixedItems,
-					newItems: Array.from({length: it_len}, (_, index) => index),
-				});
 				for (let i = 0; i < it_len; i++) {
 					Object.entries(s).forEach(([oldFieldName, fieldMeta]) => {
 						const matched = oldFieldName.match(
@@ -154,14 +150,6 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 							);
 
 							if (elemOld && matched[1]) {
-								console.log('Найден старый элемент для нормализации', {
-									elemOld,
-									newFieldName,
-									oldFieldName,
-									oldValue1: elemOld.getAttribute('value'),
-									oldValue2: (elemOld as any)?.value,
-								});
-
 								elemOld.setAttribute('name', newFieldName);
 								delete newState[oldFieldName];
 								newState = {
@@ -169,14 +157,11 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 									[newFieldName]: fieldMeta,
 								};
 
+								// TODO: точно непонятно, почему это работает
+								//		Вероятно, это связано с тем, как работают ключи React
+								// 		Пока этот код срабатывал всегда, но это не значит, что это будет действительно всегда работать
+								//		Возможно, для очень больших форм этот код может создавать ухудшение производительности
 								if (elemNew && matched[1]) {
-									console.log('Найден новый элемент для нормализации', {
-										elemNew,
-										newFieldName,
-										oldFieldName,
-										oldValue2: (elemNew as any)?.value,
-									});
-
 									(elemNew as any).value = (elemOld as any).value;
 								}
 							}
@@ -378,7 +363,6 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 		],
 	);
 
-	console.log('fields is', fields);
 	return (
 		<form
 			noValidate={!html5Validation}
