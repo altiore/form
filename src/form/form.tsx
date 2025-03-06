@@ -128,7 +128,11 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	const normalizeItems = useCallback(
 		(fieldPattern: string) => {
 			setFields((s) => {
-				console.log('Нормализовать элементы начинающиеся с', fieldPattern);
+				console.log('Нормализовать элементы начинающиеся с', {
+					fieldPattern,
+					items: s[fieldPattern].items,
+					prevItems: s[fieldPattern].itemsPrev,
+				});
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				Object.entries(s).forEach(([fieldName, _fieldMeta]) => {
 					if (fieldName.match(new RegExp(`^${fieldPattern}\.`)) && document) {
