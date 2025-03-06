@@ -125,6 +125,10 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 		[setErrors],
 	);
 
+	const normalizeItems = useCallback(() => {
+		console.log('Нормализовать элементы');
+	}, [setFields]);
+
 	const setItems = useCallback(
 		(
 			fieldName: string,
@@ -135,6 +139,9 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 			setFields((s) => {
 				const itemsPrev = [...s[fieldName].items];
 				const items = setItemsArg(s[fieldName].items);
+				if (itemsPrev.length !== items.length) {
+					setTimeout(normalizeItems, 0);
+				}
 				const errors = getErrors(items);
 				return {
 					...s,
@@ -151,7 +158,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				};
 			});
 		},
-		[setFields],
+		[setFields, normalizeItems],
 	);
 
 	const registerField = useCallback(
