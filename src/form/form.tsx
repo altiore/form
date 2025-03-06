@@ -128,24 +128,40 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	const normalizeItems = useCallback(
 		(fieldPattern: string) => {
 			setFields((s) => {
-				console.log('Нормализовать элементы начинающиеся с', {
-					fieldPattern,
-					items: s[fieldPattern].items,
-					prevItems: s[fieldPattern].itemsPrev,
-				});
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				Object.entries(s).forEach(([fieldName, _fieldMeta]) => {
-					if (fieldName.match(new RegExp(`^${fieldPattern}\.`)) && document) {
-						const elem = document.querySelector(`[name="${fieldName}"]`);
-						console.log('Найден элемент для нормализации', elem);
+				let newState = s;
+				if (Array.isArray(s[fieldPattern].items)) {
+					const it_len = s[fieldPattern].items.length;
+					for (let i = 0; i < it_len; i++) {
+						Object.entries(s).forEach(([oldFieldName, fieldMeta]) => {
+							const matched = oldFieldName.match(
+								new RegExp(
+									`^${fieldPattern}\.${s[fieldPattern].items[i]}\.(.+)`,
+								),
+							);
+							if (s[fieldPattern].items[i] !== i && matched && document) {
+								const elem = document.querySelector(`[name="${oldFieldName}"]`);
+								if (elem && matched[1]) {
+									const newFieldName = `${fieldPattern}.${i}.${matched[1]}`;
+									console.log('Найден элемент для нормализации', {
+										elem,
+										newFieldName,
+										oldFieldName,
+									});
+
+									elem.setAttribute('name', newFieldName);
+									delete newState[oldFieldName];
+									newState = {
+										...newState,
+										[newFieldName]: fieldMeta,
+									};
+									console.log('updated state', newState);
+								}
+							}
+						});
 					}
-				});
-				return {
-					...s,
-					[fieldPattern]: {
-						...s[fieldPattern],
-					},
-				};
+				}
+
+				return newState;
 			});
 		},
 		[setFields],
