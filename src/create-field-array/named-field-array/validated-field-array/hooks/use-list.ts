@@ -33,7 +33,6 @@ export const useList = <
 		getErrors: (i: number[]) => string[],
 		defaultValue?: any,
 	) => void,
-	setDefValue?: (fieldName: string, defValue: any) => void,
 ): [ListInterface<ArrayItemProps>, string[]] => {
 	const fieldName = useMemo(() => {
 		return fieldMeta?.name ?? name;
@@ -111,7 +110,7 @@ export const useList = <
 				);
 			}
 		},
-		[fieldName, setDefValue, setItems],
+		[fieldName, setItems],
 	);
 	const removeHandler = useCallback(
 		(index: number) => {

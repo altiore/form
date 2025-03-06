@@ -296,6 +296,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 		],
 	);
 
+	console.log('fields is', fields);
 	return (
 		<form
 			noValidate={!html5Validation}
