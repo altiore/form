@@ -126,51 +126,49 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 	);
 
 	const normalizeItems = useCallback(
-		(fieldPattern: string) => {
-			setFields((s) => {
-				if (Array.isArray(s[fieldPattern].items)) {
-					let newState = s;
-					const it_len = s[fieldPattern].items.length;
-					for (let i = 0; i < it_len; i++) {
-						Object.entries(s).forEach(([oldFieldName, fieldMeta]) => {
-							const matched = oldFieldName.match(
-								new RegExp(
-									`^${fieldPattern}\.${s[fieldPattern].items[i]}\.(.+)`,
-								),
-							);
-							if (s[fieldPattern].items[i] !== i && matched && document) {
-								const elem = document.querySelector(`[name="${oldFieldName}"]`);
-								if (elem && matched[1]) {
-									const newFieldName = `${fieldPattern}.${i}.${matched[1]}`;
-									console.log('Найден элемент для нормализации', {
-										elem,
-										newFieldName,
-										oldFieldName,
-									});
+		(
+			fieldPattern: string,
+			s: Record<string, FieldMeta>,
+			fixedItems: Array<number>,
+		) => {
+			if (Array.isArray(s[fieldPattern].items)) {
+				let newState = s;
+				const it_len = fixedItems.length;
+				console.log('Пытаемся нормализовать', {
+					items: fixedItems,
+					newItems: Array.from({length: it_len}, (_, index) => index),
+				});
+				for (let i = 0; i < it_len; i++) {
+					Object.entries(s).forEach(([oldFieldName, fieldMeta]) => {
+						const matched = oldFieldName.match(
+							new RegExp(`^${fieldPattern}\.${fixedItems[i]}\.(.+)`),
+						);
+						if (fixedItems[i] !== i && matched && document) {
+							const elem = document.querySelector(`[name="${oldFieldName}"]`);
+							if (elem && matched[1]) {
+								const newFieldName = `${fieldPattern}.${i}.${matched[1]}`;
+								console.log('Найден элемент для нормализации', {
+									elem,
+									newFieldName,
+									oldFieldName,
+								});
 
-									elem.setAttribute('name', newFieldName);
-									delete newState[oldFieldName];
-									newState = {
-										...newState,
-										[newFieldName]: fieldMeta,
-									};
-								}
+								elem.setAttribute('name', newFieldName);
+								delete newState[oldFieldName];
+								newState = {
+									...newState,
+									[newFieldName]: fieldMeta,
+								};
 							}
-						});
-					}
-
-					return {
-						...newState,
-						[fieldPattern]: {
-							...newState[fieldPattern],
-							items: Array.from({length: it_len}, (_, index) => index),
-						},
-					};
+						}
+					});
 				}
-				return s;
-			});
+
+				return newState;
+			}
+			return s;
 		},
-		[setFields],
+		[],
 	);
 
 	const setItems = useCallback(
@@ -183,10 +181,23 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 			setFields((s) => {
 				const itemsPrev = [...s[fieldName].items];
 				const items = setItemsArg(s[fieldName].items);
-				if (itemsPrev.length !== items.length) {
-					setTimeout(normalizeItems.bind(undefined, fieldName), 0);
-				}
 				const errors = getErrors(items);
+				if (itemsPrev.length !== items.length) {
+					return {
+						...normalizeItems(fieldName, s, items),
+						[fieldName]: {
+							...s[fieldName],
+							defaultValue,
+							error: errors?.[0],
+							errors,
+							isInvalid: Boolean(errors?.length),
+							isUntouched: false,
+							items: Array.from({length: items.length}, (_, index) => index),
+							itemsPrev,
+						},
+					};
+				}
+
 				return {
 					...s,
 					[fieldName]: {
