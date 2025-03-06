@@ -144,23 +144,41 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 							new RegExp(`^${fieldPattern}\.${fixedItems[i]}\.(.+)`),
 						);
 						if (fixedItems[i] !== i && matched && document) {
-							const elem = document.querySelector(`[name="${oldFieldName}"]`);
-							if (elem && matched[1]) {
-								const newFieldName = `${fieldPattern}.${i}.${matched[1]}`;
-								console.log('Найден элемент для нормализации', {
-									elem,
+							const newFieldName = `${fieldPattern}.${i}.${matched[1]}`;
+
+							const elemOld = document.querySelector(
+								`[name="${oldFieldName}"]`,
+							);
+							const elemNew = document.querySelector(
+								`[name="${newFieldName}"]`,
+							);
+
+							if (elemOld && matched[1]) {
+								console.log('Найден старый элемент для нормализации', {
+									elemOld,
 									newFieldName,
 									oldFieldName,
-									oldValue1: elem.getAttribute('value'),
-									oldValue2: (elem as any)?.value,
+									oldValue1: elemOld.getAttribute('value'),
+									oldValue2: (elemOld as any)?.value,
 								});
 
-								elem.setAttribute('name', newFieldName);
+								elemOld.setAttribute('name', newFieldName);
 								delete newState[oldFieldName];
 								newState = {
 									...newState,
 									[newFieldName]: fieldMeta,
 								};
+
+								if (elemNew && matched[1]) {
+									console.log('Найден новый элемент для нормализации', {
+										elemNew,
+										newFieldName,
+										oldFieldName,
+										oldValue2: (elemNew as any)?.value,
+									});
+
+									(elemNew as any).value = (elemOld as any).value;
+								}
 							}
 						}
 					});
