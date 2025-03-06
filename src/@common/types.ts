@@ -61,6 +61,7 @@ export interface ListItem<
 	Item extends Record<string, any> = Record<string, any>,
 > {
 	key: string;
+	itemKey: number;
 	append: (initialValue?: Item) => void;
 	prepend: (initialValue?: Item) => void;
 	remove: () => void;

@@ -125,56 +125,57 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 		[setErrors],
 	);
 
-	const normalizeItems = useCallback(
-		(
-			fieldPattern: string,
-			s: Record<string, FieldMeta>,
-			fixedItems: Array<number>,
-		) => {
-			if (Array.isArray(s[fieldPattern].items)) {
-				let newState = s;
-				const it_len = fixedItems.length;
-				for (let i = 0; i < it_len; i++) {
-					Object.entries(s).forEach(([oldFieldName, fieldMeta]) => {
-						const matched = oldFieldName.match(
-							new RegExp(`^${fieldPattern}\.${fixedItems[i]}\.(.+)`),
-						);
-						if (fixedItems[i] !== i && matched && document) {
-							const newFieldName = `${fieldPattern}.${i}.${matched[1]}`;
-
-							const elemOld = document.querySelector(
-								`[name="${oldFieldName}"]`,
-							);
-							const elemNew = document.querySelector(
-								`[name="${newFieldName}"]`,
-							);
-
-							if (elemOld && matched[1]) {
-								elemOld.setAttribute('name', newFieldName);
-								delete newState[oldFieldName];
-								newState = {
-									...newState,
-									[newFieldName]: fieldMeta,
-								};
-
-								// TODO: точно непонятно, почему это работает
-								//		Вероятно, это связано с тем, как работают ключи React
-								// 		Пока этот код срабатывал всегда, но это не значит, что это будет действительно всегда работать
-								//		Возможно, для очень больших форм этот код может создавать ухудшение производительности
-								if (elemNew && matched[1]) {
-									(elemNew as any).value = (elemOld as any).value;
-								}
-							}
-						}
-					});
-				}
-
-				return newState;
-			}
-			return s;
-		},
-		[],
-	);
+	// К сожалению, нормализация индексов не работает, т.к. механизмы React конфликтуют с изменениями сырого кода
+	// const normalizeItems = useCallback(
+	// 	(
+	// 		fieldPattern: string,
+	// 		s: Record<string, FieldMeta>,
+	// 		fixedItems: Array<number>,
+	// 	) => {
+	// 		if (Array.isArray(s[fieldPattern].items)) {
+	// 			let newState = s;
+	// 			const it_len = fixedItems.length;
+	// 			for (let i = 0; i < it_len; i++) {
+	// 				Object.entries(s).forEach(([oldFieldName, fieldMeta]) => {
+	// 					const matched = oldFieldName.match(
+	// 						new RegExp(`^${fieldPattern}\.${fixedItems[i]}\.(.+)`),
+	// 					);
+	// 					if (fixedItems[i] !== i && matched && document) {
+	// 						const newFieldName = `${fieldPattern}.${i}.${matched[1]}`;
+	//
+	// 						const elemOld = document.querySelector(
+	// 							`[name="${oldFieldName}"]`,
+	// 						);
+	// 						const elemNew = document.querySelector(
+	// 							`[name="${newFieldName}"]`,
+	// 						);
+	//
+	// 						if (elemOld && matched[1]) {
+	// 							elemOld.setAttribute('name', newFieldName);
+	// 							delete newState[oldFieldName];
+	// 							newState = {
+	// 								...newState,
+	// 								[newFieldName]: fieldMeta,
+	// 							};
+	//
+	// 							// TODO: точно непонятно, почему это работает
+	// 							//		Вероятно, это связано с тем, как работают ключи React
+	// 							// 		Пока этот код срабатывал всегда, но это не значит, что это будет действительно всегда работать
+	// 							//		Возможно, для очень больших форм этот код может создавать ухудшение производительности
+	// 							if (elemNew && matched[1]) {
+	// 								(elemNew as any).value = (elemOld as any).value;
+	// 							}
+	// 						}
+	// 					}
+	// 				});
+	// 			}
+	//
+	// 			return newState;
+	// 		}
+	// 		return s;
+	// 	},
+	// 	[],
+	// );
 
 	const setItems = useCallback(
 		(
@@ -187,21 +188,22 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				const itemsPrev = [...s[fieldName].items];
 				const items = setItemsArg(s[fieldName].items);
 				const errors = getErrors(items);
-				if (itemsPrev.length !== items.length) {
-					return {
-						...normalizeItems(fieldName, s, items),
-						[fieldName]: {
-							...s[fieldName],
-							defaultValue,
-							error: errors?.[0],
-							errors,
-							isInvalid: Boolean(errors?.length),
-							isUntouched: false,
-							items: Array.from({length: items.length}, (_, index) => index),
-							itemsPrev,
-						},
-					};
-				}
+				// К сожалению, нормализация индексов не работает, т.к. механизмы React конфликтуют с изменениями сырого кода
+				// if (itemsPrev.length !== items.length) {
+				// 	return {
+				// 		...normalizeItems(fieldName, s, items),
+				// 		[fieldName]: {
+				// 			...s[fieldName],
+				// 			defaultValue,
+				// 			error: errors?.[0],
+				// 			errors,
+				// 			isInvalid: Boolean(errors?.length),
+				// 			isUntouched: false,
+				// 			items: Array.from({length: items.length}, (_, index) => index),
+				// 			itemsPrev,
+				// 		},
+				// 	};
+				// }
 
 				return {
 					...s,
@@ -218,7 +220,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				};
 			});
 		},
-		[setFields, normalizeItems],
+		[setFields],
 	);
 
 	const registerField = useCallback(

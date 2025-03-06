@@ -13,27 +13,28 @@ interface ItemProps {
 	fieldName: string;
 	remove: (index: number) => void;
 	name: string;
+	itemKey: number;
 	index: number;
 }
 
 const Item = React.memo<ItemProps>(
-	({add, cb, fieldName, remove, name, index}) => {
+	({add, cb, fieldName, remove, name, index, itemKey}) => {
 		const removeHandler = useCallback(() => {
-			remove(index);
-		}, [index, remove]);
+			remove(itemKey);
+		}, [itemKey, remove]);
 
 		const append = useCallback(
 			(initialValue?: any) => {
-				add(initialValue, index, InsertPosition.AFTER);
+				add(initialValue, itemKey, InsertPosition.AFTER);
 			},
-			[add, index],
+			[add, itemKey],
 		);
 
 		const prepend = useCallback(
 			(initialValue?: any) => {
-				add(initialValue, index, InsertPosition.BEFORE);
+				add(initialValue, itemKey, InsertPosition.BEFORE);
 			},
-			[add, fieldName, index],
+			[add, fieldName, itemKey],
 		);
 
 		return (
@@ -41,6 +42,7 @@ const Item = React.memo<ItemProps>(
 				{cb(
 					{
 						append,
+						itemKey: itemKey,
 						key: name,
 						prepend,
 						remove: removeHandler,
@@ -63,8 +65,8 @@ export const map = (
 	fieldName: string,
 	callback: (el: ListItem, index: number) => JSX.Element,
 ): JSX.Element[] => {
-	return list.map((index) => {
-		const name = `${fieldName}.${index}`;
+	return list.map((itemKey, index) => {
+		const name = `${fieldName}.${itemKey}`;
 		return (
 			<Item
 				key={name}
@@ -74,6 +76,7 @@ export const map = (
 				name={name}
 				fieldName={fieldName}
 				index={index}
+				itemKey={itemKey}
 			/>
 		);
 	});
