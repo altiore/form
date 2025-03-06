@@ -151,6 +151,8 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 									elem,
 									newFieldName,
 									oldFieldName,
+									oldValue1: elem.getAttribute('value'),
+									oldValue2: (elem as any)?.value,
 								});
 
 								elem.setAttribute('name', newFieldName);
