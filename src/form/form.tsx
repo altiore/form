@@ -125,9 +125,27 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 		[setErrors],
 	);
 
-	const normalizeItems = useCallback(() => {
-		console.log('Нормализовать элементы');
-	}, [setFields]);
+	const normalizeItems = useCallback(
+		(fieldPattern: string) => {
+			setFields((s) => {
+				console.log('Нормализовать элементы начинающиеся с', fieldPattern);
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				Object.entries(s).forEach(([fieldName, _fieldMeta]) => {
+					if (fieldName.match(new RegExp(`^${fieldPattern}\.`)) && document) {
+						const elem = document.querySelector(`[name="${fieldName}"]`);
+						console.log('Найден элемент для нормализации', elem);
+					}
+				});
+				return {
+					...s,
+					[fieldPattern]: {
+						...s[fieldPattern],
+					},
+				};
+			});
+		},
+		[setFields],
+	);
 
 	const setItems = useCallback(
 		(
@@ -140,7 +158,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				const itemsPrev = [...s[fieldName].items];
 				const items = setItemsArg(s[fieldName].items);
 				if (itemsPrev.length !== items.length) {
-					setTimeout(normalizeItems, 0);
+					setTimeout(normalizeItems.bind(undefined, fieldName), 0);
 				}
 				const errors = getErrors(items);
 				return {
