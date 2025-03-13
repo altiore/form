@@ -188,6 +188,35 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				const itemsPrev = [...s[fieldName].items];
 				const items = setItemsArg(s[fieldName].items);
 				const errors = getErrors(items);
+
+				const newState = {
+					...s,
+					[fieldName]: {
+						...s[fieldName],
+						defaultValue,
+						error: errors?.[0],
+						errors,
+						isInvalid: Boolean(errors?.length),
+						isUntouched: false,
+						items,
+						itemsPrev,
+					},
+				};
+
+				// Если происходит удаление элемента массива, то нужно отфильтровать все неиспользуемые поля
+				if (itemsPrev.length > items.length) {
+					const removedItems = itemsPrev.filter((el) => !items.includes(el));
+					const allRemovedFields = Object.keys(newState).filter((fieldName) => {
+						removedItems.some((removedItem) => {
+							return fieldName.match(
+								new RegExp(`^${fieldName}\.${removedItem}\.(.+)`),
+							);
+						});
+					});
+					allRemovedFields.forEach((removedField) => {
+						delete newState[removedField];
+					});
+				}
 				// К сожалению, нормализация индексов не работает, т.к. механизмы React конфликтуют с изменениями сырого кода
 				// if (itemsPrev.length !== items.length) {
 				// 	return {
@@ -205,19 +234,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				// 	};
 				// }
 
-				return {
-					...s,
-					[fieldName]: {
-						...s[fieldName],
-						defaultValue,
-						error: errors?.[0],
-						errors,
-						isInvalid: Boolean(errors?.length),
-						isUntouched: false,
-						items,
-						itemsPrev,
-					},
-				};
+				return newState;
 			});
 		},
 		[setFields],
@@ -297,26 +314,28 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 
 			// 2. Проверка данных на соответствие правилам валидации
 			let isFormInvalid = false;
-			Object.entries(fields).forEach(([fieldName, fieldMeta]: any) => {
-				if (fieldMeta.validators) {
-					const fieldType: FieldType = fieldMeta.fieldType || FieldType.TEXT;
-					let value: any;
-					if (fieldType === FieldType.ARRAY) {
-						value = getArrayValue(fieldName, values, fieldMeta.items);
-					} else {
-						value = get(values, fieldName);
-					}
-					const errors: string[] = [];
-					fieldMeta.validators.forEach((validate: ValidateFunc) => {
-						const error = validate(value, fieldName, getFormValueByName);
-						if (error) {
-							isFormInvalid = true;
-							errors.push(error);
+			Object.entries(fields).forEach(
+				([fieldName, fieldMeta]: [string, FieldMeta]) => {
+					if (fieldMeta.validators) {
+						const fieldType: FieldType = fieldMeta.fieldType || FieldType.TEXT;
+						let value: any;
+						if (fieldType === FieldType.ARRAY) {
+							value = getArrayValue(fieldName, values, fieldMeta.items);
+						} else {
+							value = get(values, fieldName);
 						}
-					});
-					setErrors(fieldName, errors);
-				}
-			});
+						const errors: string[] = [];
+						fieldMeta.validators.forEach((validate: ValidateFunc) => {
+							const error = validate(value, fieldName, getFormValueByName);
+							if (error) {
+								isFormInvalid = true;
+								errors.push(error);
+							}
+						});
+						setErrors(fieldName, errors);
+					}
+				},
+			);
 
 			if (isFormInvalid) {
 				setIsSubmitting(false);

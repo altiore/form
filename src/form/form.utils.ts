@@ -9,11 +9,14 @@ export const getArrayValue = (
 	values: Record<string, any>,
 	items: number[],
 ): any[] => {
-	return items
-		.map((index: number) => {
-			return (get(values, fieldName) as any[])?.[index];
-		})
-		.filter((el) => el !== undefined);
+	const arrValue = get(values, fieldName);
+	if (arrValue) {
+		return items.map((index: number) => {
+			return arrValue?.[index];
+		});
+	} else {
+		return undefined;
+	}
 };
 
 export const toFlatErrors = (
