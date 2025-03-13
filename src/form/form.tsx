@@ -206,13 +206,15 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				// Если происходит удаление элемента массива, то нужно отфильтровать все неиспользуемые поля
 				if (itemsPrev.length > items.length) {
 					const removedItems = itemsPrev.filter((el) => !items.includes(el));
-					const allRemovedFields = Object.keys(newState).filter((fieldName) => {
-						removedItems.some((removedItem) => {
-							return fieldName.match(
-								new RegExp(`^${fieldName}\.${removedItem}\.(.+)`),
-							);
-						});
-					});
+					const allRemovedFields = Object.keys(newState).filter(
+						(oldFieldName) => {
+							return removedItems.some((removedItem) => {
+								return oldFieldName.match(
+									new RegExp(`^${fieldName}\.${removedItem}\.(.+)`),
+								);
+							});
+						},
+					);
 					allRemovedFields.forEach((removedField) => {
 						delete newState[removedField];
 					});
