@@ -324,6 +324,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 						let value: any;
 						if (fieldType === FieldType.ARRAY) {
 							value = getArrayValue(fieldName, values, fieldMeta.items);
+							console.log('field array value result 1', value);
 						} else {
 							value = get(values, fieldName);
 						}
@@ -356,6 +357,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				if (Array.isArray(items)) {
 					const value = getArrayValue(fieldName, values, fieldMeta.items);
 
+					console.log('field array value result 2', value);
 					unset(values, fieldName);
 					set(values, fieldName, value);
 				}
