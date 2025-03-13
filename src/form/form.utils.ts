@@ -9,9 +9,11 @@ export const getArrayValue = (
 	values: Record<string, any>,
 	items: number[],
 ): any[] => {
-	return items.map((index: number) => {
-		return (get(values, fieldName) as any[])?.[index];
-	});
+	return items
+		.map((index: number) => {
+			return (get(values, fieldName) as any[])?.[index];
+		})
+		.filter((el) => el !== undefined);
 };
 
 export const toFlatErrors = (
