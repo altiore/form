@@ -10,6 +10,10 @@ export const getArrayValue = (
 	items: number[],
 ): any[] => {
 	const arrValue = get(values, fieldName);
+	console.log('array value', {
+		arrValue,
+		items,
+	});
 	if (arrValue) {
 		return items
 			.map((index: number) => {
