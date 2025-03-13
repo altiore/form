@@ -237,7 +237,6 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				// 	};
 				// }
 
-				console.log('new state after change', newState);
 				return newState;
 			});
 		},

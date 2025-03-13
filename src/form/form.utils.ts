@@ -12,11 +12,14 @@ export const getArrayValue = (
 	const arrValue = get(values, fieldName);
 
 	if (arrValue) {
-		return items
-			.map((index: number) => {
-				return arrValue?.[index];
-			})
-			.filter((el) => el !== undefined);
+		const resArr: any[] = [];
+		items.forEach((index: number) => {
+			if (typeof index === 'number' && arrValue?.[index] !== undefined) {
+				resArr.push(arrValue?.[index]);
+			}
+		});
+
+		return resArr;
 	} else {
 		return [];
 	}
@@ -50,10 +53,8 @@ export const getFormValues = (
 	const formData = new window.FormData(formRefCurrent ?? undefined);
 	const values: Record<string, unknown> = {};
 
-	console.log('formData', formData);
 	const formDataMap = new Map(Array.from(formData as any));
 
-	console.log('formDataMap', formDataMap);
 	const fieldKeys = Object.keys(fields);
 	fieldKeys.forEach((name) => {
 		let value = formDataMap.has(name) ? formDataMap.get(name) : undefined;
