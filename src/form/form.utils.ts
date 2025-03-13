@@ -10,10 +10,7 @@ export const getArrayValue = (
 	items: number[],
 ): any[] => {
 	const arrValue = get(values, fieldName);
-	console.log('array value', {
-		arrValue,
-		items,
-	});
+
 	if (arrValue) {
 		return items
 			.map((index: number) => {
@@ -21,7 +18,7 @@ export const getArrayValue = (
 			})
 			.filter((el) => el !== undefined);
 	} else {
-		return undefined;
+		return [];
 	}
 };
 

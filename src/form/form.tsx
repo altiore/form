@@ -1,5 +1,6 @@
 import React, {FormEvent, useCallback, useRef, useState} from 'react';
 
+import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
 import set from 'lodash/set';
@@ -314,6 +315,8 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 
 			// 1. Преобразовываем данные в правильный формат
 			const values = getFormValues(formRef.current, fields);
+			// создаём клон данных, т.к. похоже, что валидация может менять данные. Чтоб избежать изменения данных валидацией, создаём копию
+			const valuesClone = cloneDeep(values);
 
 			// 2. Проверка данных на соответствие правилам валидации
 			let isFormInvalid = false;
@@ -324,7 +327,6 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 						let value: any;
 						if (fieldType === FieldType.ARRAY) {
 							value = getArrayValue(fieldName, values, fieldMeta.items);
-							console.log('field array value result 1', value);
 						} else {
 							value = get(values, fieldName);
 						}
@@ -346,22 +348,26 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 				return Promise.resolve();
 			}
 
-			Object.entries(fields).forEach(([fieldName, fieldMeta]: any) => {
-				// Преобразовать массивы к массивам с непустыми данными
-				// (должно быть в самом конце для правильной работы!)
-				// мы не можем выполнить это действие во время проверки валидации,
-				// т.к. не можем менять результирующие данные до их проверки
-				// создание новой переменной с результирующими данными усложняет
-				// понимание кода
-				const items = fields[fieldName].items;
-				if (Array.isArray(items)) {
-					const value = getArrayValue(fieldName, values, fieldMeta.items);
+			Object.entries(fields).forEach(
+				([fieldName, fieldMeta]: [string, FieldMeta]) => {
+					// Преобразовать массивы к массивам с непустыми данными
+					// (должно быть в самом конце для правильной работы!)
+					// мы не можем выполнить это действие во время проверки валидации,
+					// т.к. не можем менять результирующие данные до их проверки
+					// создание новой переменной с результирующими данными усложняет
+					// понимание кода
+					if (fieldMeta.fieldType === FieldType.ARRAY) {
+						const value = getArrayValue(
+							fieldName,
+							valuesClone,
+							fieldMeta.items,
+						);
 
-					console.log('field array value result 2', value);
-					unset(values, fieldName);
-					set(values, fieldName, value);
-				}
-			});
+						unset(valuesClone, fieldName);
+						set(valuesClone, fieldName, value);
+					}
+				},
+			);
 
 			setIsSubmitting(true);
 
@@ -372,7 +378,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 			Promise.resolve(
 				// если было событие submit, то передаем это событие как 3-ий параметр,
 				// чтоб можно было что-то с ним сделать
-				localSubmitFunc(values as Values, setNestedErrors, evt),
+				localSubmitFunc(valuesClone as Values, setNestedErrors, evt),
 			)
 				.then(function () {
 					setIsSubmitting(false);
