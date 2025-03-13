@@ -50,8 +50,10 @@ export const getFormValues = (
 	const formData = new window.FormData(formRefCurrent ?? undefined);
 	const values: Record<string, unknown> = {};
 
+	console.log('formData', formData);
 	const formDataMap = new Map(Array.from(formData as any));
 
+	console.log('formDataMap', formDataMap);
 	const fieldKeys = Object.keys(fields);
 	fieldKeys.forEach((name) => {
 		let value = formDataMap.has(name) ? formDataMap.get(name) : undefined;
