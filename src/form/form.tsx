@@ -210,7 +210,7 @@ export const Form = <Values extends Record<string, any> = Record<string, any>>({
 						(oldFieldName) => {
 							return removedItems.some((removedItem) => {
 								return oldFieldName.match(
-									new RegExp(`^${fieldName}\.${removedItem}\.(.+)`),
+									new RegExp(`^${fieldName}\.${removedItem}((\.(.+))|$)`),
 								);
 							});
 						},
