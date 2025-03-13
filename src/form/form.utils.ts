@@ -10,7 +10,7 @@ export const getArrayValue = (
 	items: number[],
 ): any[] => {
 	return items.map((index: number) => {
-		return (get(values, fieldName) as any[])[index];
+		return (get(values, fieldName) as any[])?.[index];
 	});
 };
 
