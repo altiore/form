@@ -11,9 +11,11 @@ export const getArrayValue = (
 ): any[] => {
 	const arrValue = get(values, fieldName);
 	if (arrValue) {
-		return items.map((index: number) => {
-			return arrValue?.[index];
-		});
+		return items
+			.map((index: number) => {
+				return arrValue?.[index];
+			})
+			.filter((el) => el !== undefined);
 	} else {
 		return undefined;
 	}
